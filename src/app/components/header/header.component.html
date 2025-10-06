@@ -13,7 +13,7 @@
       <!-- Navigation -->
       <nav class="hidden md:flex space-x-8">
         <!-- Dashboard - Available to all roles -->
-        <a [routerLink]="isAdmin ? '/admin-dashboard' : '/dashboard'" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: false}" 
+        <a [routerLink]="isAdmin ? '/admin-dashboard' : (isHRManager ? '/hr-dashboard' : '/dashboard')" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: false}" 
            class="text-gray-600 hover:text-primary px-3 py-2 font-medium transition-colors">
           Dashboard
         </a>
@@ -111,6 +111,10 @@
           <a routerLink="/employees" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: false}" 
              class="text-gray-600 hover:text-primary px-3 py-2 font-medium transition-colors">
             Employees
+          </a>
+          <a routerLink="/attendance" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: false}" 
+             class="text-gray-600 hover:text-primary px-3 py-2 font-medium transition-colors">
+            Attendance
           </a>
         </ng-container>
 
@@ -280,6 +284,7 @@
         <!-- HR MANAGER MOBILE NAVIGATION -->
         <ng-container *ngIf="isHRManager">
           <a routerLink="/employees" class="text-gray-600 hover:text-primary block px-3 py-2 text-base font-medium">Employees</a>
+          <a routerLink="/attendance" class="text-gray-600 hover:text-primary block px-3 py-2 text-base font-medium">Attendance</a>
         </ng-container>
 
         <!-- RECEPTIONIST MOBILE NAVIGATION -->

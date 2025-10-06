@@ -79,6 +79,11 @@ export class DashboardComponent implements OnInit {
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
       if (user) {
+        // Redirect HR Manager to dedicated HR dashboard
+        if (this.isHRManager) {
+          this.router.navigate(['/hr-dashboard']);
+          return;
+        }
         this.loadDashboardData();
       }
     });
