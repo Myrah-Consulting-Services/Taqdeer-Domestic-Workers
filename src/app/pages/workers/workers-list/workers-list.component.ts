@@ -62,6 +62,7 @@ export class WorkersListComponent implements OnInit {
   // Current user info
   currentUser: any = null;
   isAdmin = false;
+  isAgent = false;
   isReceptionist = false;
   
   // Available agents list for admin
@@ -76,6 +77,7 @@ export class WorkersListComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.authService.currentUser;
     this.isAdmin = this.authService.isAdmin();
+    this.isAgent = this.authService.isAgent();
     this.isReceptionist = this.currentUser?.role === 'employee' && this.currentUser?.employeeRole === 'Receptionist';
     this.loadAvailableAgents();
     this.loadWorkers();

@@ -191,12 +191,13 @@
             </select>
           </div>
 
-          <!-- Quick Import Button (Admin only) -->
+          <!-- Quick Import Button (Admin and Agent) -->
           <button 
+            *ngIf="isAdmin || isAgent"
             (click)="openQuickImportModal()"
             class="inline-flex items-center px-4 py-2 border-2 text-white font-medium rounded-md transition-colors mr-3"
             style="border-color: #FF6B00; background-color: #FF6B00;"
-            title="isAdmin: {{isAdmin}}"
+            title="isAdmin: {{isAdmin}}, isAgent: {{isAgent}}"
           >
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
@@ -204,9 +205,9 @@
             Quick Import
           </button>
 
-          <!-- Add Worker Button (Admin only) -->
+          <!-- Add Worker Button (Admin and Agent) -->
           <button 
-            *ngIf="isAdmin"
+            *ngIf="isAdmin || isAgent"
             (click)="openAddWorkerModal()"
             class="inline-flex items-center px-4 py-2 text-white font-medium rounded-md transition-colors"
             style="background-color: #FF6B00;"

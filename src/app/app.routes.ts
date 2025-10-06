@@ -20,6 +20,7 @@ import { AccFinComponent } from './pages/acc-fin/acc-fin.component';
 import { ExpensesComponent } from './pages/accounts-finance/expenses/expenses.component';
 import { CommissionsComponent } from './pages/accounts-finance/commissions/commissions.component';
 import { CreditDebitNotesComponent } from './pages/accounts-finance/credit-debit-notes/credit-debit-notes.component';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -46,6 +47,7 @@ export const routes: Routes = [
       { path: 'accounts-finance/expenses', component: ExpensesComponent },
       { path: 'accounts-finance/commissions', component: CommissionsComponent },
       { path: 'accounts-finance/credit-debit-notes', component: CreditDebitNotesComponent },
+      { path: 'settings', component: SettingsComponent },
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
       { path: 'accounts-finance-dashboard', component: AccountsFinanceDashboardComponent }
     ]
