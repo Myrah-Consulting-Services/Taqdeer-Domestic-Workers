@@ -1,0 +1,774 @@
+<!-- Employees List Page -->
+<div class="min-h-screen bg-gray-50">
+  <div class="w-full px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Success Alert -->
+    <div *ngIf="showSuccessAlert" class="mb-6 bg-green-50 border border-green-200 rounded-md p-4 animate-fade-in">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm font-medium text-green-800">{{ alertMessage }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Employee Management</h1>
+      <p class="text-lg text-gray-600">Manage your internal staff members</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+      <!-- Total Employees -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-600">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Total</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.totalEmployees }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Employees -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Active</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.activeEmployees }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- On Leave -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">On Leave</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.onLeave }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inactive Employees -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-gray-500 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Inactive</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.inactiveEmployees }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monthly Salary -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Monthly</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ formatCurrency(stats.totalSalaryExpense) }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters and Actions -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+      <div class="p-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <!-- Search -->
+          <div class="flex-1 max-w-md">
+            <div class="relative">
+              <input
+                type="text"
+                [(ngModel)]="searchTerm"
+                (ngModelChange)="applyFilters()"
+                placeholder="Search by name, code, email, phone..."
+                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Filters & Actions -->
+          <div class="flex gap-3">
+            <!-- Role Filter -->
+            <select
+              [(ngModel)]="roleFilter"
+              (ngModelChange)="applyFilters()"
+              class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="all">All Roles</option>
+              <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+            </select>
+
+            <!-- Status Filter -->
+            <select
+              [(ngModel)]="statusFilter"
+              (ngModelChange)="applyFilters()"
+              class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="on-leave">On Leave</option>
+              <option value="terminated">Terminated</option>
+            </select>
+
+            <!-- Department Filter -->
+            <select
+              [(ngModel)]="departmentFilter"
+              (ngModelChange)="applyFilters()"
+              class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="all">All Departments</option>
+              <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+            </select>
+
+            <!-- Add Employee Button -->
+            <button
+              (click)="openAddModal()"
+              class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-md hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl"
+            >
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Add Employee
+            </button>
+          </div>
+        </div>
+
+        <!-- Results Info -->
+        <div class="mt-4 flex justify-between items-center border-t border-gray-200 pt-4">
+          <p class="text-sm text-gray-600">
+            Showing <span class="font-semibold">{{ filteredEmployees.length }}</span> of <span class="font-semibold">{{ employees.length }}</span> employees
+          </p>
+          <div class="flex gap-2">
+            <button 
+              (click)="exportToExcel()"
+              class="no-print inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              Export
+            </button>
+            <button 
+              (click)="printList()"
+              class="no-print inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+              </svg>
+              Print
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Employees Table -->
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Salary</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let employee of filteredEmployees" class="hover:bg-gray-50 transition-colors">
+              <!-- Employee Info -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10">
+                    <div class="h-10 w-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white font-semibold">
+                      {{ employee.fullName.charAt(0) }}
+                    </div>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900 cursor-pointer hover:text-blue-600"
+                         (click)="viewEmployeeDetails(employee)">
+                      {{ employee.fullName }}
+                    </div>
+                    <div class="text-sm text-gray-500">{{ employee.employeeCode }}</div>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Role -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span [class]="getRoleBadgeClass(employee.role)" 
+                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                  {{ employee.role }}
+                </span>
+              </td>
+
+              <!-- Department -->
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ employee.department }}
+              </td>
+
+              <!-- Contact -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">{{ employee.phone }}</div>
+                <div class="text-sm text-gray-500">{{ employee.email }}</div>
+              </td>
+
+              <!-- Salary -->
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                {{ formatCurrency(employee.totalSalary) }}
+              </td>
+
+              <!-- Status -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span [class]="getStatusClass(employee.status)"
+                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                  {{ employee.status | titlecase }}
+                </span>
+              </td>
+
+              <!-- Actions -->
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <div class="flex justify-end gap-2">
+                  <button
+                    (click)="viewEmployeeDetails(employee)"
+                    class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50"
+                    title="View Details"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                  </button>
+
+                  <button
+                    (click)="openEditModal(employee)"
+                    class="text-gray-600 hover:text-gray-900 p-2 rounded hover:bg-gray-100"
+                    title="Edit"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                  </button>
+
+                  <button
+                    (click)="openDeleteModal(employee)"
+                    class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50"
+                    title="Delete"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Empty State -->
+            <tr *ngIf="filteredEmployees.length === 0">
+              <td colspan="7" class="px-6 py-12 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">No employees found</h3>
+                <p class="mt-1 text-sm text-gray-500">Try adjusting your search or filter to find what you're looking for.</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Add/Edit Employee Modal -->
+<div *ngIf="showFormModal" class="fixed z-50 inset-0 overflow-y-auto">
+  <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" (click)="closeFormModal()"></div>
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+    
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-4xl">
+      <div class="px-6 pt-6 pb-4 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-indigo-600">
+        <div class="flex items-center justify-between">
+          <h3 class="text-2xl font-bold text-white">
+            {{ isEditMode ? 'Edit Employee' : 'Add New Employee' }}
+          </h3>
+          <button (click)="closeFormModal()" class="text-white hover:text-gray-200">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <form (ngSubmit)="submitForm()" class="p-6">
+        <div class="space-y-6 max-h-[70vh] overflow-y-auto pr-2">
+          <!-- Personal Information -->
+          <div>
+            <h4 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Personal Information</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Employee Code</label>
+                <input
+                  type="text"
+                  [(ngModel)]="formData.employeeCode"
+                  name="employeeCode"
+                  readonly
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
+                />
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Full Name <span class="text-red-500">*</span></label>
+                <input
+                  type="text"
+                  [(ngModel)]="formData.fullName"
+                  name="fullName"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+                <select [(ngModel)]="formData.gender" name="gender" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
+                <input
+                  type="date"
+                  [(ngModel)]="formData.dateOfBirth"
+                  name="dateOfBirth"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Marital Status</label>
+                <select [(ngModel)]="formData.maritalStatus" name="maritalStatus" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                  <option value="single">Single</option>
+                  <option value="married">Married</option>
+                  <option value="divorced">Divorced</option>
+                  <option value="widowed">Widowed</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nationality</label>
+                <input
+                  type="text"
+                  [(ngModel)]="formData.nationality"
+                  name="nationality"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Emirates ID</label>
+                <input
+                  type="text"
+                  [(ngModel)]="formData.emiratesId"
+                  name="emiratesId"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Passport Number</label>
+                <input
+                  type="text"
+                  [(ngModel)]="formData.passportNumber"
+                  name="passportNumber"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Information -->
+          <div>
+            <h4 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Contact Information</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Email <span class="text-red-500">*</span></label>
+                <input
+                  type="email"
+                  [(ngModel)]="formData.email"
+                  name="email"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Phone <span class="text-red-500">*</span></label>
+                <input
+                  type="tel"
+                  [(ngModel)]="formData.phone"
+                  name="phone"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Alternate Phone</label>
+                <input
+                  type="tel"
+                  [(ngModel)]="formData.alternatePhone"
+                  name="alternatePhone"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">City</label>
+                <input
+                  type="text"
+                  [(ngModel)]="formData.city"
+                  name="city"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                <textarea
+                  [(ngModel)]="formData.address"
+                  name="address"
+                  rows="2"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Employment Details -->
+          <div>
+            <h4 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Employment Details</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Role <span class="text-red-500">*</span></label>
+                <select [(ngModel)]="formData.role" name="role" required class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                  <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Department <span class="text-red-500">*</span></label>
+                <select [(ngModel)]="formData.department" name="department" required class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                  <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Employment Type</label>
+                <select [(ngModel)]="formData.employmentType" name="employmentType" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                  <option value="full-time">Full Time</option>
+                  <option value="part-time">Part Time</option>
+                  <option value="contract">Contract</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Joining Date</label>
+                <input
+                  type="date"
+                  [(ngModel)]="formData.joiningDate"
+                  name="joiningDate"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Working Hours</label>
+                <input
+                  type="text"
+                  [(ngModel)]="formData.workingHours"
+                  name="workingHours"
+                  placeholder="e.g., 9:00 AM - 6:00 PM"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Salary & Bank Details -->
+          <div>
+            <h4 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Salary & Bank Details</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Basic Salary (AED) <span class="text-red-500">*</span></label>
+                <input
+                  type="number"
+                  [(ngModel)]="formData.basicSalary"
+                  name="basicSalary"
+                  min="0"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Allowances (AED)</label>
+                <input
+                  type="number"
+                  [(ngModel)]="formData.allowances"
+                  name="allowances"
+                  min="0"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Payment Mode</label>
+                <select [(ngModel)]="formData.paymentMode" name="paymentMode" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                  <option value="bank-transfer">Bank Transfer</option>
+                  <option value="cash">Cash</option>
+                  <option value="cheque">Cheque</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Bank Name</label>
+                <input
+                  type="text"
+                  [(ngModel)]="formData.bankName"
+                  name="bankName"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Account Number</label>
+                <input
+                  type="text"
+                  [(ngModel)]="formData.accountNumber"
+                  name="accountNumber"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">IBAN</label>
+                <input
+                  type="text"
+                  [(ngModel)]="formData.iban"
+                  name="iban"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- System Access -->
+          <div>
+            <h4 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">System Access</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Username <span class="text-red-500">*</span></label>
+                <input
+                  type="text"
+                  [(ngModel)]="formData.username"
+                  name="username"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Password <span class="text-red-500">*</span></label>
+                <input
+                  type="password"
+                  [(ngModel)]="formData.password"
+                  name="password"
+                  [required]="!isEditMode"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                <select [(ngModel)]="formData.status" name="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                  <option value="on-leave">On Leave</option>
+                  <option value="terminated">Terminated</option>
+                </select>
+              </div>
+
+              <div class="md:col-span-3">
+                <label class="flex items-center">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="formData.hasSystemAccess"
+                    name="hasSystemAccess"
+                    class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span class="ml-2 text-sm text-gray-700">Grant System Access (Allow login)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Emergency Contact -->
+          <div>
+            <h4 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">Emergency Contact</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Contact Name</label>
+                <input
+                  type="text"
+                  [(ngModel)]="formData.emergencyContact.name"
+                  name="emergencyName"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Relationship</label>
+                <input
+                  type="text"
+                  [(ngModel)]="formData.emergencyContact.relationship"
+                  name="emergencyRelationship"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Contact Phone</label>
+                <input
+                  type="tel"
+                  [(ngModel)]="formData.emergencyContact.phone"
+                  name="emergencyPhone"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Notes</label>
+            <textarea
+              [(ngModel)]="formData.notes"
+              name="notes"
+              rows="3"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+              placeholder="Any additional information..."
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3 mt-6 -mx-6 -mb-6">
+          <button 
+            type="button" 
+            (click)="closeFormModal()"
+            class="px-6 py-2 border border-gray-300 text-gray-700 font-medium rounded-md hover:bg-gray-100">
+            Cancel
+          </button>
+          <button 
+            type="submit"
+            class="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-md hover:from-blue-700 hover:to-indigo-700">
+            {{ isEditMode ? 'Update Employee' : 'Add Employee' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div *ngIf="showDeleteModal && employeeToDelete" class="fixed z-50 inset-0 overflow-y-auto">
+  <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75" (click)="closeDeleteModal()"></div>
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+    
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="sm:flex sm:items-start">
+          <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+            <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+          </div>
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Delete Employee</h3>
+            <div class="mt-2">
+              <p class="text-sm text-gray-500">
+                Are you sure you want to delete <strong>{{ employeeToDelete.fullName }}</strong>? 
+                This action cannot be undone.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <button 
+          type="button"
+          (click)="confirmDelete()"
+          class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 sm:ml-3 sm:w-auto sm:text-sm">
+          Delete
+        </button>
+        <button 
+          type="button"
+          (click)="closeDeleteModal()"
+          class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

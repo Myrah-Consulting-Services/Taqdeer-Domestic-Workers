@@ -1,0 +1,1111 @@
+<!-- Workers Management Page -->
+<div class="min-h-screen bg-gray-50">
+  <div class="w-full px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Success Alert -->
+    <div *ngIf="showSuccessAlert" class="mb-6 bg-green-50 border border-green-200 rounded-md p-4 animate-fade-in">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm font-medium text-green-800">{{ alertMessage }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Workers Management</h1>
+      <p class="text-lg text-gray-600">
+        {{ isAdmin ? 'Manage all domestic workers' : 
+           isReceptionist ? 'View all domestic workers' : 'Manage your workers' }}
+      </p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
+      <!-- Total Workers -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Total</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.total }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Available -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Available</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.available }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interview -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-blue-400 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Interview</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.interview }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trial -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">On Trial</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.trial }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Placed -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Placed</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.placed }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Returned -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Returned</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.returned }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters and Actions -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+      <div class="flex flex-col gap-4">
+        
+        <!-- Search Bar -->
+        <div class="flex-1">
+          <div class="relative max-w-md">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </div>
+            <input 
+              type="text" 
+              [(ngModel)]="searchTerm"
+              (ngModelChange)="onSearchChange()"
+              placeholder="Search by name, code, passport..." 
+              class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent sm:text-sm"
+            >
+          </div>
+        </div>
+
+        <!-- Filters Row -->
+        <div class="flex flex-wrap gap-3 items-center justify-between">
+          <div class="flex flex-wrap gap-3">
+            <!-- Status Filter -->
+            <select 
+              [(ngModel)]="statusFilter"
+              (ngModelChange)="onFilterChange()"
+              class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+            >
+              <option value="all">All Status</option>
+              <option value="available">Available</option>
+              <option value="interview">Interview</option>
+              <option value="trial">On Trial</option>
+              <option value="placed">Placed</option>
+              <option value="returned">Returned</option>
+              <option value="absconded">Absconded</option>
+            </select>
+
+            <!-- Nationality Filter -->
+            <select 
+              [(ngModel)]="nationalityFilter"
+              (ngModelChange)="onFilterChange()"
+              class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+            >
+              <option value="all">All Nationalities</option>
+              <option *ngFor="let nationality of nationalities" [value]="nationality">{{ nationality }}</option>
+            </select>
+
+            <!-- Type Filter -->
+            <select 
+              [(ngModel)]="typeFilter"
+              (ngModelChange)="onFilterChange()"
+              class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+            >
+              <option value="all">All Types</option>
+              <option *ngFor="let type of workerTypes" [value]="type">{{ getWorkerTypeLabel(type) }}</option>
+            </select>
+          </div>
+
+          <!-- Quick Import Button (Admin only) -->
+          <button 
+            (click)="openQuickImportModal()"
+            class="inline-flex items-center px-4 py-2 border-2 text-white font-medium rounded-md transition-colors mr-3"
+            style="border-color: #FF6B00; background-color: #FF6B00;"
+            title="isAdmin: {{isAdmin}}"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+            </svg>
+            Quick Import
+          </button>
+
+          <!-- Add Worker Button (Admin only) -->
+          <button 
+            *ngIf="isAdmin"
+            (click)="openAddWorkerModal()"
+            class="inline-flex items-center px-4 py-2 text-white font-medium rounded-md transition-colors"
+            style="background-color: #FF6B00;"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Add New Worker
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Workers Table -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Worker Details
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Type & Nationality
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Passport & Visa
+              </th>
+              <th *ngIf="isAdmin || isReceptionist" scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Agent
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Package
+              </th>
+              <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let worker of filteredWorkers" class="hover:bg-gray-50 transition-colors">
+              <!-- Worker Details -->
+              <td class="px-6 py-4 whitespace-nowrap cursor-pointer" (click)="viewWorkerDetails(worker)">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center">
+                    <span class="text-white font-semibold text-sm">{{ worker.fullName.charAt(0) }}</span>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-blue-600 hover:text-blue-800">{{ worker.fullName }}</div>
+                    <div class="text-sm text-gray-500">{{ worker.workerCode }}</div>
+                    <div class="text-xs text-gray-400">{{ worker.age }} years, {{ worker.gender }}</div>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Type & Nationality -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">{{ getWorkerTypeLabel(worker.workerType) }}</div>
+                <div class="text-sm text-gray-500">{{ worker.nationality }}</div>
+                <div class="text-xs text-gray-400">{{ worker.experience }} years exp</div>
+              </td>
+
+              <!-- Passport & Visa -->
+              <td class="px-6 py-4">
+                <div class="text-sm text-gray-900">{{ worker.passportNumber }}</div>
+                <div class="text-xs text-gray-500">Exp: {{ formatDate(worker.passportExpiryDate) }}</div>
+                <div class="text-xs text-blue-600 capitalize">{{ worker.visaType }} visa</div>
+              </td>
+
+              <!-- Agent (Admin only) -->
+              <td *ngIf="isAdmin || isReceptionist" class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">{{ worker.agentName }}</div>
+                <div class="text-xs text-gray-500">{{ worker.agentCode }}</div>
+              </td>
+
+              <!-- Status -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span [class]="'inline-flex px-2 py-1 text-xs font-semibold rounded-full ' + getStatusBadgeClass(worker.currentStatus)">
+                  {{ getStatusLabel(worker.currentStatus) }}
+                </span>
+              </td>
+
+              <!-- Package -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900">{{ formatCurrency(worker.packageAmount) }}</div>
+                <div class="text-xs text-gray-500">Commission: {{ formatCurrency(worker.agentCommission) }}</div>
+              </td>
+
+              <!-- Actions -->
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <div class="flex items-center justify-end gap-2">
+                  <button 
+                    (click)="viewWorkerDetails(worker)"
+                    class="text-blue-600 hover:text-blue-900 transition-colors"
+                    title="View Details"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                  </button>
+                  <button 
+                    (click)="openEditWorkerModal(worker)"
+                    class="text-indigo-600 hover:text-indigo-900 transition-colors"
+                    title="Edit Worker"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                  </button>
+                  <button 
+                    (click)="openDeleteModal(worker)"
+                    class="text-red-600 hover:text-red-900 transition-colors"
+                    title="Delete Worker"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Empty State -->
+            <tr *ngIf="filteredWorkers.length === 0">
+              <td [attr.colspan]="(isAdmin || isReceptionist) ? 7 : 6" class="px-6 py-12 text-center">
+                <div class="flex flex-col items-center">
+                  <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                  </svg>
+                  <h3 class="text-lg font-medium text-gray-900 mb-1">No workers found</h3>
+                  <p class="text-gray-500 mb-4">Get started by adding your first worker.</p>
+                  <button 
+                    (click)="openAddWorkerModal()"
+                    class="inline-flex items-center px-4 py-2 text-white font-medium rounded-md transition-colors"
+                    style="background-color: #FF6B00;"
+                  >
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Add Worker
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div *ngIf="showDeleteModal" class="fixed z-50 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" (click)="closeDeleteModal()"></div>
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+    
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="sm:flex sm:items-start">
+          <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+            <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+          </div>
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Delete Worker</h3>
+            <div class="mt-2">
+              <p class="text-sm text-gray-500">
+                Are you sure you want to delete <span class="font-semibold">{{ workerToDelete?.fullName }}</span>? This action cannot be undone.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-3">
+        <button 
+          type="button" 
+          (click)="confirmDelete()"
+          class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 sm:ml-3 sm:w-auto sm:text-sm"
+        >
+          Delete
+        </button>
+        <button 
+          type="button" 
+          (click)="closeDeleteModal()"
+          class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Worker Form Modal -->
+<div *ngIf="showFormModal" class="fixed z-50 inset-0 overflow-y-auto" role="dialog" aria-modal="true">
+  <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" (click)="closeFormModal()"></div>
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+    
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-4xl">
+      <!-- Modal Header -->
+      <div class="bg-white px-6 pt-6 pb-4 border-b border-gray-200">
+        <div class="flex items-center justify-between">
+          <h3 class="text-2xl font-bold text-gray-900">
+            {{ isEditMode ? 'Edit Worker' : 'Add New Worker' }}
+          </h3>
+          <button (click)="closeFormModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body - Scrollable -->
+      <div class="bg-white px-6 py-6 max-h-[calc(100vh-200px)] overflow-y-auto">
+        <form (ngSubmit)="onFormSubmit()" #workerForm="ngForm">
+          
+          <!-- Personal Information -->
+          <div class="mb-6">
+            <h4 class="text-lg font-semibold text-gray-900 mb-4">Personal Information</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Full Name <span class="text-red-500">*</span></label>
+                <input type="text" [(ngModel)]="formData.fullName" name="fullName" required placeholder="Enter full name"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth <span class="text-red-500">*</span></label>
+                <input type="date" [(ngModel)]="formData.dateOfBirth" name="dateOfBirth" required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Gender <span class="text-red-500">*</span></label>
+                <select [(ngModel)]="formData.gender" name="gender" required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                  <option *ngFor="let gender of genders" [value]="gender">{{ gender | titlecase }}</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nationality <span class="text-red-500">*</span></label>
+                <select [(ngModel)]="formData.nationality" name="nationality" required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                  <option *ngFor="let nat of nationalities" [value]="nat">{{ nat }}</option>
+                </select>
+                <p class="text-xs text-gray-500 mt-1">Package: {{ formatCurrency(getPackageAmount(formData.nationality)) }}</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Marital Status <span class="text-red-500">*</span></label>
+                <select [(ngModel)]="formData.maritalStatus" name="maritalStatus" required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                  <option *ngFor="let status of maritalStatuses" [value]="status">{{ status | titlecase }}</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Religion</label>
+                <input type="text" [(ngModel)]="formData.religion" name="religion" placeholder="e.g., Muslim, Christian"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+            </div>
+          </div>
+
+          <!-- Passport Details -->
+          <div class="mb-6">
+            <h4 class="text-lg font-semibold text-gray-900 mb-4">Passport Details</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Passport Number <span class="text-red-500">*</span></label>
+                <input type="text" [(ngModel)]="formData.passportNumber" name="passportNumber" required placeholder="e.g., ET1234567"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Issue Date <span class="text-red-500">*</span></label>
+                <input type="date" [(ngModel)]="formData.passportIssueDate" name="passportIssueDate" required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date <span class="text-red-500">*</span></label>
+                <input type="date" [(ngModel)]="formData.passportExpiryDate" name="passportExpiryDate" required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+            </div>
+          </div>
+
+          <!-- Visa Details -->
+          <div class="mb-6">
+            <h4 class="text-lg font-semibold text-gray-900 mb-4">Visa Details</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Visa Type <span class="text-red-500">*</span></label>
+                <select [(ngModel)]="formData.visaType" name="visaType" required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                  <option *ngFor="let type of visaTypes" [value]="type">{{ type | titlecase }}</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Visa Number</label>
+                <input type="text" [(ngModel)]="formData.visaNumber" name="visaNumber" placeholder="e.g., V123456"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Visa Issue Date</label>
+                <input type="date" [(ngModel)]="formData.visaIssueDate" name="visaIssueDate"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Visa Expiry Date</label>
+                <input type="date" [(ngModel)]="formData.visaExpiryDate" name="visaExpiryDate"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Arrival Date</label>
+                <input type="date" [(ngModel)]="formData.arrivalDate" name="arrivalDate"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+            </div>
+          </div>
+
+          <!-- Worker Details -->
+          <div class="mb-6">
+            <h4 class="text-lg font-semibold text-gray-900 mb-4">Worker Details</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Worker Type <span class="text-red-500">*</span></label>
+                <select [(ngModel)]="formData.workerType" name="workerType" required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                  <option *ngFor="let type of workerTypes" [value]="type">{{ getWorkerTypeLabel(type) }}</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Experience (Years) <span class="text-red-500">*</span></label>
+                <input type="number" [(ngModel)]="formData.experience" name="experience" required min="0" placeholder="e.g., 5"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+            </div>
+          </div>
+
+          <!-- Agent Selection (Admin Only) -->
+          <div class="mb-6" *ngIf="isAdmin">
+            <h4 class="text-lg font-semibold text-gray-900 mb-4">Agent Assignment</h4>
+            <div class="grid grid-cols-1 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Select Agent <span class="text-red-500">*</span></label>
+                <select [(ngModel)]="formData.agentId" name="agentId" required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                  <option value="">Select an agent</option>
+                  <option *ngFor="let agent of availableAgents" [value]="agent.id">
+                    {{ agent.code }} - {{ agent.name }}
+                  </option>
+                </select>
+                <p class="text-xs text-gray-500 mt-1">This worker will be assigned to the selected agent</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Agent Info Display (Agent User - Read Only) -->
+          <div class="mb-6" *ngIf="!isAdmin && currentUser?.agentCode">
+            <h4 class="text-lg font-semibold text-gray-900 mb-4">Agent Information</h4>
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div class="flex items-start">
+                <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                  <p class="text-sm font-medium text-blue-900">This worker will be assigned to your account</p>
+                  <p class="text-xs text-blue-700 mt-1">Agent: {{ currentUser.fullName }} ({{ currentUser.agentCode }})</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Languages -->
+          <div class="mb-6">
+            <h4 class="text-lg font-semibold text-gray-900 mb-4">Languages</h4>
+            <div class="flex gap-2 mb-3">
+              <select [(ngModel)]="newLanguage" name="newLanguage"
+                class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="">Select Language</option>
+                <option *ngFor="let lang of availableLanguages" [value]="lang">{{ lang }}</option>
+              </select>
+              <button type="button" (click)="addLanguage()"
+                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                Add
+              </button>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span *ngFor="let lang of selectedLanguages"
+                class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+                {{ lang }}
+                <button type="button" (click)="removeLanguage(lang)" class="ml-2 text-blue-600 hover:text-blue-800">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </span>
+            </div>
+          </div>
+
+          <!-- Skills -->
+          <div class="mb-6">
+            <h4 class="text-lg font-semibold text-gray-900 mb-4">Skills</h4>
+            <div class="flex gap-2 mb-3">
+              <select [(ngModel)]="newSkill" name="newSkill"
+                class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="">Select Skill</option>
+                <option *ngFor="let skill of availableSkills" [value]="skill">{{ skill }}</option>
+              </select>
+              <button type="button" (click)="addSkill()"
+                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                Add
+              </button>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span *ngFor="let skill of selectedSkills"
+                class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
+                {{ skill }}
+                <button type="button" (click)="removeSkill(skill)" class="ml-2 text-green-600 hover:text-green-800">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </span>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="mb-6">
+            <h4 class="text-lg font-semibold text-gray-900 mb-4">Additional Notes</h4>
+            <textarea [(ngModel)]="formData.notes" name="notes" rows="4" placeholder="Add any additional notes..."
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+          </div>
+        </form>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3 border-t border-gray-200">
+        <button type="button" (click)="closeFormModal()"
+          class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50">
+          Cancel
+        </button>
+        <button type="submit" (click)="onFormSubmit()" [disabled]="!workerForm.form.valid"
+          class="px-6 py-2 text-white font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+          style="background-color: #FF6B00;">
+          {{ isEditMode ? 'Update Worker' : 'Add Worker' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Worker Details Modal -->
+<div *ngIf="showDetailsModal && selectedWorker" class="fixed z-50 inset-0 overflow-y-auto" role="dialog" aria-modal="true">
+  <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" (click)="closeDetailsModal()"></div>
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+    
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-5xl">
+      <!-- Modal Header -->
+      <div class="bg-white px-6 pt-6 pb-4 border-b border-gray-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-2xl font-bold text-gray-900">{{ selectedWorker.fullName }}</h3>
+            <p class="text-sm text-gray-600 mt-1">Worker Code: {{ selectedWorker.workerCode }}</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <span [class]="'inline-flex px-3 py-1 text-sm font-semibold rounded-md ' + getStatusBadgeClass(selectedWorker.currentStatus)">
+              {{ getStatusLabel(selectedWorker.currentStatus) }}
+            </span>
+            <button (click)="editFromDetails()" class="p-2 text-blue-600 hover:bg-blue-50 rounded-md" title="Edit">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+            </button>
+            <button (click)="deleteFromDetails()" class="p-2 text-red-600 hover:bg-red-50 rounded-md" title="Delete">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+              </svg>
+            </button>
+            <button (click)="closeDetailsModal()" class="p-2 text-gray-400 hover:text-gray-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="bg-white px-6 py-6 max-h-[calc(100vh-200px)] overflow-y-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Personal Information -->
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h4 class="text-lg font-semibold text-gray-900 mb-3">Personal Information</h4>
+            <div class="space-y-2">
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Date of Birth:</span>
+                <span class="text-sm text-gray-900">{{ formatDate(selectedWorker.dateOfBirth) }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Age:</span>
+                <span class="text-sm text-gray-900">{{ selectedWorker.age }} years</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Gender:</span>
+                <span class="text-sm text-gray-900">{{ selectedWorker.gender | titlecase }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Nationality:</span>
+                <span class="text-sm text-gray-900">{{ selectedWorker.nationality }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Marital Status:</span>
+                <span class="text-sm text-gray-900">{{ selectedWorker.maritalStatus | titlecase }}</span>
+              </div>
+              <div class="flex justify-between py-2">
+                <span class="text-sm text-gray-600">Religion:</span>
+                <span class="text-sm text-gray-900">{{ selectedWorker.religion || 'N/A' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Passport & Visa -->
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h4 class="text-lg font-semibold text-gray-900 mb-3">Passport & Visa</h4>
+            <div class="space-y-2">
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Passport:</span>
+                <span class="text-sm text-gray-900">{{ selectedWorker.passportNumber }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Passport Expiry:</span>
+                <span class="text-sm text-gray-900">{{ formatDate(selectedWorker.passportExpiryDate) }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Visa Type:</span>
+                <span class="text-sm text-gray-900">{{ selectedWorker.visaType | titlecase }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Visa Number:</span>
+                <span class="text-sm text-gray-900">{{ selectedWorker.visaNumber || 'N/A' }}</span>
+              </div>
+              <div class="flex justify-between py-2">
+                <span class="text-sm text-gray-600">Arrival Date:</span>
+                <span class="text-sm text-gray-900">{{ formatDate(selectedWorker.arrivalDate) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visa Status Tracking (CRM Requirement) -->
+          <div class="bg-white rounded-lg p-4 border-2" [ngClass]="{
+            'border-red-300 bg-red-50': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) < 0,
+            'border-yellow-300 bg-yellow-50': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) >= 0 && getVisaDaysRemaining(selectedWorker.visaExpiryDate!) <= 30,
+            'border-green-300 bg-green-50': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) > 30
+          }">
+            <div class="flex items-center mb-3">
+              <svg class="w-5 h-5 mr-2" [ngClass]="{
+                'text-red-600': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) < 0,
+                'text-yellow-600': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) >= 0 && getVisaDaysRemaining(selectedWorker.visaExpiryDate!) <= 30,
+                'text-green-600': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) > 30
+              }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <h4 class="text-sm font-bold" [ngClass]="{
+                'text-red-900': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) < 0,
+                'text-yellow-900': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) >= 0 && getVisaDaysRemaining(selectedWorker.visaExpiryDate!) <= 30,
+                'text-green-900': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) > 30
+              }">Visa Status & Tracking</h4>
+            </div>
+            
+            <div class="space-y-2">
+              <!-- Visa Expiry Date -->
+              <div class="flex justify-between py-1">
+                <span class="text-xs font-medium text-gray-600">Visa Expiry:</span>
+                <span class="text-xs font-bold text-gray-900">{{ formatDate(selectedWorker.visaExpiryDate) }}</span>
+              </div>
+
+              <!-- Days Remaining / Overstay -->
+              <div class="flex justify-between py-1">
+                <span class="text-xs font-medium text-gray-600">
+                  {{ getVisaDaysRemaining(selectedWorker.visaExpiryDate!) >= 0 ? 'Days Remaining:' : 'Overstay:' }}
+                </span>
+                <span class="text-xs font-bold" [ngClass]="{
+                  'text-red-600': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) < 0,
+                  'text-yellow-600': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) >= 0 && getVisaDaysRemaining(selectedWorker.visaExpiryDate!) <= 30,
+                  'text-green-600': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) > 30
+                }">
+                  {{ Math.abs(getVisaDaysRemaining(selectedWorker.visaExpiryDate!)) }} days
+                  <span *ngIf="getVisaDaysRemaining(selectedWorker.visaExpiryDate!) < 0">(OVERSTAY!)</span>
+                </span>
+              </div>
+
+              <!-- Visa Duration (Total) -->
+              <div class="flex justify-between py-1">
+                <span class="text-xs font-medium text-gray-600">Visa Duration:</span>
+                <span class="text-xs font-bold text-gray-900">
+                  {{ getVisaDuration(selectedWorker.visaIssueDate, selectedWorker.visaExpiryDate) }} days
+                </span>
+              </div>
+
+              <!-- Days in UAE -->
+              <div class="flex justify-between py-1">
+                <span class="text-xs font-medium text-gray-600">Days in UAE:</span>
+                <span class="text-xs font-bold text-gray-900">
+                  {{ getDaysInUAE(selectedWorker.arrivalDate) }} days
+                </span>
+              </div>
+
+              <!-- Status Badge -->
+              <div class="mt-2 pt-2 border-t" [ngClass]="{
+                'border-red-300': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) < 0,
+                'border-yellow-300': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) >= 0 && getVisaDaysRemaining(selectedWorker.visaExpiryDate!) <= 30,
+                'border-green-300': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) > 30
+              }">
+                <span class="inline-flex px-2 py-1 text-xs font-bold rounded-full" [ngClass]="{
+                  'bg-red-200 text-red-900': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) < 0,
+                  'bg-yellow-200 text-yellow-900': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) >= 0 && getVisaDaysRemaining(selectedWorker.visaExpiryDate!) <= 30,
+                  'bg-green-200 text-green-900': getVisaDaysRemaining(selectedWorker.visaExpiryDate!) > 30
+                }">
+                  <span *ngIf="getVisaDaysRemaining(selectedWorker.visaExpiryDate!) < 0">⚠️ VISA EXPIRED - ACTION REQUIRED</span>
+                  <span *ngIf="getVisaDaysRemaining(selectedWorker.visaExpiryDate!) >= 0 && getVisaDaysRemaining(selectedWorker.visaExpiryDate!) <= 30">⚠️ EXPIRING SOON - RENEW NOW</span>
+                  <span *ngIf="getVisaDaysRemaining(selectedWorker.visaExpiryDate!) > 30">✅ VALID VISA</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Worker Details -->
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h4 class="text-lg font-semibold text-gray-900 mb-3">Worker Details</h4>
+            <div class="space-y-2">
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Type:</span>
+                <span class="text-sm text-gray-900">{{ getWorkerTypeLabel(selectedWorker.workerType) }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Experience:</span>
+                <span class="text-sm text-gray-900">{{ selectedWorker.experience }} years</span>
+              </div>
+              <div class="py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600 block mb-1">Languages:</span>
+                <div class="flex flex-wrap gap-1">
+                  <span *ngFor="let lang of selectedWorker.languages" class="inline-flex px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded">
+                    {{ lang }}
+                  </span>
+                </div>
+              </div>
+              <div class="py-2">
+                <span class="text-sm text-gray-600 block mb-1">Skills:</span>
+                <div class="flex flex-wrap gap-1">
+                  <span *ngFor="let skill of selectedWorker.skills" class="inline-flex px-2 py-1 text-xs bg-green-100 text-green-800 rounded">
+                    {{ skill }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Financial Details -->
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h4 class="text-lg font-semibold text-gray-900 mb-3">Financial Details</h4>
+            <div class="space-y-2">
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Package Amount:</span>
+                <span class="text-sm font-semibold text-gray-900">{{ formatCurrency(selectedWorker.packageAmount) }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Advance Received:</span>
+                <span class="text-sm text-gray-900">{{ formatCurrency(selectedWorker.advanceReceived) }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Remaining:</span>
+                <span class="text-sm text-gray-900">{{ formatCurrency(selectedWorker.remainingAmount) }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Agent Commission:</span>
+                <span class="text-sm text-gray-900">{{ formatCurrency(selectedWorker.agentCommission) }}</span>
+              </div>
+              <div class="flex justify-between py-2">
+                <span class="text-sm text-gray-600">Payment Status:</span>
+                <span [class]="'text-sm font-medium ' + (selectedWorker.paymentStatus === 'paid' ? 'text-green-600' : selectedWorker.paymentStatus === 'partial' ? 'text-yellow-600' : 'text-red-600')">
+                  {{ selectedWorker.paymentStatus | titlecase }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Agent Information -->
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h4 class="text-lg font-semibold text-gray-900 mb-3">Agent Information</h4>
+            <div class="space-y-2">
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Agent Name:</span>
+                <span class="text-sm text-gray-900">{{ selectedWorker.agentName }}</span>
+              </div>
+              <div class="flex justify-between py-2">
+                <span class="text-sm text-gray-600">Agent Code:</span>
+                <span class="text-sm text-gray-900">{{ selectedWorker.agentCode }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sponsor Information -->
+          <div *ngIf="selectedWorker.sponsorId" class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h4 class="text-lg font-semibold text-gray-900 mb-3">Sponsor Information</h4>
+            <div class="space-y-2">
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Sponsor Name:</span>
+                <span class="text-sm text-gray-900">{{ selectedWorker.sponsorName }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-300">
+                <span class="text-sm text-gray-600">Phone:</span>
+                <span class="text-sm text-gray-900">{{ selectedWorker.sponsorPhone }}</span>
+              </div>
+              <div class="flex justify-between py-2">
+                <span class="text-sm text-gray-600">Emirates:</span>
+                <span class="text-sm text-gray-900">{{ selectedWorker.sponsorEmirates }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div *ngIf="selectedWorker.notes" class="mt-6 bg-gray-50 rounded-lg p-4 border border-gray-200">
+          <h4 class="text-lg font-semibold text-gray-900 mb-3">Notes</h4>
+          <p class="text-sm text-gray-700">{{ selectedWorker.notes }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Import Modal -->
+  <div *ngIf="showQuickImportModal" class="fixed z-50 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <!-- Background overlay -->
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" (click)="closeQuickImportModal()"></div>
+
+      <!-- Center modal -->
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-4xl">
+        <!-- Modal Header -->
+        <div class="px-6 pt-6 pb-4 border-b border-gray-200" style="background-color: #FF6B00;">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+              </svg>
+              <h3 class="text-2xl font-bold text-white">Quick Import Worker Data</h3>
+            </div>
+            <button (click)="closeQuickImportModal()" class="text-white hover:text-gray-200 transition-colors">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="px-6 py-6">
+          <!-- Instructions -->
+          <div class="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="flex">
+              <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+              </svg>
+              <div class="ml-3">
+                <h4 class="text-sm font-semibold text-blue-900 mb-1">How to use Quick Import:</h4>
+                <ul class="text-sm text-blue-800 space-y-1">
+                  <li>• Paste worker data from email, WhatsApp, or any text format</li>
+                  <li>• System will automatically extract: Name, Passport, DOB, Nationality, Type, etc.</li>
+                  <li>• Click "Load Sample" to see an example</li>
+                  <li>• Review parsed data and click "Use This Data" to fill the form</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text Input Area -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Paste Worker Data (Email/WhatsApp/Text)
+            </label>
+            <textarea
+              [(ngModel)]="importText"
+              rows="12"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent font-mono text-sm"
+              placeholder="Example:
+Name: Fatima Hassan
+Passport: ET1234567
+DOB: 15/05/1992
+Nationality: Ethiopia
+Type: Housemaid
+Experience: 5 years
+Languages: English, Arabic
+Skills: Cooking, Cleaning, Childcare
+Agent: AG001"
+            ></textarea>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex justify-between mb-6">
+            <button
+              (click)="fillSampleData()"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
+            >
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              Load Sample Data
+            </button>
+
+            <button
+              (click)="parseImportText()"
+              class="inline-flex items-center px-6 py-2 text-white font-medium rounded-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all"
+              style="background-color: #FF6B00;"
+            >
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+              </svg>
+              Parse Data
+            </button>
+          </div>
+
+          <!-- Parsed Data Preview -->
+          <div *ngIf="showImportPreview && parsedData" class="bg-green-50 border border-green-200 rounded-lg p-6">
+            <div class="flex items-center mb-4">
+              <svg class="w-6 h-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <h4 class="text-lg font-semibold text-green-900">Parsed Data Preview</h4>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div class="bg-white rounded-lg p-3 border border-green-300">
+                <span class="text-xs font-medium text-gray-500">Full Name</span>
+                <p class="text-sm font-semibold text-gray-900 mt-1">{{ parsedData.fullName || 'Not found' }}</p>
+              </div>
+              <div class="bg-white rounded-lg p-3 border border-green-300">
+                <span class="text-xs font-medium text-gray-500">Passport Number</span>
+                <p class="text-sm font-semibold text-gray-900 mt-1">{{ parsedData.passportNumber || 'Not found' }}</p>
+              </div>
+              <div class="bg-white rounded-lg p-3 border border-green-300">
+                <span class="text-xs font-medium text-gray-500">Nationality</span>
+                <p class="text-sm font-semibold text-gray-900 mt-1">{{ parsedData.nationality }}</p>
+              </div>
+              <div class="bg-white rounded-lg p-3 border border-green-300">
+                <span class="text-xs font-medium text-gray-500">Gender</span>
+                <p class="text-sm font-semibold text-gray-900 mt-1">{{ parsedData.gender | titlecase }}</p>
+              </div>
+              <div class="bg-white rounded-lg p-3 border border-green-300">
+                <span class="text-xs font-medium text-gray-500">Worker Type</span>
+                <p class="text-sm font-semibold text-gray-900 mt-1">{{ getWorkerTypeLabel(parsedData.workerType) }}</p>
+              </div>
+              <div class="bg-white rounded-lg p-3 border border-green-300">
+                <span class="text-xs font-medium text-gray-500">Experience</span>
+                <p class="text-sm font-semibold text-gray-900 mt-1">{{ parsedData.experience }} years</p>
+              </div>
+              <div class="bg-white rounded-lg p-3 border border-green-300">
+                <span class="text-xs font-medium text-gray-500">Languages</span>
+                <p class="text-sm font-semibold text-gray-900 mt-1">{{ parsedData.languages?.join(', ') || 'None' }}</p>
+              </div>
+              <div class="bg-white rounded-lg p-3 border border-green-300">
+                <span class="text-xs font-medium text-gray-500">Skills</span>
+                <p class="text-sm font-semibold text-gray-900 mt-1">{{ parsedData.skills?.join(', ') || 'None' }}</p>
+              </div>
+            </div>
+
+            <div class="flex justify-end">
+              <button
+                (click)="useImportedData()"
+                class="inline-flex items-center px-6 py-3 text-white font-medium rounded-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all bg-green-600"
+              >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                Use This Data
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="bg-gray-50 px-6 py-4 flex justify-end">
+          <button
+            (click)="closeQuickImportModal()"
+            class="px-6 py-2 border border-gray-300 text-gray-700 font-medium rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

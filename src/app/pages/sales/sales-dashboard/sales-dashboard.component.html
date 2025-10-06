@@ -1,0 +1,563 @@
+<!-- Sales Module - Dashboard & List -->
+<div class="min-h-screen bg-gray-50">
+  <div class="w-full px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Page Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Sales</h1>
+          <p class="text-gray-600 mt-1">Dashboard and Sales Records</p>
+        </div>
+        <button
+          (click)="navigateToCreateSale()"
+          class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          New Sale
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Tabs Navigation -->
+    <div class="bg-white rounded-t-lg shadow-sm border border-gray-200 border-b-0">
+      <nav class="flex space-x-8 px-6" aria-label="Main Tabs">
+        <button
+          (click)="switchMainTab('dashboard')"
+          [class]="mainTab === 'dashboard' ? 
+            'border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' : 
+            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'">
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+          Sales Dashboard
+        </button>
+        
+        <button
+          (click)="switchMainTab('list')"
+          [class]="mainTab === 'list' ? 
+            'border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' : 
+            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'">
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+          </svg>
+          Sales List
+        </button>
+      </nav>
+    </div>
+
+    <!-- Main Tab Content -->
+    <div class="bg-white rounded-b-lg shadow-sm border border-gray-200 p-6">
+      
+      <!-- DASHBOARD TAB -->
+      <div *ngIf="mainTab === 'dashboard' && stats">
+        
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <!-- Total Sales -->
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-600">Total Sales</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2">{{ stats.totalSales }}</p>
+              </div>
+              <div class="p-3 bg-blue-100 rounded-full">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+              </div>
+            </div>
+            <p class="text-sm text-gray-500 mt-4">
+              <span class="text-green-600 font-medium">{{ stats.completedSales }} completed</span>
+            </p>
+          </div>
+
+          <!-- Total Revenue -->
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-600">Total Revenue</p>
+                <p class="text-3xl font-bold text-green-600 mt-2">{{ formatCurrency(stats.totalRevenue) }}</p>
+              </div>
+              <div class="p-3 bg-green-100 rounded-full">
+                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            </div>
+            <p class="text-sm text-gray-500 mt-4">
+              This month: {{ formatCurrency(stats.thisMonthRevenue) }}
+            </p>
+          </div>
+
+          <!-- Trial Period -->
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-600">Trial Period</p>
+                <p class="text-3xl font-bold text-blue-600 mt-2">{{ stats.trialPeriodSales }}</p>
+              </div>
+              <div class="p-3 bg-blue-100 rounded-full">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            </div>
+            <p class="text-sm text-gray-500 mt-4">
+              Workers currently on trial
+            </p>
+          </div>
+
+          <!-- Pending Payments -->
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-600">Pending Payments</p>
+                <p class="text-3xl font-bold text-orange-600 mt-2">{{ formatCurrency(stats.pendingPayments) }}</p>
+              </div>
+              <div class="p-3 bg-orange-100 rounded-full">
+                <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            </div>
+            <p class="text-sm text-gray-500 mt-4">
+              Final payments to collect
+            </p>
+          </div>
+        </div>
+
+        <!-- Quick Stats Row -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-lg p-4 shadow-md">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm opacity-90">Pending Quotations</p>
+                <p class="text-2xl font-bold mt-1">{{ stats.pendingSales }}</p>
+              </div>
+              <svg class="w-10 h-10 opacity-75" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-r from-green-400 to-green-500 text-white rounded-lg p-4 shadow-md">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm opacity-90">Active Sales</p>
+                <p class="text-2xl font-bold mt-1">{{ stats.activeSales }}</p>
+              </div>
+              <svg class="w-10 h-10 opacity-75" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-r from-red-400 to-red-500 text-white rounded-lg p-4 shadow-md">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm opacity-90">Refunded</p>
+                <p class="text-2xl font-bold mt-1">{{ stats.refundedSales }}</p>
+              </div>
+              <svg class="w-10 h-10 opacity-75" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-r from-purple-400 to-purple-500 text-white rounded-lg p-4 shadow-md">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm opacity-90">Replaced</p>
+                <p class="text-2xl font-bold mt-1">{{ stats.replacedSales }}</p>
+              </div>
+              <svg class="w-10 h-10 opacity-75" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          <!-- Recent Sales -->
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+              <h2 class="text-lg font-semibold text-gray-900">Recent Sales</h2>
+            </div>
+            <div class="p-6">
+              <div *ngIf="recentSales.length === 0" class="text-center py-8 text-gray-500">
+                No sales yet
+              </div>
+              <div *ngIf="recentSales.length > 0" class="space-y-4">
+                <div *ngFor="let sale of recentSales" 
+                     (click)="navigateToSaleDetails(sale.id)"
+                     class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors">
+                  <div class="flex-1">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span class="text-blue-600 font-bold text-sm">{{ sale.workerName.charAt(0) }}</span>
+                      </div>
+                      <div>
+                        <p class="font-medium text-gray-900">{{ sale.workerName }}</p>
+                        <p class="text-sm text-gray-600">{{ sale.sponsorName }} • {{ sale.workerType | titlecase }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <p class="font-semibold text-gray-900">{{ formatCurrency(sale.totalAmount) }}</p>
+                    <span [class]="'inline-flex px-2 py-1 text-xs font-semibold rounded-full mt-1 ' + getStatusBadgeClass(sale.status)">
+                      {{ sale.status | titlecase }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trial Period Workers -->
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200">
+              <h2 class="text-lg font-semibold text-gray-900">Workers on Trial</h2>
+            </div>
+            <div class="p-6">
+              <div *ngIf="trialPeriodSales.length === 0" class="text-center py-8 text-gray-500">
+                No workers on trial
+              </div>
+              <div *ngIf="trialPeriodSales.length > 0" class="space-y-4">
+                <div *ngFor="let sale of trialPeriodSales"
+                     (click)="navigateToSaleDetails(sale.id)"
+                     class="p-4 bg-blue-50 rounded-lg border border-blue-200 hover:bg-blue-100 cursor-pointer transition-colors">
+                  <div class="flex items-start justify-between mb-2">
+                    <div>
+                      <p class="font-medium text-gray-900">{{ sale.workerName }}</p>
+                      <p class="text-sm text-gray-600">{{ sale.sponsorName }}</p>
+                    </div>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                      Trial
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-gray-600">Started: {{ formatDate(sale.trialStartDate!) }}</span>
+                    <span class="text-gray-600">Ends: {{ formatDate(sale.trialEndDate!) }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Pending Payments Section -->
+        <div class="mt-8 bg-white rounded-lg shadow-sm border border-gray-200" *ngIf="pendingPayments.length > 0">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Pending Final Payments</h2>
+            <p class="text-sm text-gray-600 mt-1">Complete these payments to generate invoices</p>
+          </div>
+          <div class="p-6">
+            <div class="space-y-4">
+              <div *ngFor="let sale of pendingPayments"
+                   (click)="navigateToSaleDetails(sale.id)"
+                   class="flex items-center justify-between p-4 bg-orange-50 rounded-lg border border-orange-200 hover:bg-orange-100 cursor-pointer transition-colors">
+                <div class="flex-1">
+                  <p class="font-medium text-gray-900">{{ sale.workerName }} → {{ sale.sponsorName }}</p>
+                  <p class="text-sm text-gray-600">{{ sale.workerType | titlecase }} • {{ sale.workerNationality }}</p>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm text-gray-600">Advance Paid: {{ formatCurrency(sale.paidAmount) }}</p>
+                  <p class="font-bold text-orange-600">Remaining: {{ formatCurrency(sale.remainingAmount) }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- LIST TAB -->
+      <div *ngIf="mainTab === 'list'">
+        
+        <!-- Filters Section -->
+        <div class="bg-gray-50 rounded-lg p-6 mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Search -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
+              <input
+                type="text"
+                [(ngModel)]="searchTerm"
+                (ngModelChange)="onSearchChange()"
+                placeholder="Search by name, passport, phone..."
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- Status Filter -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+              <select
+                [(ngModel)]="statusFilter"
+                (ngModelChange)="onStatusFilterChange()"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="all">All Status</option>
+                <option value="quotation">Quotation</option>
+                <option value="trial">Trial Period</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="refunded">Refunded</option>
+                <option value="replaced">Replaced</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sub Tabs Navigation -->
+        <div class="bg-gray-50 rounded-t-lg border border-gray-200 border-b-0">
+          <nav class="flex space-x-8 px-6" aria-label="Sub Tabs">
+            <button
+              (click)="switchListTab('workers')"
+              [class]="listTab === 'workers' ? 
+                'border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' : 
+                'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'">
+              <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+              Sales by Worker ({{ filteredWorkerSales.length }})
+            </button>
+            
+            <button
+              (click)="switchListTab('sponsors')"
+              [class]="listTab === 'sponsors' ? 
+                'border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' : 
+                'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'">
+              <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              Sales by Sponsor ({{ filteredSponsorSales.length }})
+            </button>
+          </nav>
+        </div>
+
+        <!-- Sub Tab Content -->
+        <div class="bg-gray-50 rounded-b-lg border border-gray-200 p-6">
+          
+          <!-- Workers Sub Tab -->
+          <div *ngIf="listTab === 'workers'">
+            <div *ngIf="filteredWorkerSales.length === 0" class="text-center py-12">
+              <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+              </svg>
+              <p class="text-gray-600">No workers found</p>
+            </div>
+
+            <!-- Workers List - Table Format -->
+            <div *ngIf="filteredWorkerSales.length > 0" class="space-y-6">
+              <div *ngFor="let worker of filteredWorkerSales" class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                
+                <!-- Worker Header -->
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-3 border-b border-gray-200">
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-base font-bold text-gray-900">{{ worker.workerName }} - Sales History</h3>
+                    <div class="flex items-center gap-4 text-sm text-gray-600">
+                      <span>Total Sales: <strong class="text-blue-600">{{ worker.totalSales }}</strong></span>
+                      <span>Revenue: <strong class="text-green-600">{{ formatCurrency(worker.totalRevenue) }}</strong></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                  <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                      <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Worker Details
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Type & Nationality
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Passport
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Sponsor
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Package
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                      <tr *ngFor="let sale of worker.sales"
+                          (click)="navigateToSaleDetails(sale.id)"
+                          class="hover:bg-gray-50 cursor-pointer transition-colors">
+                        
+                        <!-- Worker Details -->
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10">
+                              <div class="h-10 w-10 rounded-full flex items-center justify-center text-white font-bold bg-gradient-to-br from-blue-500 to-blue-600">
+                                {{ sale.workerName.charAt(0) }}
+                              </div>
+                            </div>
+                            <div class="ml-4">
+                              <div class="text-sm font-medium text-blue-600">{{ sale.workerName }}</div>
+                              <div class="text-xs text-gray-500">{{ sale.saleCode }}</div>
+                            </div>
+                          </div>
+                        </td>
+
+                        <!-- Type & Nationality -->
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm font-medium text-gray-900">{{ sale.workerType | titlecase }}</div>
+                          <div class="text-xs text-gray-500">{{ sale.workerNationality }}</div>
+                        </td>
+
+                        <!-- Passport -->
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">{{ sale.workerPassport }}</div>
+                        </td>
+
+                        <!-- Sponsor -->
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm font-medium text-gray-900">{{ sale.sponsorName }}</div>
+                          <div class="text-xs text-gray-500">{{ sale.sponsorEmirates }}</div>
+                        </td>
+
+                        <!-- Status -->
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span [class]="'inline-flex px-3 py-1 text-xs font-semibold rounded-md ' + getStatusBadgeClass(sale.status)">
+                            {{ sale.status | titlecase }}
+                          </span>
+                        </td>
+
+                        <!-- Package -->
+                        <td class="px-6 py-4 whitespace-nowrap text-right">
+                          <div class="text-sm font-bold text-gray-900">{{ formatCurrency(sale.totalAmount) }}</div>
+                          <div class="text-xs text-gray-500">Paid: {{ formatCurrency(sale.paidAmount) }}</div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sponsors Sub Tab -->
+          <div *ngIf="listTab === 'sponsors'">
+            <div *ngIf="filteredSponsorSales.length === 0" class="text-center py-12">
+              <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              <p class="text-gray-600">No sponsors found</p>
+            </div>
+
+            <!-- Sponsors List - Table Format -->
+            <div *ngIf="filteredSponsorSales.length > 0" class="space-y-6">
+              <div *ngFor="let sponsor of filteredSponsorSales" class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                
+                <!-- Sponsor Header -->
+                <div class="bg-gradient-to-r from-purple-50 to-pink-50 px-6 py-3 border-b border-gray-200">
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-base font-bold text-gray-900">{{ sponsor.sponsorName }} - Hiring History</h3>
+                    <div class="flex items-center gap-4 text-sm text-gray-600">
+                      <span>Total Hires: <strong class="text-purple-600">{{ sponsor.totalSales }}</strong></span>
+                      <span>Total Paid: <strong class="text-green-600">{{ formatCurrency(sponsor.totalRevenue) }}</strong></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                  <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                      <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Sponsor Details
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Worker
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Type & Nationality
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Passport
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Package
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                      <tr *ngFor="let sale of sponsor.sales"
+                          (click)="navigateToSaleDetails(sale.id)"
+                          class="hover:bg-gray-50 cursor-pointer transition-colors">
+                        
+                        <!-- Sponsor Details -->
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10">
+                              <div class="h-10 w-10 rounded-full flex items-center justify-center text-white font-bold bg-gradient-to-br from-purple-500 to-purple-600">
+                                {{ sale.sponsorName.charAt(0) }}
+                              </div>
+                            </div>
+                            <div class="ml-4">
+                              <div class="text-sm font-medium text-purple-600">{{ sale.sponsorName }}</div>
+                              <div class="text-xs text-gray-500">{{ sale.saleCode }}</div>
+                            </div>
+                          </div>
+                        </td>
+
+                        <!-- Worker -->
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm font-medium text-blue-600">{{ sale.workerName }}</div>
+                          <div class="text-xs text-gray-500">{{ sale.workerId }}</div>
+                        </td>
+
+                        <!-- Type & Nationality -->
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm font-medium text-gray-900">{{ sale.workerType | titlecase }}</div>
+                          <div class="text-xs text-gray-500">{{ sale.workerNationality }}</div>
+                        </td>
+
+                        <!-- Passport -->
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">{{ sale.workerPassport }}</div>
+                        </td>
+
+                        <!-- Status -->
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span [class]="'inline-flex px-3 py-1 text-xs font-semibold rounded-md ' + getStatusBadgeClass(sale.status)">
+                            {{ sale.status | titlecase }}
+                          </span>
+                        </td>
+
+                        <!-- Package -->
+                        <td class="px-6 py-4 whitespace-nowrap text-right">
+                          <div class="text-sm font-bold text-gray-900">{{ formatCurrency(sale.totalAmount) }}</div>
+                          <div class="text-xs text-gray-500">Paid: {{ formatCurrency(sale.paidAmount) }}</div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

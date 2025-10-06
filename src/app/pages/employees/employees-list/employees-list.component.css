@@ -1,0 +1,31 @@
+/* Employees List Component Styles */
+.employee-card {
+  transition: all 0.3s ease;
+}
+
+.employee-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Success Alert Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+

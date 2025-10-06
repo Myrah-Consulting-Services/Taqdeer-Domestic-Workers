@@ -1,0 +1,209 @@
+<!-- Accounts & Finance Dashboard -->
+<div class="min-h-screen bg-gray-50">
+  <div class="w-full px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Page Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Accounts & Finance Dashboard</h1>
+          <p class="text-gray-600 mt-1">Comprehensive financial overview and management</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full font-semibold">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            Financial Health: Good
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Financial Overview Cards -->
+    <div *ngIf="financialSummary" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      
+      <!-- Total Revenue -->
+      <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 border border-blue-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-blue-600 mb-1">Total Revenue</p>
+            <p class="text-2xl font-bold text-blue-900">{{ formatCurrency(financialSummary.totalRevenue) }}</p>
+            <p class="text-xs text-blue-600 mt-1">From domestic worker placements</p>
+          </div>
+          <div class="p-3 bg-blue-200 rounded-full">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Expenses -->
+      <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-6 border border-red-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-red-600 mb-1">Total Expenses</p>
+            <p class="text-2xl font-bold text-red-900">{{ formatCurrency(financialSummary.totalExpenses) }}</p>
+            <p class="text-xs text-red-600 mt-1">Business operations & overheads</p>
+          </div>
+          <div class="p-3 bg-red-200 rounded-full">
+            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Net Profit -->
+      <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6 border border-green-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-green-600 mb-1">Net Profit</p>
+            <p class="text-2xl font-bold" [class.text-green-900]="getProfitStatus() === 'positive'" [class.text-red-900]="getProfitStatus() === 'negative'">
+              {{ formatCurrency(financialSummary.netProfit) }}
+            </p>
+            <p class="text-xs" [class.text-green-600]="getProfitStatus() === 'positive'" [class.text-red-600]="getProfitStatus() === 'negative'" mt-1>
+              {{ getProfitMargin().toFixed(1) }}% margin
+            </p>
+          </div>
+          <div class="p-3" [class.bg-green-200]="getProfitStatus() === 'positive'" [class.bg-red-200]="getProfitStatus() === 'negative'" rounded-full>
+            <svg class="w-6 h-6" [class.text-green-600]="getProfitStatus() === 'positive'" [class.text-red-600]="getProfitStatus() === 'negative'" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pending Amounts -->
+      <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-6 border border-orange-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-orange-600 mb-1">Pending Amounts</p>
+            <p class="text-2xl font-bold text-orange-900">{{ formatCurrency(financialSummary.pendingCommissions + financialSummary.pendingRefunds) }}</p>
+            <p class="text-xs text-orange-600 mt-1">Commissions & refunds due</p>
+          </div>
+          <div class="p-3 bg-orange-200 rounded-full">
+            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Dashboard Content -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Expenses Section -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="p-6 border-b border-gray-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900">Expenses Management</h3>
+              <p class="text-sm text-gray-500">Track and manage business expenses</p>
+            </div>
+            <div class="p-2 bg-red-100 rounded-full">
+              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="p-6">
+          <app-expenses></app-expenses>
+        </div>
+      </div>
+
+      <!-- Commissions Section -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="p-6 border-b border-gray-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900">Agent Commissions</h3>
+              <p class="text-sm text-gray-500">Manage agent commission payments</p>
+            </div>
+            <div class="p-2 bg-green-100 rounded-full">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="p-6">
+          <app-commissions></app-commissions>
+        </div>
+      </div>
+
+      <!-- Credit/Debit Notes Section -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="p-6 border-b border-gray-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900">Credit/Debit Notes</h3>
+              <p class="text-sm text-gray-500">Handle financial adjustments and refunds</p>
+            </div>
+            <div class="p-2 bg-blue-100 rounded-full">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="p-6">
+          <app-credit-debit-notes></app-credit-debit-notes>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mt-8">
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <button class="p-4 bg-red-50 hover:bg-red-100 rounded-lg border border-red-200 transition-colors text-left">
+            <div class="flex items-center">
+              <div class="p-3 bg-red-100 rounded-full mr-4">
+                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-medium text-gray-900">Add New Expense</p>
+                <p class="text-sm text-gray-500">Record business expense</p>
+              </div>
+            </div>
+          </button>
+
+          <button class="p-4 bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 transition-colors text-left">
+            <div class="flex items-center">
+              <div class="p-3 bg-green-100 rounded-full mr-4">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-medium text-gray-900">Process Commission</p>
+                <p class="text-sm text-gray-500">Pay agent commission</p>
+              </div>
+            </div>
+          </button>
+
+          <button class="p-4 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 transition-colors text-left">
+            <div class="flex items-center">
+              <div class="p-3 bg-blue-100 rounded-full mr-4">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-medium text-gray-900">Create Note</p>
+                <p class="text-sm text-gray-500">Credit/Debit note</p>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,585 @@
+<!-- Worker Details Page -->
+<div class="min-h-screen bg-gray-50">
+  <div class="w-full px-4 sm:px-6 lg:px-8 py-8" *ngIf="worker">
+    
+    <!-- Page Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <button 
+            (click)="navigateBack()"
+            class="text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </button>
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900">{{ worker.fullName }}</h1>
+            <p class="text-lg text-gray-600 mt-1">Worker Code: {{ worker.workerCode }}</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+          <!-- Status Badge -->
+          <span 
+            [ngClass]="{
+              'bg-green-100 text-green-800': worker.currentStatus === 'available',
+              'bg-blue-100 text-blue-800': worker.currentStatus === 'interview',
+              'bg-yellow-100 text-yellow-800': worker.currentStatus === 'trial',
+              'bg-purple-100 text-purple-800': worker.currentStatus === 'placed',
+              'bg-red-100 text-red-800': worker.currentStatus === 'returned',
+              'bg-gray-100 text-gray-800': worker.currentStatus === 'absconded'
+            }"
+            class="inline-flex px-4 py-2 text-sm font-semibold rounded-md capitalize"
+          >
+            {{ getStatusLabel(worker.currentStatus) }}
+          </span>
+          
+          <!-- Edit Button -->
+          <button 
+            (click)="navigateToEdit()"
+            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+            Edit
+          </button>
+          
+          <!-- Delete Button -->
+          <button 
+            (click)="openDeleteModal()"
+            class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="bg-white rounded-t-lg shadow-sm border border-gray-200 border-b-0">
+      <nav class="flex space-x-8 px-6" aria-label="Tabs">
+        <button
+          (click)="switchTab('overview')"
+          [class]="activeTab === 'overview' ? 
+            'border-purple-500 text-purple-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' : 
+            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'"
+        >
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+          Overview
+        </button>
+        
+        <button
+          (click)="switchTab('personal')"
+          [class]="activeTab === 'personal' ? 
+            'border-purple-500 text-purple-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' : 
+            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'"
+        >
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+          Personal Info
+        </button>
+        
+        <button
+          (click)="switchTab('passport')"
+          [class]="activeTab === 'passport' ? 
+            'border-purple-500 text-purple-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' : 
+            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'"
+        >
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          Passport & Visa
+        </button>
+        
+        <button
+          (click)="switchTab('work')"
+          [class]="activeTab === 'work' ? 
+            'border-purple-500 text-purple-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' : 
+            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'"
+        >
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+          </svg>
+          Work Details
+        </button>
+        
+        <button
+          (click)="switchTab('financial')"
+          [class]="activeTab === 'financial' ? 
+            'border-purple-500 text-purple-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' : 
+            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'"
+        >
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          Financial
+        </button>
+
+        <button
+          (click)="switchTab('placement')"
+          [class]="activeTab === 'placement' ? 
+            'border-purple-500 text-purple-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' : 
+            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'"
+        >
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+          Agent & Sponsor
+        </button>
+      </nav>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="bg-white rounded-b-lg shadow-sm border border-gray-200 p-6">
+      
+      <!-- Overview Tab -->
+      <div *ngIf="activeTab === 'overview'">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <!-- Package Amount Card -->
+          <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200 p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-green-700">Package Amount</p>
+                <p class="text-2xl font-semibold text-green-900">{{ formatCurrency(worker.packageAmount) }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Experience Card -->
+          <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200 p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-blue-700">Experience</p>
+                <p class="text-2xl font-semibold text-blue-900">{{ worker.experience }} Years</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Worker Type Card -->
+          <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200 p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-purple-700">Worker Type</p>
+                <p class="text-lg font-semibold text-purple-900">{{ getWorkerTypeLabel(worker.workerType) }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Age Card -->
+          <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg border border-orange-200 p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12" style="background-color: #FF6B00; border-radius: 0.5rem;">
+                  <svg class="w-6 h-6 text-white ml-3 mt-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-orange-700">Age</p>
+                <p class="text-2xl font-semibold text-orange-900">{{ worker.age }} Years</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Summary -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Summary</h3>
+            <div class="space-y-3">
+              <div class="flex justify-between py-2 border-b border-gray-200">
+                <span class="text-gray-600">Full Name:</span>
+                <span class="font-medium text-gray-900">{{ worker.fullName }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-200">
+                <span class="text-gray-600">Nationality:</span>
+                <span class="font-medium text-gray-900">{{ worker.nationality }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-200">
+                <span class="text-gray-600">Passport:</span>
+                <span class="font-medium text-gray-900">{{ worker.passportNumber }}</span>
+              </div>
+              <div class="flex justify-between py-2">
+                <span class="text-gray-600">Current Status:</span>
+                <span 
+                  [ngClass]="{
+                    'bg-green-100 text-green-800': worker.currentStatus === 'available',
+                    'bg-blue-100 text-blue-800': worker.currentStatus === 'interview',
+                    'bg-yellow-100 text-yellow-800': worker.currentStatus === 'trial',
+                    'bg-purple-100 text-purple-800': worker.currentStatus === 'placed',
+                    'bg-red-100 text-red-800': worker.currentStatus === 'returned',
+                    'bg-gray-100 text-gray-800': worker.currentStatus === 'absconded'
+                  }"
+                  class="px-2 py-1 text-xs font-semibold rounded-full capitalize"
+                >
+                  {{ getStatusLabel(worker.currentStatus) }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Skills & Languages</h3>
+            <div class="space-y-3">
+              <div class="py-2 border-b border-gray-200">
+                <span class="text-gray-600 block mb-2">Languages:</span>
+                <div class="flex flex-wrap gap-2">
+                  <span *ngFor="let lang of worker.languages" class="inline-flex px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full font-medium">
+                    {{ lang }}
+                  </span>
+                </div>
+              </div>
+              <div class="py-2">
+                <span class="text-gray-600 block mb-2">Skills:</span>
+                <div class="flex flex-wrap gap-2">
+                  <span *ngFor="let skill of worker.skills" class="inline-flex px-3 py-1 text-sm bg-green-100 text-green-800 rounded-full font-medium">
+                    {{ skill }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div *ngIf="worker.notes" class="mt-6 bg-yellow-50 rounded-lg p-6 border border-yellow-200">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            Notes
+          </h3>
+          <p class="text-gray-700">{{ worker.notes }}</p>
+        </div>
+      </div>
+
+      <!-- Personal Info Tab -->
+      <div *ngIf="activeTab === 'personal'">
+        <div class="max-w-3xl">
+          <h2 class="text-2xl font-semibold text-gray-900 mb-6">Personal Information</h2>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Full Name:</span>
+              <span class="text-base text-gray-900 w-2/3">{{ worker.fullName }}</span>
+            </div>
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Date of Birth:</span>
+              <span class="text-base text-gray-900 w-2/3">{{ formatDate(worker.dateOfBirth) }}</span>
+            </div>
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Age:</span>
+              <span class="text-base text-gray-900 w-2/3">{{ worker.age }} years</span>
+            </div>
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Gender:</span>
+              <span class="text-base text-gray-900 w-2/3 capitalize">{{ worker.gender }}</span>
+            </div>
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Nationality:</span>
+              <span class="text-base text-gray-900 w-2/3">{{ worker.nationality }}</span>
+            </div>
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Marital Status:</span>
+              <span class="text-base text-gray-900 w-2/3 capitalize">{{ worker.maritalStatus }}</span>
+            </div>
+            <div class="flex items-center justify-between py-4">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Religion:</span>
+              <span class="text-base text-gray-900 w-2/3">{{ worker.religion || 'N/A' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Passport & Visa Tab -->
+      <div *ngIf="activeTab === 'passport'">
+        <div class="max-w-4xl space-y-8">
+          <!-- Passport Details -->
+          <div>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-6">Passport Details</h2>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between py-4 border-b border-gray-200">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Passport Number:</span>
+                <span class="text-base text-gray-900 w-2/3 font-mono">{{ worker.passportNumber }}</span>
+              </div>
+              <div class="flex items-center justify-between py-4 border-b border-gray-200">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Issue Date:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ formatDate(worker.passportIssueDate) }}</span>
+              </div>
+              <div class="flex items-center justify-between py-4">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Expiry Date:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ formatDate(worker.passportExpiryDate) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visa Details -->
+          <div>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-6">Visa Details</h2>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between py-4 border-b border-gray-200">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Visa Type:</span>
+                <span class="text-base text-gray-900 w-2/3 capitalize">{{ worker.visaType }}</span>
+              </div>
+              <div class="flex items-center justify-between py-4 border-b border-gray-200">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Visa Number:</span>
+                <span class="text-base text-gray-900 w-2/3 font-mono">{{ worker.visaNumber || 'N/A' }}</span>
+              </div>
+              <div class="flex items-center justify-between py-4 border-b border-gray-200" *ngIf="worker.visaIssueDate">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Visa Issue Date:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ formatDate(worker.visaIssueDate) }}</span>
+              </div>
+              <div class="flex items-center justify-between py-4 border-b border-gray-200" *ngIf="worker.visaExpiryDate">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Visa Expiry Date:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ formatDate(worker.visaExpiryDate) }}</span>
+              </div>
+              <div class="flex items-center justify-between py-4" *ngIf="worker.arrivalDate">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Arrival Date:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ formatDate(worker.arrivalDate) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Work Details Tab -->
+      <div *ngIf="activeTab === 'work'">
+        <div class="max-w-3xl">
+          <h2 class="text-2xl font-semibold text-gray-900 mb-6">Work Details</h2>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Worker Type:</span>
+              <span class="text-base text-gray-900 w-2/3">{{ getWorkerTypeLabel(worker.workerType) }}</span>
+            </div>
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Experience:</span>
+              <span class="text-base text-gray-900 w-2/3">{{ worker.experience }} years</span>
+            </div>
+            <div class="flex items-start justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Languages:</span>
+              <div class="w-2/3">
+                <div class="flex flex-wrap gap-2">
+                  <span *ngFor="let lang of worker.languages" class="inline-flex px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full font-medium">
+                    {{ lang }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-start justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Skills:</span>
+              <div class="w-2/3">
+                <div class="flex flex-wrap gap-2">
+                  <span *ngFor="let skill of worker.skills" class="inline-flex px-3 py-1 text-sm bg-green-100 text-green-800 rounded-full font-medium">
+                    {{ skill }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between py-4" *ngIf="worker.medicalStatus">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Medical Status:</span>
+              <span 
+                [ngClass]="{
+                  'bg-green-100 text-green-800': worker.medicalStatus === 'passed',
+                  'bg-red-100 text-red-800': worker.medicalStatus === 'failed',
+                  'bg-yellow-100 text-yellow-800': worker.medicalStatus === 'pending'
+                }"
+                class="px-3 py-1 text-sm font-semibold rounded-full capitalize"
+              >
+                {{ worker.medicalStatus }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial Tab -->
+      <div *ngIf="activeTab === 'financial'">
+        <div class="max-w-3xl">
+          <h2 class="text-2xl font-semibold text-gray-900 mb-6">Financial Details</h2>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Package Amount:</span>
+              <span class="text-base font-semibold text-gray-900 w-2/3">{{ formatCurrency(worker.packageAmount) }}</span>
+            </div>
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Advance Received:</span>
+              <span class="text-base text-green-600 font-medium w-2/3">{{ formatCurrency(worker.advanceReceived) }}</span>
+            </div>
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Remaining Amount:</span>
+              <span class="text-base text-orange-600 font-medium w-2/3">{{ formatCurrency(worker.remainingAmount) }}</span>
+            </div>
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Agent Commission:</span>
+              <span class="text-base text-gray-900 w-2/3">{{ formatCurrency(worker.agentCommission) }}</span>
+            </div>
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Payment Status:</span>
+              <span 
+                [ngClass]="{
+                  'bg-green-100 text-green-800': worker.paymentStatus === 'paid',
+                  'bg-yellow-100 text-yellow-800': worker.paymentStatus === 'partial',
+                  'bg-red-100 text-red-800': worker.paymentStatus === 'pending'
+                }"
+                class="px-3 py-1 text-sm font-semibold rounded-full capitalize"
+              >
+                {{ worker.paymentStatus }}
+              </span>
+            </div>
+            <div class="flex items-center justify-between py-4" *ngIf="worker.invoiceNumber">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Invoice Number:</span>
+              <span class="text-base text-gray-900 w-2/3 font-mono">{{ worker.invoiceNumber }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agent & Sponsor Tab -->
+      <div *ngIf="activeTab === 'placement'">
+        <div class="max-w-4xl space-y-8">
+          <!-- Agent Information -->
+          <div>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-6">Agent Information</h2>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between py-4 border-b border-gray-200">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Agent Name:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ worker.agentName }}</span>
+              </div>
+              <div class="flex items-center justify-between py-4 border-b border-gray-200">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Agent Code:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ worker.agentCode }}</span>
+              </div>
+              <div class="flex items-center justify-between py-4">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Commission:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ formatCurrency(worker.agentCommission) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sponsor Information -->
+          <div *ngIf="worker.sponsorId">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-6">Sponsor Information</h2>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between py-4 border-b border-gray-200">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Sponsor Name:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ worker.sponsorName }}</span>
+              </div>
+              <div class="flex items-center justify-between py-4 border-b border-gray-200">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Phone:</span>
+                <a [href]="'tel:' + worker.sponsorPhone" class="text-base text-blue-600 hover:text-blue-800 w-2/3">{{ worker.sponsorPhone }}</a>
+              </div>
+              <div class="flex items-center justify-between py-4 border-b border-gray-200">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Emirates:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ worker.sponsorEmirates }}</span>
+              </div>
+              <div class="flex items-center justify-between py-4 border-b border-gray-200" *ngIf="worker.placementDate">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Placement Date:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ formatDate(worker.placementDate) }}</span>
+              </div>
+              <div class="flex items-center justify-between py-4 border-b border-gray-200" *ngIf="worker.contractStartDate">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Contract Start:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ formatDate(worker.contractStartDate) }}</span>
+              </div>
+              <div class="flex items-center justify-between py-4" *ngIf="worker.contractEndDate">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Contract End:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ formatDate(worker.contractEndDate) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- No Sponsor Message -->
+          <div *ngIf="!worker.sponsorId" class="text-center py-12 bg-gray-50 rounded-lg">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No Sponsor Yet</h3>
+            <p class="mt-1 text-sm text-gray-500">This worker has not been placed with a sponsor yet.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div *ngIf="showDeleteModal" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <!-- Background overlay -->
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" (click)="closeDeleteModal()"></div>
+
+    <!-- Modal panel -->
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+    
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="sm:flex sm:items-start">
+          <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+            <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+          </div>
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+              Delete Worker
+            </h3>
+            <div class="mt-2">
+              <p class="text-sm text-gray-500">
+                Are you sure you want to delete <span class="font-semibold">{{ worker?.fullName }}</span>? This action cannot be undone.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-3">
+        <button 
+          type="button" 
+          (click)="confirmDelete()"
+          class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+        >
+          Delete
+        </button>
+        <button 
+          type="button" 
+          (click)="closeDeleteModal()"
+          class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

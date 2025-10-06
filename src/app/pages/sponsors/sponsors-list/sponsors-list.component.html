@@ -1,0 +1,2101 @@
+<!-- Sponsors Management Page -->
+<div class="min-h-screen bg-gray-50">
+  <div class="w-full px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Success Alert -->
+    <div *ngIf="showSuccessAlert" class="mb-6 bg-green-50 border border-green-200 rounded-md p-4 animate-fade-in">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm font-medium text-green-800">{{ alertMessage }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Sponsors Management</h1>
+      <p class="text-lg text-gray-600">Manage Emirati sponsors and worker assignments</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-6 mb-8">
+      <!-- Total Sponsors -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background-color: #FF6B00;">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Total</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.totalSponsors }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Sponsors -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Active</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.activeSponsors }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Assignments -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Assignments</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.totalAssignments }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Contracts -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Active</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.activeAssignments }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- On Trial -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">On Trial</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.onTrial }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Returned -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Returned</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.returned }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Refunded -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-500">Refunded</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.refunded }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters and Actions -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+      <div class="p-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <!-- Search -->
+          <div class="flex-1 max-w-md">
+            <div class="relative">
+              <input
+                type="text"
+                [(ngModel)]="searchTerm"
+                (ngModelChange)="onSearchChange()"
+                placeholder="Search by name, code, Emirates ID, phone..."
+                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              />
+              <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div class="flex gap-3">
+            <!-- Emirates Filter -->
+            <select
+              [(ngModel)]="emiratesFilter"
+              (ngModelChange)="onFilterChange()"
+              class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            >
+              <option value="all">All Emirates</option>
+              <option *ngFor="let emirate of emiratesList" [value]="emirate">{{ emirate }}</option>
+            </select>
+
+            <!-- Status Filter -->
+            <select
+              [(ngModel)]="statusFilter"
+              (ngModelChange)="onFilterChange()"
+              class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            >
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+
+            <!-- Add Sponsor Button -->
+            <button
+              (click)="openAddModal()"
+              class="inline-flex items-center px-4 py-2 text-white font-medium rounded-md transition-colors"
+              style="background-color: #FF6B00;"
+            >
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Add Sponsor
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sponsors Table -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sponsor</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Workers</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let sponsor of filteredSponsors" class="hover:bg-gray-50 transition-colors">
+              <!-- Sponsor Info -->
+              <td class="px-6 py-4 whitespace-nowrap cursor-pointer" (click)="viewSponsorDetails(sponsor)">
+                <div>
+                  <div class="text-sm font-medium text-blue-600 hover:text-blue-800">{{ sponsor.fullName }}</div>
+                  <div class="text-sm text-gray-500">{{ sponsor.sponsorCode }}</div>
+                  <div class="text-xs text-gray-400">{{ sponsor.emiratesId }}</div>
+                </div>
+              </td>
+
+              <!-- Contact -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div>
+                  <div class="text-sm text-gray-900">{{ sponsor.phone }}</div>
+                  <div class="text-sm text-gray-500" *ngIf="sponsor.email">{{ sponsor.email }}</div>
+                </div>
+              </td>
+
+              <!-- Location -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div>
+                  <div class="text-sm font-medium text-gray-900">{{ sponsor.emirates }}</div>
+                  <div class="text-sm text-gray-500">{{ sponsor.area }}</div>
+                </div>
+              </td>
+
+              <!-- Workers -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center gap-4">
+                  <div class="text-center">
+                    <div class="text-lg font-bold text-gray-900">{{ sponsor.currentWorkers }}</div>
+                    <div class="text-xs text-gray-500">Current</div>
+                  </div>
+                  <div class="text-center">
+                    <div class="text-lg font-bold text-gray-600">{{ sponsor.totalHired }}</div>
+                    <div class="text-xs text-gray-500">Total</div>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Status -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+                  [ngClass]="sponsor.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
+                  {{ sponsor.status | titlecase }}
+                </span>
+              </td>
+
+              <!-- Actions -->
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <div class="flex justify-end gap-2">
+                  <!-- <button
+                    (click)="viewSponsorDetails(sponsor)"
+                    class="text-blue-600 hover:text-blue-900 p-2 rounded hover:bg-blue-50"
+                    title="View Details"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                  </button> -->
+                  
+                  <button
+                    (click)="openInterviewModal(sponsor)"
+                    class="text-purple-600 hover:text-purple-900 p-2 rounded hover:bg-purple-50"
+                    title="Schedule Interview"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                  </button>
+                  
+                  <button
+                    (click)="openAssignModal(sponsor)"
+                    class="text-green-600 hover:text-green-900 p-2 rounded hover:bg-green-50"
+                    title="Assign Worker"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                    </svg>
+                  </button>
+
+                  <button
+                    (click)="openEditModal(sponsor)"
+                    class="text-gray-600 hover:text-gray-900 p-2 rounded hover:bg-gray-100"
+                    title="Edit"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                  </button>
+
+                  <button
+                    (click)="openDeleteModal(sponsor)"
+                    class="text-red-600 hover:text-red-900 p-2 rounded hover:bg-red-50"
+                    title="Delete"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Empty State -->
+            <tr *ngIf="filteredSponsors.length === 0">
+              <td colspan="6" class="px-6 py-12 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">No sponsors found</h3>
+                <p class="mt-1 text-sm text-gray-500">Get started by adding a new sponsor.</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Sponsor Modal -->
+  <div *ngIf="showFormModal" class="fixed z-50 inset-0 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" (click)="closeFormModal()"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+      
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-3xl">
+        <div class="px-6 pt-6 pb-4 border-b border-gray-200" style="background-color: #FF6B00;">
+          <div class="flex items-center justify-between">
+            <h3 class="text-2xl font-bold text-white">
+              {{ isEditMode ? 'Edit Sponsor' : 'Add New Sponsor' }}
+            </h3>
+            <button (click)="closeFormModal()" class="text-white hover:text-gray-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <form (ngSubmit)="onSubmit()">
+          <div class="px-6 py-6">
+            <div class="grid grid-cols-2 gap-6">
+              <!-- Sponsor Code -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Sponsor Code</label>
+                <input type="text" [(ngModel)]="formData.sponsorCode" name="sponsorCode" [readonly]="true"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50" />
+              </div>
+
+              <!-- Full Name -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                <input type="text" [(ngModel)]="formData.fullName" name="fullName" required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" />
+              </div>
+
+              <!-- Emirates ID -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Emirates ID *</label>
+                <input type="text" [(ngModel)]="formData.emiratesId" name="emiratesId" required
+                  placeholder="784-YYYY-XXXXXXX-X"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" />
+              </div>
+
+              <!-- Nationality -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nationality</label>
+                <input type="text" [(ngModel)]="formData.nationality" name="nationality"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg" value="UAE" readonly />
+              </div>
+
+              <!-- Phone -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Phone *</label>
+                <input type="tel" [(ngModel)]="formData.phone" name="phone" required
+                  placeholder="+971 50 123 4567"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" />
+              </div>
+
+              <!-- Alternate Phone -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Alternate Phone</label>
+                <input type="tel" [(ngModel)]="formData.alternatePhone" name="alternatePhone"
+                  placeholder="+971 4 234 5678"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" />
+              </div>
+
+              <!-- Email -->
+              <div class="col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <input type="email" [(ngModel)]="formData.email" name="email"
+                  placeholder="sponsor@email.ae"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" />
+              </div>
+
+              <!-- Emirates -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Emirates *</label>
+                <select [(ngModel)]="formData.emirates" name="emirates" required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                  <option *ngFor="let emirate of emiratesList" [value]="emirate">{{ emirate }}</option>
+                </select>
+              </div>
+
+              <!-- Area -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Area *</label>
+                <input type="text" [(ngModel)]="formData.area" name="area" required
+                  placeholder="Jumeirah, Al Majaz, etc."
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" />
+              </div>
+
+              <!-- Address -->
+              <div class="col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Address *</label>
+                <textarea [(ngModel)]="formData.address" name="address" required rows="2"
+                  placeholder="Villa/Apartment number, Building name, Street"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"></textarea>
+              </div>
+
+              <!-- Status -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                <select [(ngModel)]="formData.status" name="status"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3">
+            <button type="button" (click)="closeFormModal()"
+              class="px-6 py-2 border border-gray-300 text-gray-700 font-medium rounded-md hover:bg-gray-100">
+              Cancel
+            </button>
+            <button type="submit"
+              class="px-6 py-2 text-white font-medium rounded-md transition-colors"
+              style="background-color: #FF6B00;">
+              {{ isEditMode ? 'Update Sponsor' : 'Add Sponsor' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assign Worker Modal -->
+  <div *ngIf="showAssignModal && selectedSponsor" class="fixed z-50 inset-0 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75" (click)="closeAssignModal()"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+      
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-2xl">
+        <div class="px-6 pt-6 pb-4 border-b border-gray-200 bg-green-600">
+          <div class="flex items-center justify-between">
+            <h3 class="text-2xl font-bold text-white">Assign Worker to {{ selectedSponsor.fullName }}</h3>
+            <button (click)="closeAssignModal()" class="text-white hover:text-gray-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <form (ngSubmit)="assignWorker()">
+          <div class="px-6 py-6">
+            <div *ngIf="availableWorkers.length === 0" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+              <p class="text-sm text-yellow-800">No available workers. All workers are either assigned or not available.</p>
+            </div>
+
+            <div *ngIf="availableWorkers.length > 0" class="space-y-6">
+              <!-- Worker Selection -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Select Worker *</label>
+                <select [(ngModel)]="assignmentData.workerId" name="workerId" required (ngModelChange)="onWorkerSelect()"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                  <option *ngFor="let worker of availableWorkers" [value]="worker.id">
+                    {{ worker.fullName }} - {{ worker.passportNumber }} ({{ worker.nationality }} - {{ worker.workerType }})
+                  </option>
+                </select>
+              </div>
+
+              <!-- Contract Start Date -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Contract Start Date *</label>
+                <input type="date" [(ngModel)]="assignmentData.contractStartDate" name="contractStartDate" required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" />
+              </div>
+
+              <!-- Trial Period -->
+              <div class="flex items-center">
+                <input type="checkbox" [(ngModel)]="assignmentData.isOnTrial" name="isOnTrial" id="isOnTrial"
+                  class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded" />
+                <label for="isOnTrial" class="ml-2 block text-sm text-gray-700">
+                  Start with 7-day trial period
+                </label>
+              </div>
+
+              <!-- Advance Payment -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Advance Payment (AED) *</label>
+                <input type="number" [(ngModel)]="assignmentData.advanceAmount" name="advanceAmount" required
+                  min="0" step="100"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" />
+                <p class="mt-1 text-xs text-gray-500">Recommended: 30% of total amount</p>
+              </div>
+
+              <!-- Payment Summary -->
+              <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 class="text-sm font-semibold text-blue-900 mb-2">Payment Summary</h4>
+                <div class="space-y-1 text-sm">
+                  <div class="flex justify-between">
+                    <span class="text-blue-700">Total Amount:</span>
+                    <span class="font-semibold text-blue-900">AED {{ getSelectedWorkerTotalAmount().toLocaleString() }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-blue-700">Advance Payment:</span>
+                    <span class="font-semibold text-blue-900">AED {{ (assignmentData.advanceAmount || 0).toLocaleString() }}</span>
+                  </div>
+                  <div class="flex justify-between pt-2 border-t border-blue-300">
+                    <span class="text-blue-700 font-medium">Remaining:</span>
+                    <span class="font-bold text-blue-900">AED {{ getSelectedWorkerRemainingAmount().toLocaleString() }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Contract Terms Info -->
+              <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <h4 class="text-sm font-semibold text-gray-900 mb-2">Contract Terms</h4>
+                <ul class="space-y-1 text-xs text-gray-600">
+                  <li>✓ 2-year contract period</li>
+                  <li>✓ 6-month performance guarantee</li>
+                  <li>✓ Replacement or refund available within guarantee period</li>
+                  <li>✓ Full refund for illness, pregnancy, or absconding cases</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3">
+            <button type="button" (click)="closeAssignModal()"
+              class="px-6 py-2 border border-gray-300 text-gray-700 font-medium rounded-md hover:bg-gray-100">
+              Cancel
+            </button>
+            <button type="submit" [disabled]="availableWorkers.length === 0"
+              class="px-6 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed">
+              Assign Worker
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Schedule Interview Modal -->
+  <div *ngIf="showInterviewModal && selectedSponsor" class="fixed z-50 inset-0 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75" (click)="closeInterviewModal()"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+      
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-2xl">
+        <div class="px-6 pt-6 pb-4 border-b border-gray-200 bg-gradient-to-r from-purple-600 to-indigo-600">
+          <div class="flex items-center justify-between">
+            <h3 class="text-2xl font-bold text-white">📅 Schedule Interview - {{ selectedSponsor.fullName }}</h3>
+            <button (click)="closeInterviewModal()" class="text-white hover:text-gray-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <form (ngSubmit)="scheduleInterview()" class="p-6 space-y-6">
+          <!-- Worker Selection -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Select Worker <span class="text-red-500">*</span>
+            </label>
+            <select
+              [(ngModel)]="interviewFormData.workerId"
+              name="workerId"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              required
+            >
+              <option value="">-- Select Worker --</option>
+              <option *ngFor="let worker of availableWorkers" [value]="worker.id">
+                {{ worker.fullName }} ({{ worker.nationality }} - {{ worker.workerType }})
+              </option>
+            </select>
+            <p class="text-xs text-gray-500 mt-1">
+              {{ availableWorkers.length }} available workers
+            </p>
+          </div>
+
+          <!-- Interview Date & Time -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Interview Date <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="date"
+                [(ngModel)]="interviewFormData.interviewDate"
+                name="interviewDate"
+                [min]="getCurrentDate()"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                required
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Interview Time <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="time"
+                [(ngModel)]="interviewFormData.interviewTime"
+                name="interviewTime"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Interview Location -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Interview Location
+            </label>
+            <input
+              type="text"
+              [(ngModel)]="interviewFormData.interviewLocation"
+              name="interviewLocation"
+              placeholder="e.g., Villa 45, Jumeirah 1, Dubai"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            />
+            <p class="text-xs text-gray-500 mt-1">
+              Default: Sponsor's address
+            </p>
+          </div>
+
+          <!-- Interview Notes -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Interview Notes (Optional)
+            </label>
+            <textarea
+              [(ngModel)]="interviewFormData.interviewNotes"
+              name="interviewNotes"
+              rows="3"
+              placeholder="e.g., Prepare documents, specific requirements, etc."
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            ></textarea>
+          </div>
+
+          <!-- Info Box -->
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="flex items-start">
+              <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <div class="text-sm text-blue-800">
+                <p class="font-medium mb-1">Interview Process:</p>
+                <ul class="list-disc list-inside space-y-1">
+                  <li>Schedule meeting with selected worker</li>
+                  <li>After interview, mark result as Selected or Rejected</li>
+                  <li>If selected, proceed to assign worker</li>
+                  <li>View all interviews in Sponsor Details page</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="bg-gray-50 -mx-6 -mb-6 px-6 py-4 flex justify-end gap-3">
+            <button 
+              type="button" 
+              (click)="closeInterviewModal()"
+              class="px-6 py-2 border border-gray-300 text-gray-700 font-medium rounded-md hover:bg-gray-100">
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              [disabled]="availableWorkers.length === 0 || !interviewFormData.workerId || !interviewFormData.interviewDate"
+              class="px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium rounded-md hover:from-purple-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed">
+              📅 Schedule Interview
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div *ngIf="showDeleteModal && sponsorToDelete" class="fixed z-50 inset-0 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75" (click)="closeDeleteModal()"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+      
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle max-w-lg w-full">
+        <div class="bg-white px-6 pt-6 pb-4">
+          <div class="flex items-start">
+            <div class="flex-shrink-0">
+              <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-4 flex-1">
+              <h3 class="text-lg font-medium text-gray-900">Delete Sponsor</h3>
+              <p class="mt-2 text-sm text-gray-500">
+                Are you sure you want to delete <strong>{{ sponsorToDelete.fullName }}</strong> ({{ sponsorToDelete.sponsorCode }})?
+              </p>
+              <p class="mt-2 text-sm text-red-600">
+                This action cannot be undone. All related data will be permanently deleted.
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3">
+          <button (click)="closeDeleteModal()"
+            class="px-6 py-2 border border-gray-300 text-gray-700 font-medium rounded-md hover:bg-gray-100">
+            Cancel
+          </button>
+          <button (click)="confirmDelete()"
+            class="px-6 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700">
+            Delete Sponsor
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Collection Modal -->
+  <div *ngIf="showPaymentModal && selectedAssignment" class="fixed z-[60] inset-0 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75" (click)="closePaymentModal()"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+      
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-3xl">
+        <!-- Modal Header -->
+        <div class="px-6 pt-6 pb-4 border-b border-gray-200 bg-gradient-to-r from-green-600 to-emerald-600">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-2xl font-bold text-white">💰 Final Payment Collection</h3>
+              <p class="text-sm text-green-100 mt-1">Complete payment and generate invoice</p>
+            </div>
+            <button (click)="closePaymentModal()" class="text-white hover:text-gray-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="px-6 py-6">
+          <!-- Worker & Assignment Info -->
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span class="text-blue-700 font-medium">Worker:</span>
+                <span class="text-blue-900 font-bold ml-2">{{ selectedAssignment.workerName }}</span>
+              </div>
+              <div>
+                <span class="text-blue-700 font-medium">Nationality:</span>
+                <span class="text-blue-900 font-bold ml-2">{{ selectedAssignment.workerNationality }}</span>
+              </div>
+              <div>
+                <span class="text-blue-700 font-medium">Sponsor:</span>
+                <span class="text-blue-900 font-bold ml-2">{{ selectedAssignment.sponsorName }}</span>
+              </div>
+              <div>
+                <span class="text-blue-700 font-medium">Contract Start:</span>
+                <span class="text-blue-900 font-bold ml-2">{{ formatDate(selectedAssignment.contractStartDate) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Current Payment Summary -->
+          <div class="bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-300 rounded-lg p-5 mb-6">
+            <h4 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+              <svg class="w-5 h-5 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+              </svg>
+              Current Payment Status
+            </h4>
+            
+            <div class="grid grid-cols-3 gap-4">
+              <!-- Total Amount -->
+              <div class="bg-white rounded-lg p-3 border-2 border-blue-300 shadow-sm">
+                <div class="text-xs text-blue-600 font-semibold mb-1">TOTAL AMOUNT</div>
+                <div class="text-2xl font-bold text-blue-900">{{ selectedAssignment.totalAmount.toLocaleString() }}</div>
+                <div class="text-xs text-blue-700 mt-1">AED</div>
+              </div>
+
+              <!-- Already Paid -->
+              <div class="bg-white rounded-lg p-3 border-2 border-green-300 shadow-sm">
+                <div class="text-xs text-green-600 font-semibold mb-1">ADVANCE PAID</div>
+                <div class="text-2xl font-bold text-green-900">{{ selectedAssignment.advanceAmount.toLocaleString() }}</div>
+                <div class="text-xs text-green-700 mt-1">✓ Received</div>
+              </div>
+
+              <!-- Remaining -->
+              <div class="bg-white rounded-lg p-3 border-2 border-orange-300 shadow-sm">
+                <div class="text-xs text-orange-600 font-semibold mb-1">REMAINING DUE</div>
+                <div class="text-2xl font-bold text-orange-900">{{ selectedAssignment.remainingAmount.toLocaleString() }}</div>
+                <div class="text-xs text-orange-700 mt-1">⚠ To be paid</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Input Form -->
+          <form (ngSubmit)="processPayment()">
+            <div class="space-y-5">
+              <!-- Final Payment Amount -->
+              <div class="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-5">
+                <label class="block text-sm font-bold text-gray-900 mb-3">
+                  💵 Final Payment Amount (AED) *
+                </label>
+                <input 
+                  type="number" 
+                  [(ngModel)]="paymentFormData.finalPaymentAmount" 
+                  name="finalPaymentAmount" 
+                  [min]="selectedAssignment.remainingAmount"
+                  step="0.01"
+                  required
+                  class="w-full px-4 py-3 text-2xl font-bold border-2 border-yellow-400 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white"
+                  placeholder="Enter amount" />
+                <p class="mt-2 text-xs text-gray-600">
+                  <span class="font-semibold text-orange-700">Minimum required:</span> AED {{ selectedAssignment.remainingAmount.toLocaleString() }}
+                </p>
+              </div>
+
+              <!-- Payment Date -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Payment Date *</label>
+                <input 
+                  type="date" 
+                  [(ngModel)]="paymentFormData.paymentDate" 
+                  name="paymentDate" 
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" />
+              </div>
+
+              <!-- Notes -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Payment Notes (Optional)</label>
+                <textarea 
+                  [(ngModel)]="paymentFormData.notes" 
+                  name="notes" 
+                  rows="2"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                  placeholder="Add any notes about this payment..."></textarea>
+              </div>
+
+              <!-- Live Payment Summary -->
+              <div class="bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-300 rounded-lg p-5">
+                <h4 class="text-base font-bold text-indigo-900 mb-4 flex items-center">
+                  <svg class="w-5 h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                  </svg>
+                  After Payment Summary
+                </h4>
+
+                <div class="space-y-3">
+                  <!-- Total Paid After -->
+                  <div class="flex justify-between items-center bg-white rounded-lg p-3 shadow-sm">
+                    <span class="text-sm font-medium text-gray-700">Total Paid:</span>
+                    <div class="text-right">
+                      <div class="text-lg font-bold text-green-700">AED {{ getTotalAfterPayment().toLocaleString() }}</div>
+                      <div class="text-xs text-gray-500">Advance + Final Payment</div>
+                    </div>
+                  </div>
+
+                  <!-- Remaining After -->
+                  <div class="flex justify-between items-center bg-white rounded-lg p-3 shadow-sm">
+                    <span class="text-sm font-medium text-gray-700">Remaining:</span>
+                    <div class="text-right">
+                      <div class="text-lg font-bold" [ngClass]="{
+                        'text-green-700': getRemainingAfterPayment() <= 0,
+                        'text-orange-700': getRemainingAfterPayment() > 0
+                      }">
+                        AED {{ getRemainingAfterPayment().toLocaleString() }}
+                      </div>
+                      <div class="text-xs" [ngClass]="{
+                        'text-green-600': getRemainingAfterPayment() <= 0,
+                        'text-orange-600': getRemainingAfterPayment() > 0
+                      }">
+                        {{ getRemainingAfterPayment() <= 0 ? '✓ Fully Paid' : '⚠ Underpaid' }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Payment Progress Bar -->
+                  <div class="bg-white rounded-lg p-4 shadow-sm">
+                    <div class="flex justify-between text-sm text-gray-600 mb-2">
+                      <span class="font-medium">Payment Progress</span>
+                      <span class="font-bold text-indigo-900">{{ getPaymentProgress().toFixed(1) }}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden shadow-inner">
+                      <div 
+                        class="h-full rounded-full transition-all duration-500 ease-out flex items-center justify-end pr-2" 
+                        [ngClass]="{
+                          'bg-gradient-to-r from-red-400 to-orange-500': getPaymentProgress() < 50,
+                          'bg-gradient-to-r from-yellow-400 to-orange-500': getPaymentProgress() >= 50 && getPaymentProgress() < 100,
+                          'bg-gradient-to-r from-green-400 to-emerald-500': getPaymentProgress() >= 100
+                        }"
+                        [style.width.%]="getPaymentProgress()">
+                        <svg *ngIf="getPaymentProgress() >= 100" class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Invoice Info -->
+                  <div *ngIf="getRemainingAfterPayment() <= 0" class="bg-purple-100 border border-purple-300 rounded-lg p-3">
+                    <div class="flex items-start">
+                      <svg class="w-5 h-5 text-purple-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      <div class="flex-1">
+                        <p class="text-sm font-bold text-purple-900">Ready to Generate Invoice!</p>
+                        <p class="text-xs text-purple-700 mt-1">
+                          ✓ Invoice will be auto-generated<br>
+                          ✓ Contract will be activated for 2 years<br>
+                          ✓ Worker status will change to "Placed"
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="mt-6 pt-6 border-t border-gray-200 flex justify-end gap-3">
+              <button 
+                type="button" 
+                (click)="closePaymentModal()"
+                class="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition-colors">
+                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+                Cancel
+              </button>
+              <button 
+                type="submit"
+                [disabled]="paymentFormData.finalPaymentAmount < selectedAssignment.remainingAmount"
+                class="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold rounded-lg hover:from-green-700 hover:to-emerald-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl">
+                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Confirm Payment & Generate Invoice
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sponsor Details Modal -->
+  <div *ngIf="showDetailsModal && selectedSponsor" class="fixed z-50 inset-0 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75" (click)="closeDetailsModal()"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+      
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-6xl">
+        <!-- Modal Header -->
+        <div class="px-6 pt-6 pb-4 border-b border-gray-200" style="background-color: #FF6B00;">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-2xl font-bold text-white">{{ selectedSponsor.fullName }}</h3>
+              <p class="text-sm text-white opacity-90">{{ selectedSponsor.sponsorCode }} • {{ selectedSponsor.emirates }}</p>
+            </div>
+            <button (click)="closeDetailsModal()" class="text-white hover:text-gray-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="px-6 py-6 max-h-[70vh] overflow-y-auto">
+          <!-- Sponsor Information -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Personal Details Card -->
+            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <h4 class="text-lg font-semibold text-gray-900 mb-4">Personal Information</h4>
+              <div class="space-y-3">
+                <div class="flex justify-between">
+                  <span class="text-sm text-gray-600">Full Name:</span>
+                  <span class="text-sm font-medium text-gray-900">{{ selectedSponsor.fullName }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-sm text-gray-600">Emirates ID:</span>
+                  <span class="text-sm font-medium text-gray-900">{{ selectedSponsor.emiratesId }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-sm text-gray-600">Nationality:</span>
+                  <span class="text-sm font-medium text-gray-900">{{ selectedSponsor.nationality }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-sm text-gray-600">Status:</span>
+                  <span class="px-2 py-1 text-xs font-semibold rounded-full"
+                    [ngClass]="selectedSponsor.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
+                    {{ selectedSponsor.status | titlecase }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contact Details Card -->
+            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <h4 class="text-lg font-semibold text-gray-900 mb-4">Contact Information</h4>
+              <div class="space-y-3">
+                <div class="flex justify-between">
+                  <span class="text-sm text-gray-600">Phone:</span>
+                  <span class="text-sm font-medium text-gray-900">{{ selectedSponsor.phone }}</span>
+                </div>
+                <div class="flex justify-between" *ngIf="selectedSponsor.alternatePhone">
+                  <span class="text-sm text-gray-600">Alt. Phone:</span>
+                  <span class="text-sm font-medium text-gray-900">{{ selectedSponsor.alternatePhone }}</span>
+                </div>
+                <div class="flex justify-between" *ngIf="selectedSponsor.email">
+                  <span class="text-sm text-gray-600">Email:</span>
+                  <span class="text-sm font-medium text-gray-900">{{ selectedSponsor.email }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-sm text-gray-600">Emirates:</span>
+                  <span class="text-sm font-medium text-gray-900">{{ selectedSponsor.emirates }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Address Card -->
+            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 md:col-span-2">
+              <h4 class="text-lg font-semibold text-gray-900 mb-4">Address</h4>
+              <div class="space-y-2">
+                <p class="text-sm text-gray-600">Area: <span class="text-gray-900 font-medium">{{ selectedSponsor.area }}</span></p>
+                <p class="text-sm text-gray-600">Full Address: <span class="text-gray-900 font-medium">{{ selectedSponsor.address }}</span></p>
+              </div>
+            </div>
+
+            <!-- Statistics Card -->
+            <div class="bg-blue-50 rounded-lg p-4 border border-blue-200 md:col-span-2">
+              <h4 class="text-lg font-semibold text-blue-900 mb-4">Hiring Statistics</h4>
+              <div class="grid grid-cols-3 gap-4">
+                <div class="text-center">
+                  <div class="text-3xl font-bold text-blue-900">{{ selectedSponsor.totalHired }}</div>
+                  <div class="text-sm text-blue-700">Total Hired</div>
+                </div>
+                <div class="text-center">
+                  <div class="text-3xl font-bold text-green-600">{{ selectedSponsor.currentWorkers }}</div>
+                  <div class="text-sm text-blue-700">Current Workers</div>
+                </div>
+                <div class="text-center">
+                  <div class="text-3xl font-bold text-orange-600">{{ getSponsorAssignments(selectedSponsor.id).length }}</div>
+                  <div class="text-sm text-blue-700">Total Assignments</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabs Navigation -->
+          <div class="mb-6">
+            <div class="border-b border-gray-200">
+              <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                <button
+                  (click)="switchTab('interviews')"
+                  class="py-4 px-1 border-b-2 font-medium text-sm transition-colors"
+                  [ngClass]="activeTab === 'interviews' 
+                    ? 'border-purple-500 text-purple-600' 
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
+                  📅 Scheduled Interviews
+                  <span *ngIf="getPendingInterviews(selectedSponsor.id).length > 0" 
+                    class="ml-2 py-0.5 px-2 rounded-full text-xs font-semibold"
+                    [ngClass]="activeTab === 'interviews' ? 'bg-purple-100 text-purple-600' : 'bg-gray-100 text-gray-600'">
+                    {{ getPendingInterviews(selectedSponsor.id).length }}
+                  </span>
+                </button>
+                
+                <button
+                  (click)="switchTab('assignments')"
+                  class="py-4 px-1 border-b-2 font-medium text-sm transition-colors"
+                  [ngClass]="activeTab === 'assignments' 
+                    ? 'border-green-500 text-green-600' 
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
+                  👥 Worker Assignments
+                  <span *ngIf="getSponsorAssignments(selectedSponsor.id).length > 0" 
+                    class="ml-2 py-0.5 px-2 rounded-full text-xs font-semibold"
+                    [ngClass]="activeTab === 'assignments' ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600'">
+                    {{ getSponsorAssignments(selectedSponsor.id).length }}
+                  </span>
+                </button>
+              </nav>
+            </div>
+          </div>
+
+          <!-- Tab Content: Scheduled Interviews -->
+          <div *ngIf="activeTab === 'interviews'" class="mb-6">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-lg font-semibold text-gray-900">Pending Interviews</h4>
+              <button
+                (click)="openInterviewModal(selectedSponsor)"
+                class="inline-flex items-center px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-md hover:bg-purple-700">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Schedule Interview
+              </button>
+            </div>
+
+            <div *ngIf="getPendingInterviews(selectedSponsor.id).length === 0" 
+              class="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
+              <svg class="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              <p class="text-gray-600">No pending interviews</p>
+              <p class="text-sm text-gray-500 mt-1">Click "Schedule Interview" to arrange a meeting</p>
+            </div>
+
+            <div *ngIf="getPendingInterviews(selectedSponsor.id).length > 0" class="space-y-4">
+              <div *ngFor="let interview of getPendingInterviews(selectedSponsor.id)" 
+                class="bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-lg p-5 hover:shadow-lg transition-all">
+                <div class="flex items-start justify-between">
+                  <!-- Interview Info -->
+                  <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-3">
+                      <div class="w-12 h-12 rounded-full bg-purple-600 flex items-center justify-center text-white font-bold text-lg">
+                        {{ interview.workerName.charAt(0) }}
+                      </div>
+                      <div>
+                        <h5 class="text-xl font-bold text-gray-900">{{ interview.workerName }}</h5>
+                        <p class="text-sm text-purple-700 font-medium">{{ interview.workerType }}</p>
+                      </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-3">
+                      <div class="bg-white rounded-lg p-3 border border-purple-200">
+                        <p class="text-xs text-gray-600 mb-1">📅 Interview Date</p>
+                        <p class="text-sm font-bold text-gray-900">{{ formatDate(interview.interviewDate) }}</p>
+                        <p class="text-xs text-purple-700">🕐 {{ interview.interviewTime }}</p>
+                      </div>
+                      <div class="bg-white rounded-lg p-3 border border-purple-200">
+                        <p class="text-xs text-gray-600 mb-1">🛂 Passport</p>
+                        <p class="text-sm font-bold text-gray-900">{{ interview.workerPassport }}</p>
+                      </div>
+                      <div class="bg-white rounded-lg p-3 border border-purple-200">
+                        <p class="text-xs text-gray-600 mb-1">🌍 Nationality</p>
+                        <p class="text-sm font-bold text-gray-900">{{ interview.workerNationality }}</p>
+                      </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="bg-white rounded-lg p-3 border border-purple-200 mb-3" *ngIf="interview.interviewLocation">
+                      <p class="text-xs text-gray-600 mb-1">📍 Interview Location</p>
+                      <p class="text-sm font-medium text-gray-900">{{ interview.interviewLocation }}</p>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="bg-white rounded-lg p-3 border border-purple-200" *ngIf="interview.interviewNotes">
+                      <p class="text-xs text-gray-600 mb-1">📝 Notes</p>
+                      <p class="text-sm text-gray-700">{{ interview.interviewNotes }}</p>
+                    </div>
+                  </div>
+
+                  <!-- Action Buttons -->
+                  <div class="ml-6 flex flex-col gap-3">
+                    <button
+                      (click)="acceptInterview(interview)"
+                      class="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-lg hover:from-green-700 hover:to-green-800 transition-all shadow-md hover:shadow-lg flex items-center gap-2">
+                      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                      </svg>
+                      Accept
+                    </button>
+
+                    <button
+                      (click)="openRejectModal(interview)"
+                      class="px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-lg hover:from-red-700 hover:to-red-800 transition-all shadow-md hover:shadow-lg flex items-center gap-2">
+                      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                      </svg>
+                      Reject
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Content: Worker Assignments -->
+          <div *ngIf="activeTab === 'assignments'" class="mb-6">
+          <div class="mb-6">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-xl font-semibold text-gray-900">Worker Assignments</h4>
+              <button
+                (click)="openAssignModal(selectedSponsor)"
+                class="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Assign New Worker
+              </button>
+            </div>
+
+            <div *ngIf="getSponsorAssignments(selectedSponsor.id).length === 0" 
+              class="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
+              <svg class="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+              </svg>
+              <p class="text-gray-600">No worker assignments yet</p>
+              <p class="text-sm text-gray-500 mt-1">Click "Assign New Worker" to start</p>
+            </div>
+
+            <div *ngIf="getSponsorAssignments(selectedSponsor.id).length > 0" class="space-y-4">
+              <div *ngFor="let assignment of getSponsorAssignments(selectedSponsor.id)" 
+                class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div class="flex items-start justify-between">
+                  <!-- Worker Info -->
+                  <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-2">
+                      <h5 class="text-lg font-semibold text-gray-900">{{ assignment.workerName }}</h5>
+                      <span class="px-2 py-1 text-xs font-semibold rounded-full"
+                        [ngClass]="getStatusClass(assignment.assignmentStatus)">
+                        {{ assignment.assignmentStatus | titlecase }}
+                      </span>
+                      <span class="px-2 py-1 text-xs font-semibold rounded-full"
+                        [ngClass]="getContractStatusClass(assignment.contractStatus)">
+                        {{ assignment.contractStatus | titlecase }}
+                      </span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                      <div>
+                        <span class="text-gray-600">Passport:</span>
+                        <span class="text-gray-900 font-medium ml-1">{{ assignment.workerPassport }}</span>
+                      </div>
+                      <div>
+                        <span class="text-gray-600">Nationality:</span>
+                        <span class="text-gray-900 font-medium ml-1">{{ assignment.workerNationality }}</span>
+                      </div>
+                      <div>
+                        <span class="text-gray-600">Type:</span>
+                        <span class="text-gray-900 font-medium ml-1">{{ assignment.workerType }}</span>
+                      </div>
+                      <div>
+                        <span class="text-gray-600">Contract Start:</span>
+                        <span class="text-gray-900 font-medium ml-1">{{ formatDate(assignment.contractStartDate) }}</span>
+                      </div>
+                    </div>
+
+                    <!-- Payment Details -->
+                    <div class="mt-3 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-300 rounded-lg p-4 shadow-sm">
+                      <div class="flex items-center mb-3">
+                        <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <h4 class="text-sm font-bold text-blue-900">Payment Details</h4>
+                      </div>
+                      
+                      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <!-- Total Amount -->
+                        <div class="bg-white rounded-lg p-2 border border-blue-200">
+                          <div class="text-blue-600 text-xs font-medium mb-1">Total Amount</div>
+                          <div class="text-blue-900 font-bold text-lg">AED {{ assignment.totalAmount.toLocaleString() }}</div>
+                        </div>
+                        
+                        <!-- Advance Paid -->
+                        <div class="bg-white rounded-lg p-2 border border-green-200">
+                          <div class="text-green-600 text-xs font-medium mb-1">Advance Paid</div>
+                          <div class="text-green-900 font-bold text-lg">AED {{ assignment.advanceAmount.toLocaleString() }}</div>
+                          <div class="text-xs text-green-700 mt-1">✓ Received</div>
+                        </div>
+                        
+                        <!-- Total Paid -->
+                        <div class="bg-white rounded-lg p-2 border" [ngClass]="{
+                          'border-green-200': assignment.paidAmount >= assignment.totalAmount,
+                          'border-yellow-200': assignment.paidAmount < assignment.totalAmount
+                        }">
+                          <div class="text-xs font-medium mb-1" [ngClass]="{
+                            'text-green-600': assignment.paidAmount >= assignment.totalAmount,
+                            'text-yellow-600': assignment.paidAmount < assignment.totalAmount
+                          }">Total Paid</div>
+                          <div class="font-bold text-lg" [ngClass]="{
+                            'text-green-900': assignment.paidAmount >= assignment.totalAmount,
+                            'text-yellow-900': assignment.paidAmount < assignment.totalAmount
+                          }">AED {{ assignment.paidAmount.toLocaleString() }}</div>
+                          <div class="text-xs mt-1" [ngClass]="{
+                            'text-green-700': assignment.paidAmount >= assignment.totalAmount,
+                            'text-yellow-700': assignment.paidAmount < assignment.totalAmount
+                          }">
+                            {{ assignment.paidAmount >= assignment.totalAmount ? '✓ Full Paid' : '⚠ Partial' }}
+                          </div>
+                        </div>
+                        
+                        <!-- Remaining / Invoice -->
+                        <div class="bg-white rounded-lg p-2 border" [ngClass]="{
+                          'border-orange-200': assignment.remainingAmount > 0,
+                          'border-purple-200': assignment.remainingAmount === 0
+                        }">
+                          <div class="text-xs font-medium mb-1" [ngClass]="{
+                            'text-orange-600': assignment.remainingAmount > 0,
+                            'text-purple-600': assignment.remainingAmount === 0
+                          }">
+                            {{ assignment.remainingAmount > 0 ? 'Remaining' : 'Invoice' }}
+                          </div>
+                          <div class="font-bold text-lg" [ngClass]="{
+                            'text-orange-900': assignment.remainingAmount > 0,
+                            'text-purple-900': assignment.remainingAmount === 0
+                          }">
+                            {{ assignment.remainingAmount > 0 ? 
+                              'AED ' + assignment.remainingAmount.toLocaleString() : 
+                              assignment.invoiceNumber }}
+                          </div>
+                          <div class="text-xs mt-1" [ngClass]="{
+                            'text-orange-700': assignment.remainingAmount > 0,
+                            'text-purple-700': assignment.remainingAmount === 0
+                          }">
+                            {{ assignment.remainingAmount > 0 ? '⚠ Pending' : '✓ Generated' }}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- Payment Status Bar -->
+                      <div class="mt-3 bg-white rounded-lg p-2">
+                        <div class="flex justify-between text-xs text-gray-600 mb-1">
+                          <span>Payment Progress</span>
+                          <span class="font-bold">{{ ((assignment.paidAmount / assignment.totalAmount) * 100).toFixed(0) }}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                          <div class="h-full rounded-full transition-all duration-300" 
+                            [ngClass]="{
+                              'bg-gradient-to-r from-yellow-400 to-yellow-500': assignment.paidAmount < assignment.totalAmount,
+                              'bg-gradient-to-r from-green-400 to-green-500': assignment.paidAmount >= assignment.totalAmount
+                            }"
+                            [style.width.%]="(assignment.paidAmount / assignment.totalAmount) * 100">
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- Quotation Number (if not invoiced) -->
+                      <div *ngIf="!assignment.invoiceNumber" class="mt-2 flex items-center justify-between bg-yellow-50 border border-yellow-200 rounded px-3 py-2">
+                        <span class="text-xs text-yellow-800">
+                          <strong>Quotation:</strong> {{ assignment.quotationNumber }}
+                        </span>
+                        <span class="text-xs text-yellow-700 italic">
+                          Invoice pending final payment
+                        </span>
+                      </div>
+                    </div>
+
+                    <!-- Trial Info -->
+                    <div *ngIf="assignment.isOnTrial" class="mt-2 bg-yellow-50 border border-yellow-200 rounded-lg p-2">
+                      <div class="flex items-center text-sm">
+                        <svg class="w-4 h-4 text-yellow-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="text-yellow-800">
+                          Trial Period: {{ formatDate(assignment.trialStartDate!) }} - {{ formatDate(assignment.trialEndDate!) }}
+                          <span class="font-medium ml-2">({{ calculateDaysRemaining(assignment.trialEndDate!) }} days remaining)</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <!-- Contract & Guarantee Period Info -->
+                    <div *ngIf="assignment.assignmentStatus === 'active'" class="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                      <div class="flex items-center mb-2">
+                        <svg class="w-4 h-4 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span class="text-sm font-bold text-blue-900">Contract Terms (2 Years)</span>
+                      </div>
+                      
+                      <div class="space-y-1 text-xs">
+                        <div class="flex justify-between">
+                          <span class="text-blue-700">Contract End:</span>
+                          <span class="font-semibold text-blue-900">{{ formatDate(assignment.contractEndDate) }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                          <span class="text-blue-700">Days Remaining:</span>
+                          <span class="font-semibold text-blue-900">{{ calculateDaysRemaining(assignment.contractEndDate) }} days</span>
+                        </div>
+                        <div class="flex justify-between pt-1 border-t border-blue-200">
+                          <span class="text-blue-700">Months Worked:</span>
+                          <span class="font-semibold text-blue-900">{{ getMonthsWorked(assignment.contractStartDate) }} of 24 months</span>
+                        </div>
+                        
+                        <!-- 6-Month Guarantee Period -->
+                        <div class="mt-2 pt-2 border-t border-blue-200" [ngClass]="{
+                          'bg-orange-50': getMonthsWorked(assignment.contractStartDate) <= 6,
+                          'bg-green-50': getMonthsWorked(assignment.contractStartDate) > 6
+                        }">
+                          <div class="flex items-center justify-between">
+                            <span class="font-bold" [ngClass]="{
+                              'text-orange-800': getMonthsWorked(assignment.contractStartDate) <= 6,
+                              'text-green-800': getMonthsWorked(assignment.contractStartDate) > 6
+                            }">
+                              {{ getMonthsWorked(assignment.contractStartDate) <= 6 ? '🔄 6-Month Guarantee Active' : '✅ Guarantee Period Complete' }}
+                            </span>
+                          </div>
+                          <p class="text-xs mt-1" [ngClass]="{
+                            'text-orange-700': getMonthsWorked(assignment.contractStartDate) <= 6,
+                            'text-green-700': getMonthsWorked(assignment.contractStartDate) > 6
+                          }">
+                            {{ getMonthsWorked(assignment.contractStartDate) <= 6 ? 
+                              'Replacement or proportional refund available' : 
+                              'Standard contract terms apply' }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Return Info -->
+                    <div *ngIf="assignment.assignmentStatus === 'returned'" class="mt-2 bg-red-50 border border-red-200 rounded-lg p-2">
+                      <div class="text-sm text-red-800">
+                        <strong>Returned:</strong> {{ formatDate(assignment.returnDate!) }}
+                        <span *ngIf="assignment.returnReason"> - Reason: {{ assignment.returnReason }}</span>
+                      </div>
+                    </div>
+
+                    <!-- Refund Info -->
+                    <div *ngIf="assignment.assignmentStatus === 'refunded'" class="mt-2 bg-purple-50 border border-purple-200 rounded-lg p-3">
+                      <div class="flex items-center mb-1">
+                        <svg class="w-4 h-4 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <strong class="text-purple-900">Refund Processed</strong>
+                      </div>
+                      <div class="space-y-1 text-xs">
+                        <div class="flex justify-between">
+                          <span class="text-purple-700">Amount:</span>
+                          <span class="font-bold text-purple-900">AED {{ assignment.refundAmount?.toLocaleString() }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                          <span class="text-purple-700">Date:</span>
+                          <span class="text-purple-900">{{ formatDate(assignment.refundDate!) }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                          <span class="text-purple-700">Reason:</span>
+                          <span class="text-purple-900 capitalize">{{ assignment.refundReason }}</span>
+                        </div>
+                        <div class="flex justify-between pt-1 border-t border-purple-200">
+                          <span class="text-purple-700">Type:</span>
+                          <span class="font-semibold" [ngClass]="{
+                            'text-green-800': ['illness', 'pregnancy', 'absconded'].includes(assignment.refundReason?.toLowerCase() || ''),
+                            'text-orange-800': !['illness', 'pregnancy', 'absconded'].includes(assignment.refundReason?.toLowerCase() || '')
+                          }">
+                            {{ ['illness', 'pregnancy', 'absconded'].includes(assignment.refundReason?.toLowerCase() || '') ? 
+                              '✅ Full Refund (100%)' : 
+                              '📊 Proportional Refund' }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="ml-4 flex flex-col gap-2">
+                    <button
+                      *ngIf="assignment.assignmentStatus === 'on-trial' && assignment.remainingAmount > 0"
+                      (click)="confirmAssignment(assignment)"
+                      class="px-3 py-1 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700"
+                      title="Confirm & Generate Invoice">
+                      ✓ Confirm
+                    </button>
+                    
+                    <button
+                      *ngIf="['on-trial', 'active'].includes(assignment.assignmentStatus)"
+                      (click)="openReturnModal(assignment)"
+                      class="px-3 py-1 bg-orange-600 text-white text-xs font-medium rounded hover:bg-orange-700"
+                      title="Return Worker">
+                      ↩ Return
+                    </button>
+                    
+                    <button
+                      *ngIf="assignment.assignmentStatus === 'returned' && getMonthsWorked(assignment.contractStartDate) <= 6"
+                      (click)="replaceWorker(assignment)"
+                      class="px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700"
+                      title="Replace with Another Worker">
+                      🔄 Replace
+                    </button>
+                    
+                    <button
+                      *ngIf="assignment.assignmentStatus === 'returned'"
+                      (click)="openRefundModal(assignment)"
+                      class="px-3 py-1 bg-purple-600 text-white text-xs font-medium rounded hover:bg-purple-700"
+                      title="Process Refund">
+                      💰 Refund
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="bg-gray-50 px-6 py-4 flex justify-end">
+          <button
+            (click)="closeDetailsModal()"
+            class="px-6 py-2 border border-gray-300 text-gray-700 font-medium rounded-md hover:bg-gray-100">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Return Worker Modal -->
+  <div *ngIf="showReturnModal && selectedAssignment" class="fixed z-[60] inset-0 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75" (click)="closeReturnModal()"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+      
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-2xl">
+        <!-- Modal Header -->
+        <div class="px-6 pt-6 pb-4 border-b border-gray-200 bg-gradient-to-r from-orange-600 to-red-600">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-2xl font-bold text-white">↩ Return Worker</h3>
+              <p class="text-sm text-orange-100 mt-1">Process worker return within contract period</p>
+            </div>
+            <button (click)="closeReturnModal()" class="text-white hover:text-gray-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="px-6 py-6">
+          <!-- Worker & Assignment Info -->
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span class="text-blue-700 font-medium">Worker:</span>
+                <span class="text-blue-900 font-bold ml-2">{{ selectedAssignment.workerName }}</span>
+              </div>
+              <div>
+                <span class="text-blue-700 font-medium">Sponsor:</span>
+                <span class="text-blue-900 font-bold ml-2">{{ selectedAssignment.sponsorName }}</span>
+              </div>
+              <div>
+                <span class="text-blue-700 font-medium">Contract Start:</span>
+                <span class="text-blue-900 font-bold ml-2">{{ formatDate(selectedAssignment.contractStartDate) }}</span>
+              </div>
+              <div>
+                <span class="text-blue-700 font-medium">Months Worked:</span>
+                <span class="text-blue-900 font-bold ml-2">{{ getMonthsWorked(selectedAssignment.contractStartDate) }} months</span>
+              </div>
+            </div>
+          </div>
+
+          <form (ngSubmit)="returnWorker()">
+            <div class="space-y-5">
+              <!-- Return Reason -->
+              <div>
+                <label class="block text-sm font-bold text-gray-900 mb-3">
+                  📋 Return Reason <span class="text-red-500">*</span>
+                </label>
+                <select 
+                  [(ngModel)]="returnFormData.returnReason" 
+                  name="returnReason" 
+                  required
+                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                  <option value="">-- Select Reason --</option>
+                  <option value="poor-performance">❌ Poor Performance</option>
+                  <option value="refusal-to-work">⛔ Refusal to Work</option>
+                  <option value="behavioral-issues">😠 Behavioral Issues</option>
+                  <option value="skill-mismatch">🔧 Skill Mismatch</option>
+                  <option value="health-issues">🏥 Health Issues</option>
+                  <option value="sponsor-request">👤 Sponsor Request</option>
+                  <option value="other">📝 Other</option>
+                </select>
+              </div>
+
+              <!-- Return Date -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Return Date *</label>
+                <input 
+                  type="date" 
+                  [(ngModel)]="returnFormData.returnDate" 
+                  name="returnDate" 
+                  required
+                  [max]="getCurrentDate()"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" />
+              </div>
+
+              <!-- Notes -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Additional Notes</label>
+                <textarea 
+                  [(ngModel)]="returnFormData.notes" 
+                  name="notes" 
+                  rows="3"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                  placeholder="Add any additional details about the return..."></textarea>
+              </div>
+
+              <!-- Guarantee Period Info -->
+              <div class="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4">
+                <div class="flex items-start">
+                  <svg class="w-6 h-6 text-yellow-600 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <div class="flex-1">
+                    <p class="text-sm font-bold text-yellow-900 mb-2">⏰ 6-Month Guarantee Period</p>
+                    <p class="text-xs text-yellow-800 mb-2">
+                      This worker has worked for <strong>{{ getMonthsWorked(selectedAssignment.contractStartDate) }} months</strong> out of the 24-month contract (2 years).
+                    </p>
+                    <div class="bg-white rounded p-3 mt-3">
+                      <p class="text-xs text-gray-700 font-medium mb-2">📝 After Return, Sponsor Can:</p>
+                      <ul class="text-xs text-gray-600 space-y-1 ml-4">
+                        <li *ngIf="getMonthsWorked(selectedAssignment.contractStartDate) <= 6">
+                          ✅ <strong>Replace</strong> with another housemaid (no additional charge)
+                        </li>
+                        <li>💰 <strong>Request Refund</strong> (proportional calculation)</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="mt-6 pt-6 border-t border-gray-200 flex justify-end gap-3">
+              <button 
+                type="button" 
+                (click)="closeReturnModal()"
+                class="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition-colors">
+                Cancel
+              </button>
+              <button 
+                type="submit"
+                [disabled]="!returnFormData.returnReason"
+                class="px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold rounded-lg hover:from-orange-700 hover:to-red-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl">
+                ↩ Process Return
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Refund Modal -->
+  <div *ngIf="showRefundModal && selectedAssignment" class="fixed z-[60] inset-0 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75" (click)="closeRefundModal()"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+      
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-3xl">
+        <!-- Modal Header -->
+        <div class="px-6 pt-6 pb-4 border-b border-gray-200 bg-gradient-to-r from-purple-600 to-pink-600">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-2xl font-bold text-white">💰 Process Refund</h3>
+              <p class="text-sm text-purple-100 mt-1">Calculate and process refund for returned worker</p>
+            </div>
+            <button (click)="closeRefundModal()" class="text-white hover:text-gray-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="px-6 py-6">
+          <!-- Worker & Payment Info -->
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span class="text-blue-700 font-medium">Worker:</span>
+                <span class="text-blue-900 font-bold ml-2">{{ selectedAssignment.workerName }}</span>
+              </div>
+              <div>
+                <span class="text-blue-700 font-medium">Sponsor:</span>
+                <span class="text-blue-900 font-bold ml-2">{{ selectedAssignment.sponsorName }}</span>
+              </div>
+              <div>
+                <span class="text-blue-700 font-medium">Total Paid:</span>
+                <span class="text-blue-900 font-bold ml-2">AED {{ selectedAssignment.paidAmount.toLocaleString() }}</span>
+              </div>
+              <div>
+                <span class="text-blue-700 font-medium">Months Worked:</span>
+                <span class="text-blue-900 font-bold ml-2">{{ getMonthsWorked(selectedAssignment.contractStartDate) }} months</span>
+              </div>
+            </div>
+          </div>
+
+          <form (ngSubmit)="processRefund()">
+            <div class="space-y-5">
+              <!-- Refund Reason -->
+              <div>
+                <label class="block text-sm font-bold text-gray-900 mb-3">
+                  📋 Refund Reason <span class="text-red-500">*</span>
+                </label>
+                <select 
+                  [(ngModel)]="refundFormData.refundReason" 
+                  name="refundReason" 
+                  required
+                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                  <option value="performance">📊 Performance Issues (Proportional Refund)</option>
+                  <option value="illness">🏥 Illness (Full Refund)</option>
+                  <option value="pregnancy">🤰 Pregnancy (Full Refund)</option>
+                  <option value="absconded">🚫 Absconded (Full Refund)</option>
+                  <option value="other">📝 Other (Proportional Refund)</option>
+                </select>
+              </div>
+
+              <!-- Refund Calculation Display -->
+              <div class="bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-purple-300 rounded-lg p-5">
+                <h4 class="text-lg font-bold text-purple-900 mb-4 flex items-center">
+                  <svg class="w-6 h-6 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                  </svg>
+                  Refund Calculation
+                </h4>
+
+                <!-- Contract Details -->
+                <div class="bg-white rounded-lg p-4 mb-4 shadow-sm">
+                  <div class="grid grid-cols-3 gap-4 text-sm">
+                    <div class="text-center">
+                      <div class="text-gray-600 text-xs mb-1">Total Amount</div>
+                      <div class="text-xl font-bold text-gray-900">{{ selectedAssignment.totalAmount.toLocaleString() }}</div>
+                      <div class="text-xs text-gray-500">AED</div>
+                    </div>
+                    <div class="text-center">
+                      <div class="text-gray-600 text-xs mb-1">Amount Paid</div>
+                      <div class="text-xl font-bold text-blue-900">{{ selectedAssignment.paidAmount.toLocaleString() }}</div>
+                      <div class="text-xs text-blue-700">AED</div>
+                    </div>
+                    <div class="text-center">
+                      <div class="text-gray-600 text-xs mb-1">Monthly Rate</div>
+                      <div class="text-xl font-bold text-purple-900">{{ (selectedAssignment.totalAmount / 24).toFixed(0) }}</div>
+                      <div class="text-xs text-purple-700">AED/month</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Refund Type Banner -->
+                <div *ngIf="isFullRefund()" class="bg-green-100 border-2 border-green-400 rounded-lg p-4 mb-4">
+                  <div class="flex items-center">
+                    <svg class="w-8 h-8 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
+                    <div>
+                      <p class="text-sm font-bold text-green-900">✅ FULL REFUND APPLICABLE</p>
+                      <p class="text-xs text-green-800 mt-1">{{ refundFormData.refundReason === 'illness' ? 'Illness' : refundFormData.refundReason === 'pregnancy' ? 'Pregnancy' : 'Absconded' }} cases qualify for 100% refund</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="!isFullRefund()" class="bg-yellow-100 border-2 border-yellow-400 rounded-lg p-4 mb-4">
+                  <div class="flex items-start">
+                    <svg class="w-6 h-6 text-yellow-600 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    <div class="flex-1">
+                      <p class="text-sm font-bold text-yellow-900">📊 PROPORTIONAL REFUND</p>
+                      <p class="text-xs text-yellow-800 mt-1">Refund = Total Paid - (Monthly Rate × Months Worked)</p>
+                      <p class="text-xs text-yellow-700 mt-2 font-mono bg-white p-2 rounded">
+                        = AED {{selectedAssignment.paidAmount.toLocaleString()}} - (AED {{(selectedAssignment.totalAmount / 24).toFixed(0)}} × {{getMonthsWorked(selectedAssignment.contractStartDate)}} months)
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Final Refund Amount -->
+                <div class="bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg p-5 text-white shadow-lg">
+                  <div class="flex justify-between items-center">
+                    <div>
+                      <p class="text-sm opacity-90">Refund Amount</p>
+                      <p class="text-4xl font-bold mt-1">AED {{ getCalculatedRefundAmount().toLocaleString() }}</p>
+                      <p class="text-xs opacity-75 mt-1">
+                        {{ isFullRefund() ? '✅ Full Refund (100%)' : '📊 Proportional Refund' }}
+                      </p>
+                    </div>
+                    <div class="text-right">
+                      <svg class="w-16 h-16 opacity-50" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"></path>
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"></path>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Refund Date -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Refund Date *</label>
+                <input 
+                  type="date" 
+                  [(ngModel)]="refundFormData.refundDate" 
+                  name="refundDate" 
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" />
+              </div>
+
+              <!-- Notes -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Refund Notes</label>
+                <textarea 
+                  [(ngModel)]="refundFormData.notes" 
+                  name="notes" 
+                  rows="3"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                  placeholder="Add any notes about this refund transaction..."></textarea>
+              </div>
+
+              <!-- Accounting Info -->
+              <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start">
+                  <svg class="w-5 h-5 text-blue-600 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <div class="text-sm text-blue-800">
+                    <p class="font-bold mb-1">💼 Accounting Note:</p>
+                    <p class="text-xs">This refund will be recorded as a <strong>Credit Note</strong> in your accounts.</p>
+                    <p class="text-xs mt-1">The accountant can process this through the Accounts & Finance section.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="mt-6 pt-6 border-t border-gray-200 flex justify-end gap-3">
+              <button 
+                type="button" 
+                (click)="closeRefundModal()"
+                class="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition-colors">
+                Cancel
+              </button>
+              <button 
+                type="submit"
+                class="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl">
+                💰 Process Refund
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Reject Modal -->
+  <div *ngIf="showInterviewFeedbackModal && selectedInterview" class="fixed z-[60] inset-0 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75" (click)="closeInterviewFeedbackModal()"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+      
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-lg">
+        <!-- Modal Header -->
+        <div class="px-6 pt-6 pb-4 border-b border-gray-200 bg-gradient-to-r from-red-600 to-red-700">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-2xl font-bold text-white">❌ Reject Interview</h3>
+              <p class="text-sm text-red-100 mt-1">Provide rejection reason</p>
+            </div>
+            <button (click)="closeInterviewFeedbackModal()" class="text-white hover:text-gray-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="px-6 py-6">
+          <!-- Worker Info -->
+          <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center text-white font-bold text-lg">
+                {{ selectedInterview.workerName.charAt(0) }}
+              </div>
+              <div>
+                <p class="font-bold text-gray-900">{{ selectedInterview.workerName }}</p>
+                <p class="text-sm text-red-700">{{ selectedInterview.workerType }} • {{ selectedInterview.workerPassport }}</p>
+              </div>
+            </div>
+          </div>
+
+          <form (ngSubmit)="rejectInterview()">
+            <div class="space-y-5">
+              <!-- Rejection Reason -->
+              <div>
+                <label class="block text-sm font-bold text-gray-900 mb-3">
+                  Rejection Reason <span class="text-red-500">*</span>
+                </label>
+                <select 
+                  [(ngModel)]="quickRejectReason" 
+                  name="quickRejectReason" 
+                  required
+                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                  <option value="">-- Select Reason --</option>
+                  <option value="poor-communication">💬 Poor Communication Skills</option>
+                  <option value="no-experience">📚 Lack of Experience</option>
+                  <option value="attitude-issues">😠 Attitude Issues</option>
+                  <option value="health-concerns">🏥 Health Concerns</option>
+                  <option value="sponsor-not-satisfied">👤 Sponsor Not Satisfied</option>
+                  <option value="language-barrier">🗣️ Language Barrier</option>
+                  <option value="not-suitable">🚫 Not Suitable for Role</option>
+                  <option value="other">📝 Other</option>
+                </select>
+              </div>
+
+              <!-- Info Banner -->
+              <div class="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4">
+                <div class="flex items-start">
+                  <svg class="w-6 h-6 text-yellow-600 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <div class="flex-1">
+                    <p class="text-sm font-bold text-yellow-900 mb-2">⚠️ After Rejection:</p>
+                    <ul class="text-xs text-yellow-800 space-y-1 ml-4">
+                      <li>• Worker will remain <strong>available</strong> for other sponsors</li>
+                      <li>• Rejection reason will be recorded</li>
+                      <li>• Interview will be marked as completed</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="mt-6 pt-6 border-t border-gray-200 flex justify-end gap-3">
+              <button 
+                type="button" 
+                (click)="closeInterviewFeedbackModal()"
+                class="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition-colors">
+                Cancel
+              </button>
+              <button 
+                type="submit"
+                [disabled]="!quickRejectReason"
+                class="px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-lg hover:from-red-700 hover:to-red-800 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl">
+                ❌ Reject Worker
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Form Modal -->
+  <div *ngIf="showFeedbackFormModal && selectedInterview" class="fixed z-[70] inset-0 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+      
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-md">
+        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+              <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                {{ feedbackAction === 'accept' ? 'localhost:4200 says' : 'localhost:4200 says' }}
+              </h3>
+              <label class="block text-sm text-gray-700 mb-2">
+                Enter feedback for selected worker:
+              </label>
+              <textarea
+                [(ngModel)]="interviewFeedback"
+                rows="3"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Enter your feedback here..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-2">
+          <button
+            type="button"
+            (click)="submitFeedback()"
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+            OK
+          </button>
+          <button
+            type="button"
+            (click)="closeFeedbackFormModal()"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto sm:text-sm">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generic Alert Modal -->
+  <div *ngIf="showAlertModal" class="fixed z-[70] inset-0 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+      
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-md">
+        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+              <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                localhost:4200 says
+              </h3>
+              <p class="text-sm text-gray-700">
+                {{ alertModalMessage }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button
+            type="button"
+            (click)="closeAlertModal()"
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div *ngIf="showSuccessModal" class="fixed z-[70] inset-0 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+      
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-md">
+        <!-- Success Icon & Content -->
+        <div class="px-6 pt-6 pb-4">
+          <div class="flex flex-col items-center">
+            <!-- Success Icon (Accept) -->
+            <div *ngIf="successType === 'accept'" class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
+              <svg class="w-10 h-10 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+
+            <!-- Reject Icon -->
+            <div *ngIf="successType === 'reject'" class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-4">
+              <svg class="w-10 h-10 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+
+            <!-- Title -->
+            <h3 class="text-xl font-bold text-gray-900 mb-2 text-center">
+              {{ successType === 'accept' ? '✅ Worker Accepted!' : '❌ Worker Rejected' }}
+            </h3>
+
+            <!-- Message -->
+            <p class="text-sm text-gray-600 text-center mb-6">
+              {{ successMessage }}
+            </p>
+
+            <!-- OK Button -->
+            <button
+              (click)="closeSuccessModal()"
+              class="w-full px-6 py-3 text-white font-bold rounded-lg transition-all shadow-md hover:shadow-lg"
+              [ngClass]="successType === 'accept' 
+                ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800' 
+                : 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800'">
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

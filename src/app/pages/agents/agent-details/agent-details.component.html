@@ -1,0 +1,522 @@
+<!-- Agent Details Page -->
+<div class="min-h-screen bg-gray-50">
+  <div class="w-full px-4 sm:px-6 lg:px-8 py-8" *ngIf="agent">
+    
+    <!-- Page Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <button 
+            (click)="navigateBack()"
+            class="text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </button>
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900">{{ agent.agentName }}</h1>
+            <p class="text-lg text-gray-600 mt-1">Agent Code: {{ agent.agentCode }}</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+          <!-- Status Badge -->
+          <button
+            (click)="toggleStatus()"
+            [class]="agent.status === 'active' ? 
+              'inline-flex px-4 py-2 text-sm font-semibold rounded-md bg-green-100 text-green-800 hover:bg-green-200 transition-colors cursor-pointer' : 
+              'inline-flex px-4 py-2 text-sm font-semibold rounded-md bg-red-100 text-red-800 hover:bg-red-200 transition-colors cursor-pointer'"
+          >
+            {{ agent.status | titlecase }}
+          </button>
+          
+          <!-- Edit Button -->
+          <button 
+            (click)="navigateToEdit()"
+            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+            Edit
+          </button>
+          
+          <!-- Delete Button -->
+          <button 
+            (click)="openDeleteModal()"
+            class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="bg-white rounded-t-lg shadow-sm border border-gray-200 border-b-0">
+      <nav class="flex space-x-8 px-6" aria-label="Tabs">
+        <button
+          (click)="switchTab('overview')"
+          [class]="activeTab === 'overview' ? 
+            'border-purple-500 text-purple-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' : 
+            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'"
+        >
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+          Overview
+        </button>
+        
+        <button
+          (click)="switchTab('basic')"
+          [class]="activeTab === 'basic' ? 
+            'border-purple-500 text-purple-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' : 
+            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'"
+        >
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          Basic Info
+        </button>
+        
+        <button
+          (click)="switchTab('contact')"
+          [class]="activeTab === 'contact' ? 
+            'border-purple-500 text-purple-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' : 
+            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'"
+        >
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+          </svg>
+          Contact Info
+        </button>
+        
+        <button
+          (click)="switchTab('address')"
+          [class]="activeTab === 'address' ? 
+            'border-purple-500 text-purple-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' : 
+            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'"
+        >
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+          Address & Bank
+        </button>
+        
+        <button
+          (click)="switchTab('workers')"
+          [class]="activeTab === 'workers' ? 
+            'border-purple-500 text-purple-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' : 
+            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'"
+        >
+          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+          Workers
+          <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+            {{ agentWorkers.length }}
+          </span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="bg-white rounded-b-lg shadow-sm border border-gray-200 p-6">
+      
+      <!-- Overview Tab -->
+      <div *ngIf="activeTab === 'overview'">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <!-- Workers Supplied -->
+          <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200 p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-purple-700">Workers Supplied</p>
+                <p class="text-2xl font-semibold text-purple-900">{{ agent.totalWorkersSupplied }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Total Commission -->
+          <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg border border-orange-200 p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12" style="background-color: #FF6B00; border-radius: 0.5rem;">
+                  <svg class="w-6 h-6 text-white ml-3 mt-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-orange-700">Total Commission</p>
+                <p class="text-2xl font-semibold text-orange-900">{{ formatCurrency(agent.totalCommissionPaid) }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Commission Rate -->
+          <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200 p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-green-700">Commission Rate</p>
+                <p class="text-2xl font-semibold text-green-900">
+                  <span *ngIf="agent.commissionType === 'fixed'">{{ formatCurrency(agent.commissionValue) }}</span>
+                  <span *ngIf="agent.commissionType === 'percentage'">{{ agent.commissionValue }}%</span>
+                </p>
+                <p class="text-xs text-green-600 capitalize">{{ agent.commissionType }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Registration Date -->
+          <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200 p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-blue-700">Registered On</p>
+                <p class="text-lg font-semibold text-blue-900">{{ formatDate(agent.registrationDate) }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Info Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Information</h3>
+            <div class="space-y-3">
+              <div class="flex justify-between py-2 border-b border-gray-200">
+                <span class="text-gray-600">Agent Name:</span>
+                <span class="font-medium text-gray-900">{{ agent.agentName }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-200">
+                <span class="text-gray-600">Contact Person:</span>
+                <span class="font-medium text-gray-900">{{ agent.contactPerson }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-200">
+                <span class="text-gray-600">Email:</span>
+                <a [href]="'mailto:' + agent.email" class="font-medium text-blue-600 hover:text-blue-800">{{ agent.email }}</a>
+              </div>
+              <div class="flex justify-between py-2">
+                <span class="text-gray-600">Phone:</span>
+                <a [href]="'tel:' + agent.phone" class="font-medium text-blue-600 hover:text-blue-800">{{ agent.phone }}</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Location & Status</h3>
+            <div class="space-y-3">
+              <div class="flex justify-between py-2 border-b border-gray-200">
+                <span class="text-gray-600">Country:</span>
+                <span class="font-medium text-gray-900">{{ agent.country }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-200">
+                <span class="text-gray-600">City:</span>
+                <span class="font-medium text-gray-900">{{ agent.city }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-200">
+                <span class="text-gray-600">Status:</span>
+                <span 
+                  [class]="agent.status === 'active' ? 
+                    'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800' : 
+                    'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800'"
+                >
+                  {{ agent.status | titlecase }}
+                </span>
+              </div>
+              <div class="flex justify-between py-2">
+                <span class="text-gray-600">Current Workers:</span>
+                <span class="font-medium text-gray-900">{{ agentWorkers.length }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes Section -->
+        <div class="mt-6 bg-yellow-50 rounded-lg p-6 border border-yellow-200" *ngIf="agent.notes">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            Additional Notes
+          </h3>
+          <p class="text-gray-700 leading-relaxed">{{ agent.notes }}</p>
+        </div>
+      </div>
+
+      <!-- Basic Info Tab -->
+      <div *ngIf="activeTab === 'basic'">
+        <div class="max-w-3xl">
+          <h2 class="text-2xl font-semibold text-gray-900 mb-6">Basic Information</h2>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Agent Code:</span>
+              <span class="text-base text-gray-900 w-2/3">{{ agent.agentCode }}</span>
+            </div>
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Agent Name:</span>
+              <span class="text-base text-gray-900 w-2/3">{{ agent.agentName }}</span>
+            </div>
+            <div class="flex items-center justify-between py-4 border-b border-gray-200" *ngIf="agent.companyName">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Company Name:</span>
+              <span class="text-base text-gray-900 w-2/3">{{ agent.companyName }}</span>
+            </div>
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Contact Person:</span>
+              <span class="text-base text-gray-900 w-2/3">{{ agent.contactPerson }}</span>
+            </div>
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Commission Type:</span>
+              <span class="text-base text-gray-900 w-2/3 capitalize">{{ agent.commissionType }}</span>
+            </div>
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Commission Value:</span>
+              <span class="text-base text-gray-900 w-2/3">
+                <span *ngIf="agent.commissionType === 'fixed'">{{ formatCurrency(agent.commissionValue) }}</span>
+                <span *ngIf="agent.commissionType === 'percentage'">{{ agent.commissionValue }}%</span>
+              </span>
+            </div>
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Status:</span>
+              <span 
+                [class]="agent.status === 'active' ? 
+                  'inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800' : 
+                  'inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-red-100 text-red-800'"
+              >
+                {{ agent.status | titlecase }}
+              </span>
+            </div>
+            <div class="flex items-center justify-between py-4">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Registration Date:</span>
+              <span class="text-base text-gray-900 w-2/3">{{ formatDate(agent.registrationDate) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Info Tab -->
+      <div *ngIf="activeTab === 'contact'">
+        <div class="max-w-3xl">
+          <h2 class="text-2xl font-semibold text-gray-900 mb-6">Contact Information</h2>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Email:</span>
+              <a [href]="'mailto:' + agent.email" class="text-base text-blue-600 hover:text-blue-800 w-2/3">{{ agent.email }}</a>
+            </div>
+            <div class="flex items-center justify-between py-4 border-b border-gray-200">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Phone:</span>
+              <a [href]="'tel:' + agent.phone" class="text-base text-blue-600 hover:text-blue-800 w-2/3">{{ agent.phone }}</a>
+            </div>
+            <div class="flex items-center justify-between py-4" *ngIf="agent.alternatePhone">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Alternate Phone:</span>
+              <a [href]="'tel:' + agent.alternatePhone" class="text-base text-blue-600 hover:text-blue-800 w-2/3">{{ agent.alternatePhone }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Address & Bank Tab -->
+      <div *ngIf="activeTab === 'address'">
+        <div class="max-w-3xl space-y-8">
+          <!-- Address Section -->
+          <div>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-6">Address Information</h2>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between py-4 border-b border-gray-200">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Country:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ agent.country }}</span>
+              </div>
+              <div class="flex items-center justify-between py-4 border-b border-gray-200">
+                <span class="text-sm font-medium text-gray-600 w-1/3">City:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ agent.city }}</span>
+              </div>
+              <div class="flex items-start justify-between py-4">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Full Address:</span>
+                <p class="text-base text-gray-900 w-2/3">{{ agent.address }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bank Details Section -->
+          <div>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-6">Bank Details</h2>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between py-4 border-b border-gray-200">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Bank Name:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ agent.bankName || 'N/A' }}</span>
+              </div>
+              <div class="flex items-center justify-between py-4 border-b border-gray-200">
+                <span class="text-sm font-medium text-gray-600 w-1/3">Account Number:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ agent.accountNumber || 'N/A' }}</span>
+              </div>
+              <div class="flex items-center justify-between py-4 border-b border-gray-200">
+                <span class="text-sm font-medium text-gray-600 w-1/3">IBAN:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ agent.iban || 'N/A' }}</span>
+              </div>
+              <div class="flex items-center justify-between py-4">
+                <span class="text-sm font-medium text-gray-600 w-1/3">SWIFT Code:</span>
+                <span class="text-base text-gray-900 w-2/3">{{ agent.swiftCode || 'N/A' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Workers Tab -->
+      <div *ngIf="activeTab === 'workers'">
+        <div class="mb-6">
+          <h2 class="text-2xl font-semibold text-gray-900">Workers Supplied by {{ agent.agentName }}</h2>
+          <p class="text-gray-600 mt-2">Total: {{ agentWorkers.length }} workers</p>
+        </div>
+
+        <!-- Workers List -->
+        <div *ngIf="agentWorkers.length > 0" class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Worker</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nationality</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Passport</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Package</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Commission</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let worker of agentWorkers" class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center">
+                      <span class="text-white font-semibold text-sm">{{ worker.fullName.charAt(0) }}</span>
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900">{{ worker.fullName }}</div>
+                      <div class="text-sm text-gray-500">{{ worker.workerCode }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="text-sm text-gray-900">{{ worker.nationality }}</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="text-sm text-gray-900 capitalize">{{ worker.workerType }}</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="text-sm text-gray-900">{{ worker.passportNumber }}</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span 
+                    [ngClass]="{
+                      'bg-green-100 text-green-800': worker.currentStatus === 'available',
+                      'bg-blue-100 text-blue-800': worker.currentStatus === 'interview',
+                      'bg-yellow-100 text-yellow-800': worker.currentStatus === 'trial',
+                      'bg-purple-100 text-purple-800': worker.currentStatus === 'placed',
+                      'bg-red-100 text-red-800': worker.currentStatus === 'returned',
+                      'bg-gray-100 text-gray-800': worker.currentStatus === 'absconded'
+                    }"
+                    class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full capitalize"
+                  >
+                    {{ worker.currentStatus }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {{ formatCurrency(worker.packageAmount) }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {{ formatCurrency(worker.agentCommission) }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="agentWorkers.length === 0" class="text-center py-12 bg-gray-50 rounded-lg">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No workers yet</h3>
+          <p class="mt-1 text-sm text-gray-500">This agent hasn't supplied any workers yet.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div *ngIf="showDeleteModal" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <!-- Background overlay -->
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" (click)="closeDeleteModal()"></div>
+
+    <!-- Modal panel -->
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+    
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="sm:flex sm:items-start">
+          <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+            <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+          </div>
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+              Delete Agent
+            </h3>
+            <div class="mt-2">
+              <p class="text-sm text-gray-500">
+                Are you sure you want to delete <span class="font-semibold">{{ agent?.agentName }}</span>? This action cannot be undone.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-3">
+        <button 
+          type="button" 
+          (click)="confirmDelete()"
+          class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+        >
+          Delete
+        </button>
+        <button 
+          type="button" 
+          (click)="closeDeleteModal()"
+          class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
