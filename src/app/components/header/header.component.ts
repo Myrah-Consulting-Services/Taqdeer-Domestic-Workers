@@ -158,9 +158,11 @@ export class HeaderComponent implements OnInit {
   onDocumentClick(event: Event) {
     const target = event.target as HTMLElement;
     const userMenuButton = document.getElementById('user-menu-button');
+    const dropdownMenu = document.querySelector('.absolute');
     
     // Check if click is outside the dropdown
-    if (userMenuButton && !userMenuButton.contains(target) && !target.closest('.absolute')) {
+    if (userMenuButton && !userMenuButton.contains(target) && 
+        (!dropdownMenu || !dropdownMenu.contains(target))) {
       this.isDropdownOpen = false;
     }
   }

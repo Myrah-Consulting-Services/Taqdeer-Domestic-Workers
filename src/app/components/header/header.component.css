@@ -31,6 +31,19 @@
   z-index: 1000;
 }
 
+/* Ensure header has proper z-index and positioning */
+header {
+  position: relative;
+  z-index: 1001;
+}
+
+/* Ensure user dropdown button is clickable */
+#user-menu-button {
+  position: relative;
+  z-index: 1002;
+  pointer-events: auto;
+}
+
 /* Mobile menu animation */
 .mobile-menu {
   transition: all 0.3s ease-in-out;

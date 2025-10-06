@@ -1,0 +1,11 @@
+/* Ensure dashboard content doesn't interfere with header */
+.dashboard-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure no elements overlap the header */
+.dashboard-content * {
+  position: relative;
+  z-index: auto;
+}

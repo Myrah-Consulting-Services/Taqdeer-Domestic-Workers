@@ -18,7 +18,50 @@ import { User } from '../../models/user.model';
 })
 export class DashboardComponent implements OnInit {
   currentUser: User | null = null;
-  dashboardData: any = {};
+  dashboardData: any = {
+    // Initialize with default values to prevent undefined access
+    totalAgents: 0,
+    activeAgents: 0,
+    totalWorkers: 0,
+    availableWorkers: 0,
+    totalSponsors: 0,
+    activeSponsors: 0,
+    totalSales: 0,
+    totalRevenue: 0,
+    pendingPayments: 0,
+    workerStatus: {
+      available: 0,
+      interview: 0,
+      trial: 0,
+      placed: 0,
+      returned: 0,
+      absconded: 0
+    },
+    salesStatus: {
+      active: 0,
+      completed: 0,
+      pending: 0,
+      trial: 0,
+      refunded: 0,
+      replaced: 0
+    },
+    financial: {
+      totalRevenue: 0,
+      pendingPayments: 0,
+      thisMonthRevenue: 0,
+      thisMonthSales: 0,
+      totalCommissionPaid: 0
+    },
+    recentWorkers: [],
+    recentSales: [],
+    recentSponsors: [],
+    totalWorkersSupplied: 0,
+    totalAssignments: 0,
+    activeAssignments: 0,
+    onTrial: 0,
+    returned: 0,
+    refunded: 0
+  };
   isLoading = true;
 
   constructor(
@@ -56,6 +99,9 @@ export class DashboardComponent implements OnInit {
     } else if (this.isEmployee && this.currentUser?.employeeRole === 'HR Manager') {
       // Load HR Manager-specific dashboard data
       this.loadHRManagerDashboardData();
+    } else if (this.isEmployee && this.currentUser?.employeeRole === 'Operations Manager') {
+      // Load Operations Manager-specific dashboard data
+      this.loadOperationsManagerDashboardData();
     } else {
       // Load admin dashboard data
       this.loadAdminDashboardData();
@@ -435,6 +481,54 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  private loadOperationsManagerDashboardData() {
+    // Get worker and sponsor statistics for Operations Manager
+    const workerStats = this.workerService.getWorkerStats();
+    const sponsorStats = this.sponsorService.getStats();
+    const salesStats = this.salesService.getSalesStats();
+    
+    // Get recent data for Operations Manager
+    const recentWorkers = this.workerService.getAllWorkers().slice(-5);
+    const recentSales = this.salesService.getAllSales().slice(-5);
+    
+    // Calculate total commission paid from actual sales data
+    const totalCommissionPaid = recentSales.reduce((sum, sale) => sum + (sale.agentCommission || 0), 0);
+    
+    // Get sponsors data
+    this.sponsorService.getSponsors().subscribe(sponsors => {
+      const recentSponsors = sponsors.slice(-5);
+      
+      this.dashboardData = {
+        // Key Metrics for Operations Manager
+        totalWorkers: workerStats.total,
+        availableWorkers: workerStats.available,
+        totalSponsors: sponsorStats.totalSponsors,
+        activeSponsors: sponsorStats.activeSponsors,
+        totalSales: salesStats.totalSales,
+        totalRevenue: salesStats.totalRevenue,
+        pendingPayments: salesStats.pendingPayments,
+        thisMonthSales: salesStats.thisMonthSales,
+        thisMonthRevenue: salesStats.thisMonthRevenue,
+        totalCommissionPaid: totalCommissionPaid,
+        
+        // Recent Activities
+        recentWorkers: recentWorkers,
+        recentSales: recentSales,
+        recentSponsors: recentSponsors,
+        
+        // Quick Stats
+        totalWorkersSupplied: workerStats.total,
+        totalAssignments: sponsorStats.totalAssignments,
+        activeAssignments: sponsorStats.activeAssignments,
+        onTrial: sponsorStats.onTrial,
+        returned: sponsorStats.returned,
+        refunded: sponsorStats.refunded
+      };
+      
+      this.isLoading = false;
+    });
+  }
+
   get isAdmin(): boolean {
     return this.authService.isAdmin();
   }
@@ -457,6 +551,10 @@ export class DashboardComponent implements OnInit {
 
   get isHRManager(): boolean {
     return this.currentUser?.role === 'employee' && this.currentUser?.employeeRole === 'HR Manager';
+  }
+
+  get isOperationsManager(): boolean {
+    return this.currentUser?.role === 'employee' && this.currentUser?.employeeRole === 'Operations Manager';
   }
 
   get employeeRole(): string {
