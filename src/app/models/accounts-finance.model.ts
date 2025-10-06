@@ -59,10 +59,13 @@ export interface FinancialSummary {
   totalRevenue: number;
   totalExpenses: number;
   netProfit: number;
-  totalCommissions: number;
+  pendingPayments: number;
+  commissionPaid: number;
   pendingCommissions: number;
   totalRefunds: number;
   pendingRefunds: number;
+  totalEmployeeSalaries: number;
+  pendingEmployeeSalaries: number;
   monthlyRevenue: MonthlyData[];
   monthlyExpenses: MonthlyData[];
   topExpenseCategories: CategorySummary[];
@@ -122,6 +125,27 @@ export type RefundReason =
   | 'sponsor-cancellation'
   | 'contract-violation'
   | 'other';
+
+export interface EmployeeSalary {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  position: string;
+  department: string;
+  basicSalary: number;
+  allowances: number;
+  deductions: number;
+  netSalary: number;
+  month: string;
+  year: number;
+  paymentDate: string;
+  paymentMethod: PaymentMethod;
+  status: 'paid' | 'pending' | 'cancelled';
+  referenceNumber?: string;
+  notes?: string;
+  createdDate: string;
+  lastUpdated: string;
+}
 
 // Mock Data Constants
 export const EXPENSE_CATEGORIES: { [key in ExpenseCategory]: string } = {

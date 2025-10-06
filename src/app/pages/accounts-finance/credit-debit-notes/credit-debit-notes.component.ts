@@ -20,6 +20,8 @@ export class CreditDebitNotesComponent implements OnInit {
   typeFilter: string = 'all';
   statusFilter: string = 'all';
   showAddModal: boolean = false;
+  showViewModal: boolean = false;
+  selectedNote: CreditDebitNote | null = null;
   sponsors: Sponsor[] = [];
   
   // Form data for new note
@@ -94,6 +96,16 @@ export class CreditDebitNotesComponent implements OnInit {
     this.resetForm();
   }
 
+  openViewModal(note: CreditDebitNote): void {
+    this.selectedNote = note;
+    this.showViewModal = true;
+  }
+
+  closeViewModal(): void {
+    this.showViewModal = false;
+    this.selectedNote = null;
+  }
+
   resetForm(): void {
     this.newNote = {
       type: 'credit',
@@ -158,23 +170,6 @@ export class CreditDebitNotesComponent implements OnInit {
     });
   }
 
-  getTotalRefunds(): number {
-    return this.filteredNotes
-      .filter(n => n.status === 'processed')
-      .reduce((sum, note) => sum + note.refundAmount, 0);
-  }
-
-  getPendingRefunds(): number {
-    return this.filteredNotes
-      .filter(n => n.status === 'issued')
-      .reduce((sum, note) => sum + note.refundAmount, 0);
-  }
-
-  getDraftRefunds(): number {
-    return this.filteredNotes
-      .filter(n => n.status === 'draft')
-      .reduce((sum, note) => sum + note.refundAmount, 0);
-  }
 
   calculateRefundAmount(): void {
     if (this.newNote.originalAmount > 0 && this.newNote.reason) {
@@ -187,6 +182,23 @@ export class CreditDebitNotesComponent implements OnInit {
       } else {
         this.newNote.refundAmount = this.newNote.originalAmount * 0.8; // 80% refund as example
       }
+    }
+  }
+
+  issueNote(): void {
+    if (this.selectedNote && this.selectedNote.status === 'draft') {
+      // Update the note status to 'issued'
+      this.selectedNote.status = 'issued';
+      this.selectedNote.processedDate = new Date().toISOString().split('T')[0];
+      
+      // Update the note in the service
+      this.accountsFinanceService.updateCreditDebitNote(this.selectedNote);
+      
+      // Refresh the list
+      this.loadNotes();
+      
+      // Close the modal
+      this.closeViewModal();
     }
   }
 }

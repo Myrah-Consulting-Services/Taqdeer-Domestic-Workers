@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AccountsFinanceService } from '../../services/accounts-finance.service';
-import { FinancialSummary } from '../../models/accounts-finance.model';
+import { FinancialSummary, BusinessExpense, AgentCommission, EmployeeSalary } from '../../models/accounts-finance.model';
 import { ExpensesComponent } from '../accounts-finance/expenses/expenses.component';
 import { CommissionsComponent } from '../accounts-finance/commissions/commissions.component';
 import { CreditDebitNotesComponent } from '../accounts-finance/credit-debit-notes/credit-debit-notes.component';
@@ -16,16 +16,26 @@ import { CreditDebitNotesComponent } from '../accounts-finance/credit-debit-note
 })
 export class AccFinComponent implements OnInit {
   financialSummary: FinancialSummary | undefined;
+  recentExpenses: BusinessExpense[] = [];
+  recentCommissions: AgentCommission[] = [];
+  recentEmployeeSalaries: EmployeeSalary[] = [];
   activeTab: 'overview' | 'expenses' | 'commissions' | 'notes' = 'overview';
 
   constructor(private accountsFinanceService: AccountsFinanceService) {}
 
   ngOnInit(): void {
     this.loadFinancialSummary();
+    this.loadRecentData();
   }
 
   loadFinancialSummary(): void {
     this.financialSummary = this.accountsFinanceService.getFinancialSummary();
+  }
+
+  loadRecentData(): void {
+    this.recentExpenses = this.accountsFinanceService.getRecentExpenses(5);
+    this.recentCommissions = this.accountsFinanceService.getRecentCommissions(5);
+    this.recentEmployeeSalaries = this.accountsFinanceService.getRecentEmployeeSalaries(5);
   }
 
   switchTab(tab: 'overview' | 'expenses' | 'commissions' | 'notes'): void {
@@ -66,5 +76,43 @@ export class AccFinComponent implements OnInit {
       'other': 'Other'
     };
     return categoryMap[category] || this.formatCategoryName(category);
+  }
+
+  formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  }
+
+  getStatusColor(status: string): string {
+    switch (status) {
+      case 'paid':
+      case 'approved':
+        return 'text-green-600 bg-green-100';
+      case 'pending':
+        return 'text-yellow-600 bg-yellow-100';
+      case 'cancelled':
+      case 'rejected':
+        return 'text-red-600 bg-red-100';
+      default:
+        return 'text-gray-600 bg-gray-100';
+    }
+  }
+
+  getPaymentMethodDisplay(method: string): string {
+    const methodMap: { [key: string]: string } = {
+      'bank-transfer': 'Bank Transfer',
+      'cash': 'Cash',
+      'cheque': 'Cheque',
+      'credit-card': 'Credit Card',
+      'debit-card': 'Debit Card'
+    };
+    return methodMap[method] || method;
+  }
+
+  getEmployeeInitials(name: string): string {
+    return name.split(' ').map(n => n[0]).join('');
   }
 }

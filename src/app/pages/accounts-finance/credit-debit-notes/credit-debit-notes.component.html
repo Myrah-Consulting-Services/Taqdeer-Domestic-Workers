@@ -17,51 +17,6 @@
     </button>
   </div>
 
-  <!-- Summary Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <div class="bg-green-50 rounded-lg p-6 border border-green-200">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm font-medium text-green-600 mb-1">Processed Refunds</p>
-          <p class="text-2xl font-bold text-green-900">{{ formatCurrency(getTotalRefunds()) }}</p>
-        </div>
-        <div class="p-3 bg-green-200 rounded-full">
-          <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <div class="bg-orange-50 rounded-lg p-6 border border-orange-200">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm font-medium text-orange-600 mb-1">Pending Refunds</p>
-          <p class="text-2xl font-bold text-orange-900">{{ formatCurrency(getPendingRefunds()) }}</p>
-        </div>
-        <div class="p-3 bg-orange-200 rounded-full">
-          <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <div class="bg-yellow-50 rounded-lg p-6 border border-yellow-200">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm font-medium text-yellow-600 mb-1">Draft Notes</p>
-          <p class="text-2xl font-bold text-yellow-900">{{ formatCurrency(getDraftRefunds()) }}</p>
-        </div>
-        <div class="p-3 bg-yellow-200 rounded-full">
-          <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Filters -->
   <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -154,7 +109,7 @@
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
               <div class="space-x-2">
-                <button class="text-blue-600 hover:text-blue-900 transition-colors">
+                <button (click)="openViewModal(note)" class="text-blue-600 hover:text-blue-900 transition-colors">
                   View
                 </button>
                 <button *ngIf="note.status === 'draft'" class="text-green-600 hover:text-green-900 transition-colors">
@@ -308,6 +263,135 @@
           (click)="addNote()"
           class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
           Add Note
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Note Modal -->
+  <div *ngIf="showViewModal" class="fixed z-50 inset-0 overflow-y-auto flex items-center justify-center p-4">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" (click)="closeViewModal()"></div>
+    
+    <div class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all w-full max-w-2xl">
+      
+      <!-- Header -->
+      <div class="px-6 pt-6 pb-4 bg-gradient-to-r from-blue-600 to-blue-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-2xl font-bold text-white">Credit/Debit Note Details</h3>
+            <p class="text-sm text-blue-100 mt-1">{{ selectedNote?.noteNumber }}</p>
+          </div>
+          <button (click)="closeViewModal()" class="text-white hover:text-gray-200">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="px-6 py-6" *ngIf="selectedNote">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Note Information -->
+          <div class="space-y-4">
+            <h4 class="text-lg font-semibold text-gray-900 border-b pb-2">Note Information</h4>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Note Type</label>
+              <div class="mt-1">
+                <span [class]="'inline-flex px-2 py-1 text-xs font-semibold rounded-full ' + getTypeClass(selectedNote.type)">
+                  {{ selectedNote.type === 'credit' ? 'Credit Note' : 'Debit Note' }}
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Note Number</label>
+              <p class="mt-1 text-sm text-gray-900">{{ selectedNote.noteNumber }}</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Date</label>
+              <p class="mt-1 text-sm text-gray-900">{{ formatDate(selectedNote.date) }}</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Status</label>
+              <div class="mt-1">
+                <span [class]="'inline-flex px-2 py-1 text-xs font-semibold rounded-full ' + getStatusClass(selectedNote.status)">
+                  {{ selectedNote.status | titlecase }}
+                </span>
+              </div>
+            </div>
+
+            <div *ngIf="selectedNote.processedDate">
+              <label class="block text-sm font-medium text-gray-700">Processed Date</label>
+              <p class="mt-1 text-sm text-gray-900">{{ formatDate(selectedNote.processedDate) }}</p>
+            </div>
+          </div>
+
+          <!-- Sale Information -->
+          <div class="space-y-4">
+            <h4 class="text-lg font-semibold text-gray-900 border-b pb-2">Sale Information</h4>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Sale Code</label>
+              <p class="mt-1 text-sm text-gray-900">{{ selectedNote.saleCode }}</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Sponsor Name</label>
+              <p class="mt-1 text-sm text-gray-900">{{ selectedNote.sponsorName }}</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Worker Name</label>
+              <p class="mt-1 text-sm text-gray-900">{{ selectedNote.workerName }}</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Original Amount</label>
+              <p class="mt-1 text-sm text-gray-900 font-semibold">{{ formatCurrency(selectedNote.originalAmount) }}</p>
+            </div>
+          </div>
+
+          <!-- Refund Details -->
+          <div class="md:col-span-2 space-y-4">
+            <h4 class="text-lg font-semibold text-gray-900 border-b pb-2">Refund Details</h4>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Refund Reason</label>
+                <p class="mt-1 text-sm text-gray-900">{{ refundReasons[selectedNote.reason] }}</p>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Refund Amount</label>
+                <p class="mt-1 text-sm text-gray-900 font-semibold text-lg">{{ formatCurrency(selectedNote.refundAmount) }}</p>
+              </div>
+            </div>
+
+            <div *ngIf="selectedNote.notes">
+              <label class="block text-sm font-medium text-gray-700">Notes</label>
+              <p class="mt-1 text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{{ selectedNote.notes }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3">
+        <button 
+          (click)="closeViewModal()"
+          class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">
+          Close
+        </button>
+        <button 
+          *ngIf="selectedNote?.status === 'draft'"
+          (click)="issueNote()"
+          class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
+          Issue Note
         </button>
       </div>
     </div>

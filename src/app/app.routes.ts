@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard.component';
 import { UiReferenceComponent } from './pages/ui-reference/ui-reference.component';
 import { AgentsListComponent } from './pages/agents/agents-list/agents-list.component';
 import { AgentDetailsComponent } from './pages/agents/agent-details/agent-details.component';
@@ -27,6 +28,7 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       { path: 'dashboard', component: DashboardComponent },
+      { path: 'admin-dashboard', component: AdminDashboardComponent },
       { path: 'ui-reference', component: UiReferenceComponent },
       { path: 'agents', component: AgentsListComponent },
       { path: 'agents/:id', component: AgentDetailsComponent },

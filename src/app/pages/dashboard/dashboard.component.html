@@ -336,8 +336,8 @@
             </div>
           </div>
 
-          <!-- Accountant Dashboard - Monthly Revenue / Receptionist Dashboard - Total Sponsors / HR Manager - Active Employees -->
-          <div *ngIf="(isAccountant || isReceptionist || isHRManager) && !isOperationsManager" class="bg-white overflow-hidden shadow rounded-lg">
+          <!-- Accountant Dashboard - Total Revenue -->
+          <div *ngIf="isAccountant && !isOperationsManager" class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
               <div class="flex items-center">
                 <div class="flex-shrink-0">
@@ -349,52 +349,84 @@
                 </div>
                 <div class="ml-5 w-0 flex-1">
                   <dl>
-                    <dt class="text-sm font-medium text-gray-500 truncate">
-                      {{ isAccountant ? 'Monthly Revenue' : 'Total Sponsors' }}
-                    </dt>
-                    <dd class="text-lg font-medium text-gray-900">
-                      {{ isAccountant ? formatCurrency(dashboardData.monthlyRevenue?.[0]?.amount || 0) : dashboardData.totalSponsors }}
-                    </dd>
-                    <dd class="text-sm text-green-600">
-                      {{ isAccountant ? (dashboardData.monthlyRevenue?.[0]?.month || 'N/A') + ' ' + (dashboardData.monthlyRevenue?.[0]?.year || '') : dashboardData.activeSponsors + ' active' }}
-                    </dd>
+                    <dt class="text-sm font-medium text-gray-500 truncate">Total Revenue</dt>
+                    <dd class="text-lg font-medium text-gray-900">{{ formatCurrency(dashboardData.financial?.totalRevenue || 17000) }}</dd>
+                    <dd class="text-sm text-green-600">This month: AED 0.00</dd>
                   </dl>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Total Workers / Monthly Expenses (for Accountant) / Active Assignments (for Receptionist) -->
-          <div *ngIf="!isOperationsManager" class="bg-white overflow-hidden shadow rounded-lg">
+          <!-- Receptionist Dashboard - Total Sponsors / HR Manager - Active Employees -->
+          <div *ngIf="(isReceptionist || isHRManager) && !isOperationsManager" class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
               <div class="flex items-center">
                 <div class="flex-shrink-0">
-                  <div class="w-8 h-8 bg-red-500 rounded-md flex items-center justify-center">
-                    <svg *ngIf="!isAccountant" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-                    </svg>
-                    <svg *ngIf="isAccountant" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                     </svg>
                   </div>
                 </div>
                 <div class="ml-5 w-0 flex-1">
                   <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">Total Sponsors</dt>
+                    <dd class="text-lg font-medium text-gray-900">{{ dashboardData.totalSponsors }}</dd>
+                    <dd class="text-sm text-green-600">{{ dashboardData.activeSponsors + ' active' }}</dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Accountant Dashboard - Total Expenses -->
+          <div *ngIf="isAccountant && !isOperationsManager" class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-red-500 rounded-md flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">Total Expenses</dt>
+                    <dd class="text-lg font-medium text-gray-900">{{ formatCurrency(dashboardData.financial?.totalExpenses || 6500) }}</dd>
+                    <dd class="text-sm text-red-600">4 approved</dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Total Workers / Active Assignments (for Receptionist) / Active Employees (for HR Manager) -->
+          <div *ngIf="!isOperationsManager && !isAccountant" class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-red-500 rounded-md flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dl>
                     <dt class="text-sm font-medium text-gray-500 truncate">
-                      {{ isAccountant ? 'Monthly Expenses' : 
-                         isReceptionist ? 'Active Assignments' :
+                      {{ isReceptionist ? 'Active Assignments' :
                          isHRManager ? 'Active Employees' :
                          isAgent ? 'My Workers' : 'Total Workers' }}
                     </dt>
                     <dd class="text-lg font-medium text-gray-900">
-                      {{ isAccountant ? formatCurrency(dashboardData.monthlyExpenses?.[0]?.amount || 0) : 
-                         isReceptionist ? dashboardData.activeAssignments :
+                      {{ isReceptionist ? dashboardData.activeAssignments :
                          isHRManager ? dashboardData.activeEmployees :
                          dashboardData.totalWorkers }}
                     </dd>
                     <dd class="text-sm text-blue-600">
-                      {{ isAccountant ? dashboardData.monthlyExpenses?.[0]?.month + ' ' + dashboardData.monthlyExpenses?.[0]?.year : 
-                         isReceptionist ? dashboardData.totalAssignments + ' total' :
+                      {{ isReceptionist ? dashboardData.totalAssignments + ' total' :
                          isHRManager ? dashboardData.totalEmployees + ' total' :
                          dashboardData.availableWorkers + ' available' }}
                     </dd>
@@ -404,8 +436,30 @@
             </div>
           </div>
 
-          <!-- Admin: Total Sponsors / Agent: Commission Earned / Accountant: Top Expense Category / Receptionist: Workers on Trial / HR Manager: Salary Expense -->
-          <div *ngIf="!isOperationsManager" class="bg-white overflow-hidden shadow rounded-lg">
+          <!-- Accountant Dashboard - Net Profit -->
+          <div *ngIf="isAccountant && !isOperationsManager" class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">Net Profit</dt>
+                    <dd class="text-lg font-medium text-gray-900">{{ formatCurrency(dashboardData.financial?.netProfit || 4100) }}</dd>
+                    <dd class="text-sm text-green-600">Revenue - Expenses</dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Admin: Total Sponsors / Agent: Commission Earned / Receptionist: Workers on Trial / HR Manager: Salary Expense -->
+          <div *ngIf="!isOperationsManager && !isAccountant" class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
               <div class="flex items-center">
                 <div class="flex-shrink-0">
@@ -416,7 +470,7 @@
                     <svg *ngIf="isAgent" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                     </svg>
-                    <svg *ngIf="isAccountant" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg *ngIf="isReceptionist" class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                     </svg>
                   </div>
@@ -424,20 +478,17 @@
                 <div class="ml-5 w-0 flex-1">
                   <dl>
                     <dt class="text-sm font-medium text-gray-500 truncate">
-                      {{ isAccountant ? 'Top Expense Category' : 
-                         isReceptionist ? 'Workers on Trial' :
+                      {{ isReceptionist ? 'Workers on Trial' :
                          isHRManager ? 'Total Salary Expense' :
                          isAgent ? 'Commission Earned' : 'Total Sponsors' }}
                     </dt>
                     <dd class="text-lg font-medium text-gray-900">
-                      {{ isAccountant ? formatCurrency(dashboardData.topExpenseCategories?.[0]?.amount || 0) :
-                         isReceptionist ? dashboardData.workerStatus?.trial || 0 :
+                      {{ isReceptionist ? dashboardData.workerStatus?.trial || 0 :
                          isHRManager ? formatCurrency(dashboardData.financial?.totalSalaryExpense || 0) :
                          isAgent ? formatCurrency(dashboardData.totalCommissionEarned) : dashboardData.totalSponsors }}
                     </dd>
                     <dd class="text-sm text-green-600">
-                      {{ isAccountant ? (dashboardData.topExpenseCategories?.[0]?.category || 'N/A').replace('-', ' ').replace('_', ' ').toUpperCase() :
-                         isReceptionist ? dashboardData.onTrial + ' sponsors on trial' :
+                      {{ isReceptionist ? dashboardData.onTrial + ' sponsors on trial' :
                          isHRManager ? dashboardData.totalEmployees + ' employees' :
                          isAgent ? dashboardData.workersSupplied + ' workers supplied' : dashboardData.activeSponsors + ' active' }}
                     </dd>
@@ -447,8 +498,30 @@
             </div>
           </div>
 
-          <!-- Total Revenue / My Sales / Top Agent Commission (for Accountant) / Available Workers (for Receptionist) / Employee Roles (for HR Manager) -->
-          <div *ngIf="!isOperationsManager" class="bg-white overflow-hidden shadow rounded-lg">
+          <!-- Accountant Dashboard - Pending Payments -->
+          <div *ngIf="isAccountant && !isOperationsManager" class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-orange-500 rounded-md flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">Pending Payments</dt>
+                    <dd class="text-lg font-medium text-gray-900">{{ formatCurrency(dashboardData.financial?.pendingPayments || 7500) }}</dd>
+                    <dd class="text-sm text-orange-600">Awaiting collection</dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Total Revenue / My Sales / Available Workers (for Receptionist) / Employee Roles (for HR Manager) -->
+          <div *ngIf="!isOperationsManager && !isAccountant" class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
               <div class="flex items-center">
                 <div class="flex-shrink-0">
@@ -461,23 +534,112 @@
                 <div class="ml-5 w-0 flex-1">
                   <dl>
                     <dt class="text-sm font-medium text-gray-500 truncate">
-                      {{ isAccountant ? 'Top Agent Commission' : 
-                         isReceptionist ? 'Available Workers' :
+                      {{ isReceptionist ? 'Available Workers' :
                          isHRManager ? 'Employee Roles' :
                          isAgent ? 'My Sales Revenue' : 'Total Revenue' }}
                     </dt>
                     <dd class="text-lg font-medium text-gray-900">
-                      {{ isAccountant ? formatCurrency(dashboardData.agentCommissionSummary?.[0]?.totalCommissions || 0) : 
-                         isReceptionist ? dashboardData.availableWorkers :
+                      {{ isReceptionist ? dashboardData.availableWorkers :
                          isHRManager ? (dashboardData.employeeRoleBreakdown?.receptionist || 0) + (dashboardData.employeeRoleBreakdown?.accountant || 0) + (dashboardData.employeeRoleBreakdown?.salesExecutive || 0) + (dashboardData.employeeRoleBreakdown?.operationsManager || 0) :
                          formatCurrency(dashboardData.totalRevenue) }}
                     </dd>
                     <dd class="text-sm text-yellow-600">
-                      {{ isAccountant ? (dashboardData.agentCommissionSummary?.[0]?.agentName || 'N/A').split(' ')[0] :
-                         isReceptionist ? (dashboardData.workerStatus?.interview || 0) + ' in interview' :
+                      {{ isReceptionist ? (dashboardData.workerStatus?.interview || 0) + ' in interview' :
                          isHRManager ? 'Different roles' :
                          isAgent ? (dashboardData.totalSales || 0) + ' sales' : formatCurrency(dashboardData.pendingPayments || 0) + ' pending' }}
                     </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accountant Dashboard - Additional KPIs -->
+        <div *ngIf="isAccountant && !isOperationsManager" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+          
+          <!-- Commission Paid -->
+          <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-indigo-500 rounded-md flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">Commission Paid</dt>
+                    <dd class="text-lg font-medium text-gray-900">{{ formatCurrency(dashboardData.financial?.commissionPaid || 1900) }}</dd>
+                    <dd class="text-sm text-indigo-600">2 paid</dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pending Commissions -->
+          <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">Pending Commissions</dt>
+                    <dd class="text-lg font-medium text-gray-900">{{ formatCurrency(dashboardData.financial?.pendingCommissions || 1200) }}</dd>
+                    <dd class="text-sm text-yellow-600">1 to pay</dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Total Refunds -->
+          <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">Total Refunds</dt>
+                    <dd class="text-lg font-medium text-gray-900">{{ formatCurrency(dashboardData.financial?.totalRefunds || 600) }}</dd>
+                    <dd class="text-sm text-purple-600">1 processed</dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pending Refunds -->
+          <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-pink-500 rounded-md flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">Pending Refunds</dt>
+                    <dd class="text-lg font-medium text-gray-900">{{ formatCurrency(dashboardData.financial?.pendingRefunds || 600) }}</dd>
+                    <dd class="text-sm text-pink-600">1 pending</dd>
                   </dl>
                 </div>
               </div>

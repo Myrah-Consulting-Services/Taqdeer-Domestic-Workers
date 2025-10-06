@@ -289,7 +289,7 @@ export class DashboardComponent implements OnInit {
         totalRevenue: financialSummary.totalRevenue,
         totalExpenses: financialSummary.totalExpenses,
         netProfit: financialSummary.netProfit,
-        totalCommissions: financialSummary.totalCommissions,
+        commissionPaid: financialSummary.commissionPaid,
         pendingCommissions: financialSummary.pendingCommissions,
         totalRefunds: financialSummary.totalRefunds,
         pendingRefunds: financialSummary.pendingRefunds
@@ -411,7 +411,7 @@ export class DashboardComponent implements OnInit {
         thisMonthRevenue: 0,
         totalExpenses: 0,
         pendingCommissions: 0,
-        totalCommissions: 0
+        commissionPaid: 0
       },
       
       // Recent Activities
@@ -463,7 +463,7 @@ export class DashboardComponent implements OnInit {
           thisMonthRevenue: 0,
           totalExpenses: employeeStats.totalSalaryExpense,
           pendingCommissions: 0,
-          totalCommissions: 0
+          commissionPaid: 0
         },
         
         // Recent Activities

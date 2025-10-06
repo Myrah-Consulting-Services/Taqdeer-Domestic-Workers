@@ -13,7 +13,7 @@
       <!-- Navigation -->
       <nav class="hidden md:flex space-x-8">
         <!-- Dashboard - Available to all roles -->
-        <a routerLink="/dashboard" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: false}" 
+        <a [routerLink]="isAdmin ? '/admin-dashboard' : '/dashboard'" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: false}" 
            class="text-gray-600 hover:text-primary px-3 py-2 font-medium transition-colors">
           Dashboard
         </a>
@@ -238,7 +238,7 @@
     <div class="md:hidden" [class.hidden]="!isMobileMenuOpen">
       <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-200">
         <!-- Dashboard - Available to all roles -->
-        <a routerLink="/dashboard" class="text-gray-600 hover:text-primary block px-3 py-2 text-base font-medium">Dashboard</a>
+        <a [routerLink]="isAdmin ? '/admin-dashboard' : '/dashboard'" class="text-gray-600 hover:text-primary block px-3 py-2 text-base font-medium">Dashboard</a>
         
         <!-- ADMIN MOBILE NAVIGATION -->
         <ng-container *ngIf="isAdmin && !isHRManager">

@@ -113,21 +113,6 @@ export class CommissionsComponent implements OnInit {
     });
   }
 
-  getTotalCommissions(): number {
-    return this.filteredCommissions.reduce((sum, commission) => sum + commission.commissionAmount, 0);
-  }
-
-  getPaidCommissions(): number {
-    return this.filteredCommissions
-      .filter(c => c.status === 'paid')
-      .reduce((sum, commission) => sum + commission.commissionAmount, 0);
-  }
-
-  getPendingCommissions(): number {
-    return this.filteredCommissions
-      .filter(c => c.status === 'pending')
-      .reduce((sum, commission) => sum + commission.commissionAmount, 0);
-  }
 
   formatPaymentMethod(method: PaymentMethod | undefined): string {
     if (!method) return '';

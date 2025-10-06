@@ -28,7 +28,7 @@ export class AgentService {
       status: 'active',
       registrationDate: new Date('2023-01-15'),
       totalWorkersSupplied: 45,
-      totalCommissionPaid: 22500,
+      totalCommissionPaid: 500,
       notes: 'Reliable agent, specializes in Ethiopian workers'
     },
     {
@@ -52,7 +52,7 @@ export class AgentService {
       status: 'active',
       registrationDate: new Date('2023-03-20'),
       totalWorkersSupplied: 32,
-      totalCommissionPaid: 30720,
+      totalCommissionPaid: 400,
       notes: 'Specializes in Filipino and Indian domestic workers'
     },
     {
@@ -74,7 +74,7 @@ export class AgentService {
       status: 'active',
       registrationDate: new Date('2023-06-10'),
       totalWorkersSupplied: 28,
-      totalCommissionPaid: 12600,
+      totalCommissionPaid: 300,
       notes: 'Ethiopian and Kenyan workers'
     },
     {
@@ -95,7 +95,7 @@ export class AgentService {
       status: 'active',
       registrationDate: new Date('2023-08-05'),
       totalWorkersSupplied: 18,
-      totalCommissionPaid: 27000,
+      totalCommissionPaid: 500,
       notes: 'Sri Lankan workers only'
     },
     {
@@ -114,7 +114,7 @@ export class AgentService {
       status: 'inactive',
       registrationDate: new Date('2022-11-20'),
       totalWorkersSupplied: 12,
-      totalCommissionPaid: 7200,
+      totalCommissionPaid: 200,
       notes: 'Currently inactive - pending license renewal'
     }
   ];
