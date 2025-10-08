@@ -17,6 +17,7 @@ export class SponsorDetailsComponent implements OnInit {
   sponsorInterviews: WorkerInterview[] = [];
   showEditModal = false;
   showPaymentModal = false;
+  showReturnModal = false;
   showSelectWorkerModal = false;
   showRejectWorkerModal = false;
   showRescheduleModal = false;
@@ -43,6 +44,14 @@ export class SponsorDetailsComponent implements OnInit {
   paymentFormData = {
     finalPaymentAmount: 0,
     paymentDate: new Date().toISOString().split('T')[0],
+    notes: ''
+  };
+  
+  // Return form data
+  returnFormData = {
+    returnDate: new Date().toISOString().split('T')[0],
+    returnReason: '',
+    refundAmount: 0,
     notes: ''
   };
 
@@ -360,6 +369,66 @@ export class SponsorDetailsComponent implements OnInit {
       paymentDate: new Date().toISOString().split('T')[0],
       notes: ''
     };
+  }
+
+  // Return Modal Methods
+  openReturnModal(assignment: WorkerAssignment): void {
+    this.selectedAssignment = assignment;
+    this.returnFormData = {
+      returnDate: new Date().toISOString().split('T')[0],
+      returnReason: '',
+      refundAmount: this.calculateRefundAmount(assignment),
+      notes: ''
+    };
+    this.showReturnModal = true;
+  }
+
+  closeReturnModal(): void {
+    this.showReturnModal = false;
+    this.selectedAssignment = null;
+    this.returnFormData = {
+      returnDate: new Date().toISOString().split('T')[0],
+      returnReason: '',
+      refundAmount: 0,
+      notes: ''
+    };
+  }
+
+  calculateRefundAmount(assignment: WorkerAssignment): number {
+    // Calculate refund based on contract terms and time worked
+    const monthsWorked = this.getMonthsWorked(assignment.contractStartDate);
+    const totalAmount = assignment.totalAmount;
+    
+    // Standard refund policy: 50% refund if returned within 6 months
+    if (monthsWorked <= 6) {
+      return Math.round(totalAmount * 0.5);
+    }
+    // 25% refund if returned within 12 months
+    else if (monthsWorked <= 12) {
+      return Math.round(totalAmount * 0.25);
+    }
+    // No refund after 12 months
+    return 0;
+  }
+
+  processReturn(): void {
+    if (!this.selectedAssignment) return;
+
+    // Process return through service (only assignmentId and returnReason are supported)
+    this.sponsorService.returnWorker(
+      this.selectedAssignment.id,
+      this.returnFormData.returnReason
+    );
+
+    // Show success message with refund information
+    const refundMessage = this.returnFormData.refundAmount > 0 
+      ? `Refund of AED ${this.returnFormData.refundAmount.toLocaleString()} will be processed.`
+      : 'No refund applicable based on contract terms.';
+    
+    alert(`✅ Worker Return Processed! ${refundMessage}`);
+    
+    this.closeReturnModal();
+    this.loadSponsorAssignments(this.sponsor!.id);
   }
 
   processPayment(): void {

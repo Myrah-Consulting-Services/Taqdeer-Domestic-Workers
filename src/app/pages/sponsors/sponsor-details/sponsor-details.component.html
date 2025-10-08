@@ -535,10 +535,10 @@
                 
                 <button
                   *ngIf="['on-trial', 'active'].includes(assignment.assignmentStatus)"
-                  (click)="returnWorker(assignment)"
+                  (click)="openReturnModal(assignment)"
                   class="px-3 py-1 bg-orange-600 text-white text-xs font-medium rounded hover:bg-orange-700"
-                  title="Return Worker">
-                  ↩ Return
+                  title="Return Worker & Process Refund">
+                  ↩ Return & Refund
                 </button>
                 
                 <button
@@ -912,6 +912,191 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               Confirm Payment & Generate Invoice
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Return Worker Modal -->
+<div *ngIf="showReturnModal && selectedAssignment" class="fixed z-[60] inset-0 overflow-y-auto">
+  <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75" (click)="closeReturnModal()"></div>
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+    
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-3xl">
+      <!-- Modal Header -->
+      <div class="px-6 pt-6 pb-4 border-b border-gray-200 bg-gradient-to-r from-orange-600 to-red-600">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-2xl font-bold text-white">↩ Worker Return Process</h3>
+            <p class="text-sm text-orange-100 mt-1">Process worker return and refund calculation</p>
+          </div>
+          <button (click)="closeReturnModal()" class="text-white hover:text-gray-200">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="px-6 py-6">
+        <form (ngSubmit)="processReturn()">
+          <!-- Worker Details -->
+          <div class="mb-6 bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h4 class="font-bold text-gray-900 mb-3">Worker Details</h4>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span class="text-gray-600">Worker Name:</span>
+                <span class="ml-2 font-medium text-gray-900">{{ selectedAssignment.workerName }}</span>
+              </div>
+              <div>
+                <span class="text-gray-600">Passport:</span>
+                <span class="ml-2 font-medium text-gray-900">{{ selectedAssignment.workerPassport }}</span>
+              </div>
+              <div>
+                <span class="text-gray-600">Nationality:</span>
+                <span class="ml-2 font-medium text-gray-900">{{ selectedAssignment.workerNationality }}</span>
+              </div>
+              <div>
+                <span class="text-gray-600">Worker Type:</span>
+                <span class="ml-2 font-medium text-gray-900 capitalize">{{ selectedAssignment.workerType }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contract Information -->
+          <div class="mb-6">
+            <h4 class="font-bold text-gray-900 mb-3">Contract Information</h4>
+            <div class="space-y-3">
+              <div class="flex justify-between py-2 border-b border-gray-200">
+                <span class="text-gray-600">Contract Start Date:</span>
+                <span class="font-medium text-gray-900">{{ formatDate(selectedAssignment.contractStartDate) }}</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-200">
+                <span class="text-gray-600">Months Worked:</span>
+                <span class="font-medium text-gray-900">{{ getMonthsWorked(selectedAssignment.contractStartDate) }} months</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-200">
+                <span class="text-gray-600">Total Package Amount:</span>
+                <span class="font-bold text-gray-900">{{ formatCurrency(selectedAssignment.totalAmount) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Return Form -->
+          <div class="mb-6 bg-orange-50 rounded-lg p-4 border border-orange-200">
+            <h4 class="font-bold text-orange-900 mb-4">🔄 Return Details</h4>
+            
+            <div class="space-y-4">
+              <!-- Return Date -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Return Date <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  [(ngModel)]="returnFormData.returnDate"
+                  name="returnDate"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  required
+                />
+              </div>
+
+              <!-- Return Reason -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Return Reason <span class="text-red-500">*</span>
+                </label>
+                <select
+                  [(ngModel)]="returnFormData.returnReason"
+                  name="returnReason"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  required
+                >
+                  <option value="">Select return reason</option>
+                  <option value="not-suitable">Worker not suitable</option>
+                  <option value="sponsor-request">Sponsor requested return</option>
+                  <option value="worker-request">Worker requested return</option>
+                  <option value="contract-violation">Contract violation</option>
+                  <option value="other">Other reason</option>
+                </select>
+              </div>
+
+              <!-- Refund Amount -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Refund Amount (AED) <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  [(ngModel)]="returnFormData.refundAmount"
+                  name="refundAmount"
+                  class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-lg font-bold"
+                  [class.border-orange-500]="returnFormData.refundAmount > 0"
+                  readonly
+                />
+                <p class="text-xs mt-1 text-orange-600">
+                  💡 Refund calculated based on contract terms and time worked
+                </p>
+              </div>
+
+              <!-- Notes -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Additional Notes (Optional)
+                </label>
+                <textarea
+                  [(ngModel)]="returnFormData.notes"
+                  name="notes"
+                  rows="3"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  placeholder="Additional details about the return..."
+                ></textarea>
+              </div>
+            </div>
+
+            <!-- Refund Policy Info -->
+            <div class="mt-4 pt-4 border-t border-orange-200">
+              <div class="bg-blue-100 border border-blue-300 rounded-lg p-3">
+                <div class="flex items-start">
+                  <svg class="w-5 h-5 text-blue-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <div class="flex-1">
+                    <p class="text-sm font-bold text-blue-900">Refund Policy</p>
+                    <p class="text-xs text-blue-700 mt-1">
+                      • 50% refund if returned within 6 months<br>
+                      • 25% refund if returned within 12 months<br>
+                      • No refund after 12 months
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="flex justify-end gap-3">
+            <button 
+              type="button" 
+              (click)="closeReturnModal()"
+              class="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition-colors">
+              <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+              Cancel
+            </button>
+            <button 
+              type="submit"
+              class="px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold rounded-lg hover:from-orange-700 hover:to-red-700 transition-all shadow-lg hover:shadow-xl">
+              <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Process Return & Refund
             </button>
           </div>
         </form>
