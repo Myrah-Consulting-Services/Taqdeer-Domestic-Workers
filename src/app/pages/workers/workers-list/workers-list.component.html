@@ -25,111 +25,6 @@
       </p>
     </div>
 
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
-      <!-- Total Workers -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-500">Total</p>
-            <p class="text-2xl font-semibold text-gray-900">{{ stats.total }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Available -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-500">Available</p>
-            <p class="text-2xl font-semibold text-gray-900">{{ stats.available }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Interview -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="w-12 h-12 bg-blue-400 rounded-lg flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-500">Interview</p>
-            <p class="text-2xl font-semibold text-gray-900">{{ stats.interview }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Trial -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-500">On Trial</p>
-            <p class="text-2xl font-semibold text-gray-900">{{ stats.trial }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Placed -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-500">Placed</p>
-            <p class="text-2xl font-semibold text-gray-900">{{ stats.placed }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Returned -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-500">Returned</p>
-            <p class="text-2xl font-semibold text-gray-900">{{ stats.returned }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Filters and Actions -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
       <div class="flex flex-col gap-4">
@@ -195,8 +90,7 @@
           <button 
             *ngIf="isAdmin || isAgent"
             (click)="openQuickImportModal()"
-            class="inline-flex items-center px-4 py-2 border-2 text-white font-medium rounded-md transition-colors mr-3"
-            style="border-color: #FF6B00; background-color: #FF6B00;"
+            class="inline-flex items-center px-4 py-2 border-2 text-white font-medium rounded-md transition-colors mr-3 bg-blue-600 hover:bg-blue-700 border-blue-600"
             title="isAdmin: {{isAdmin}}, isAgent: {{isAgent}}"
           >
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -209,8 +103,7 @@
           <button 
             *ngIf="isAdmin || isAgent"
             (click)="openAddWorkerModal()"
-            class="inline-flex items-center px-4 py-2 text-white font-medium rounded-md transition-colors"
-            style="background-color: #FF6B00;"
+            class="inline-flex items-center px-4 py-2 text-white font-medium rounded-md transition-colors bg-blue-600 hover:bg-blue-700"
           >
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -268,7 +161,7 @@
 
               <!-- Type & Nationality -->
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-900">{{ getWorkerTypeLabel(worker.workerType) }}</div>
+                <div class="text-sm text-gray-900">Housemaid</div>
                 <div class="text-sm text-gray-500">{{ worker.nationality }}</div>
                 <div class="text-xs text-gray-400">{{ worker.experience }} years exp</div>
               </td>
@@ -345,8 +238,7 @@
                   <p class="text-gray-500 mb-4">Get started by adding your first worker.</p>
                   <button 
                     (click)="openAddWorkerModal()"
-                    class="inline-flex items-center px-4 py-2 text-white font-medium rounded-md transition-colors"
-                    style="background-color: #FF6B00;"
+                    class="inline-flex items-center px-4 py-2 text-white font-medium rounded-md transition-colors bg-blue-600 hover:bg-blue-700"
                   >
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -656,8 +548,7 @@
           Cancel
         </button>
         <button type="submit" (click)="onFormSubmit()" [disabled]="!workerForm.form.valid"
-          class="px-6 py-2 text-white font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-          style="background-color: #FF6B00;">
+          class="px-6 py-2 text-white font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed bg-blue-600 hover:bg-blue-700">
           {{ isEditMode ? 'Update Worker' : 'Add Worker' }}
         </button>
       </div>
@@ -957,7 +848,7 @@
 
       <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-4xl">
         <!-- Modal Header -->
-        <div class="px-6 pt-6 pb-4 border-b border-gray-200" style="background-color: #FF6B00;">
+        <div class="px-6 pt-6 pb-4 border-b border-gray-200 bg-blue-600">
           <div class="flex items-center justify-between">
             <div class="flex items-center">
               <svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1029,8 +920,7 @@ Agent: AG001"
 
             <button
               (click)="parseImportText()"
-              class="inline-flex items-center px-6 py-2 text-white font-medium rounded-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all"
-              style="background-color: #FF6B00;"
+              class="inline-flex items-center px-6 py-2 text-white font-medium rounded-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all bg-blue-600 hover:bg-blue-700"
             >
               <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>

@@ -15,10 +15,29 @@ export class SponsorDetailsComponent implements OnInit {
   sponsor: Sponsor | undefined;
   sponsorAssignments: WorkerAssignment[] = [];
   sponsorInterviews: WorkerInterview[] = [];
-  showDeleteModal = false;
+  showEditModal = false;
   showPaymentModal = false;
+  showSelectWorkerModal = false;
+  showRejectWorkerModal = false;
+  showRescheduleModal = false;
+  showCancelInterviewModal = false;
   activeTab: string = 'overview';
   selectedAssignment: WorkerAssignment | null = null;
+  selectedInterview: WorkerInterview | null = null;
+  isEditMode = false;
+  
+  // Form data for edit modal
+  formData: any = {};
+  
+  // Form data for interview modals
+  interviewFormData = {
+    notes: '',
+    rescheduleDate: '',
+    rescheduleTime: '',
+    reason: '',
+    selectionType: '',
+    trialDuration: ''
+  };
   
   // Payment form data
   paymentFormData = {
@@ -65,7 +84,36 @@ export class SponsorDetailsComponent implements OnInit {
 
   navigateToEdit(): void {
     if (this.sponsor) {
-      this.router.navigate(['/sponsors']);
+      this.formData = {
+        sponsorCode: this.sponsor.sponsorCode,
+        fullName: this.sponsor.fullName,
+        emiratesId: this.sponsor.emiratesId,
+        nationality: this.sponsor.nationality,
+        phone: this.sponsor.phone,
+        alternatePhone: this.sponsor.alternatePhone,
+        email: this.sponsor.email,
+        emirates: this.sponsor.emirates,
+        area: this.sponsor.area,
+        address: this.sponsor.address,
+        status: this.sponsor.status
+      };
+      this.isEditMode = true;
+      this.showEditModal = true;
+    }
+  }
+
+  closeEditModal(): void {
+    this.showEditModal = false;
+    this.isEditMode = false;
+    this.formData = {};
+  }
+
+  onEditSubmit(): void {
+    if (this.sponsor) {
+      // Update sponsor with form data
+      Object.assign(this.sponsor, this.formData);
+      this.sponsorService.updateSponsor(this.sponsor);
+      this.closeEditModal();
     }
   }
 
@@ -73,20 +121,138 @@ export class SponsorDetailsComponent implements OnInit {
     this.router.navigate(['/sponsors']);
   }
 
-  openDeleteModal(): void {
-    this.showDeleteModal = true;
-  }
-
-  closeDeleteModal(): void {
-    this.showDeleteModal = false;
-  }
-
-  confirmDelete(): void {
+  onStatusChange(): void {
     if (this.sponsor) {
-      this.sponsorService.deleteSponsor(this.sponsor.id);
-      this.router.navigate(['/sponsors']);
+      this.sponsorService.updateSponsor(this.sponsor);
     }
   }
+
+  // Interview modal methods
+  openSelectWorkerModal(interview: WorkerInterview): void {
+    this.selectedInterview = interview;
+    this.interviewFormData = { notes: '', rescheduleDate: '', rescheduleTime: '', reason: '', selectionType: '', trialDuration: '' };
+    this.showSelectWorkerModal = true;
+  }
+
+  openRejectWorkerModal(interview: WorkerInterview): void {
+    this.selectedInterview = interview;
+    this.interviewFormData = { notes: '', rescheduleDate: '', rescheduleTime: '', reason: '', selectionType: '', trialDuration: '' };
+    this.showRejectWorkerModal = true;
+  }
+
+  openRescheduleModal(interview: WorkerInterview): void {
+    this.selectedInterview = interview;
+    this.interviewFormData = { notes: '', rescheduleDate: '', rescheduleTime: '', reason: '', selectionType: '', trialDuration: '' };
+    this.showRescheduleModal = true;
+  }
+
+  openCancelInterviewModal(interview: WorkerInterview): void {
+    this.selectedInterview = interview;
+    this.interviewFormData = { notes: '', rescheduleDate: '', rescheduleTime: '', reason: '', selectionType: '', trialDuration: '' };
+    this.showCancelInterviewModal = true;
+  }
+
+  closeInterviewModals(): void {
+    this.showSelectWorkerModal = false;
+    this.showRejectWorkerModal = false;
+    this.showRescheduleModal = false;
+    this.showCancelInterviewModal = false;
+    this.selectedInterview = null;
+    this.interviewFormData = { notes: '', rescheduleDate: '', rescheduleTime: '', reason: '', selectionType: '', trialDuration: '' };
+  }
+
+  onSelectWorker(): void {
+    if (this.selectedInterview && this.sponsor && this.interviewFormData.selectionType) {
+      // Prepare notes with selection details
+      let notes = this.interviewFormData.notes || '';
+      if (this.interviewFormData.selectionType === 'trial') {
+        notes = `Trial Basis - ${this.interviewFormData.trialDuration} month(s). ${notes}`.trim();
+      } else if (this.interviewFormData.selectionType === 'full') {
+        notes = `Pay Full - Permanent hire. ${notes}`.trim();
+      }
+      
+      // Update interview result to selected
+      this.sponsorService.updateInterviewResult(
+        this.selectedInterview.id, 
+        'selected', 
+        notes
+      );
+
+      // Create worker assignment
+      const assignment: WorkerAssignment = {
+        id: '', // Will be set by the service
+        workerId: this.selectedInterview.workerId,
+        workerName: this.selectedInterview.workerName,
+        workerPassport: this.selectedInterview.workerPassport,
+        workerNationality: this.selectedInterview.workerNationality,
+        workerType: this.selectedInterview.workerType,
+        sponsorId: this.sponsor.id,
+        sponsorName: this.sponsor.fullName,
+        totalAmount: 0, // Will be calculated by the service based on nationality
+        advanceAmount: 5000, // Default advance amount
+        remainingAmount: 0, // Will be calculated by the service
+        paidAmount: 5000, // Default paid amount (advance)
+        contractStartDate: new Date().toISOString(),
+        contractEndDate: '', // Will be set by the service (2 years from start)
+        isOnTrial: this.interviewFormData.selectionType === 'trial',
+        assignmentStatus: this.interviewFormData.selectionType === 'trial' ? 'on-trial' : 'pending',
+        contractStatus: this.interviewFormData.selectionType === 'trial' ? 'trial' : 'confirmed',
+        quotationNumber: `QT-2024-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`,
+        notes: notes,
+        createdAt: '', // Will be set by the service
+        updatedAt: '' // Will be set by the service
+      };
+
+      // Assign worker to sponsor
+      this.sponsorService.assignWorkerToSponsor(assignment);
+
+      // Reload sponsor interviews and assignments to reflect changes
+      this.loadSponsorInterviews(this.sponsor.id);
+      this.loadSponsorAssignments(this.sponsor.id);
+      this.closeInterviewModals();
+    }
+  }
+
+  onRejectWorker(): void {
+    if (this.selectedInterview && this.sponsor) {
+      // Update interview result to rejected
+      this.sponsorService.updateInterviewResult(
+        this.selectedInterview.id, 
+        'rejected', 
+        undefined, 
+        this.interviewFormData.reason
+      );
+      // Reload sponsor interviews to reflect changes
+      this.loadSponsorInterviews(this.sponsor.id);
+      this.closeInterviewModals();
+    }
+  }
+
+  onReschedule(): void {
+    if (this.selectedInterview && this.sponsor && this.interviewFormData.rescheduleDate && this.interviewFormData.rescheduleTime) {
+      // Combine date and time for the service call
+      const newDateTime = `${this.interviewFormData.rescheduleDate}T${this.interviewFormData.rescheduleTime}`;
+      this.sponsorService.rescheduleInterview(
+        this.selectedInterview.id, 
+        newDateTime, 
+        this.interviewFormData.rescheduleTime
+      );
+      // Reload sponsor interviews to reflect changes
+      this.loadSponsorInterviews(this.sponsor.id);
+      this.closeInterviewModals();
+    }
+  }
+
+  onCancelInterview(): void {
+    if (this.selectedInterview && this.sponsor) {
+      // Cancel the interview
+      this.sponsorService.cancelInterview(this.selectedInterview.id);
+      // Reload sponsor interviews to reflect changes
+      this.loadSponsorInterviews(this.sponsor.id);
+      this.closeInterviewModals();
+    }
+  }
+
 
   formatCurrency(amount: number): string {
     return `AED ${amount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;

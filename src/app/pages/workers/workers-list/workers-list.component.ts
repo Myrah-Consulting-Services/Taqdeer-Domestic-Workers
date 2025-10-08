@@ -19,7 +19,6 @@ export class WorkersListComponent implements OnInit {
   statusFilter: string = 'all';
   nationalityFilter: string = 'all';
   typeFilter: string = 'all';
-  stats: any = {};
   
   // Modal states
   showDeleteModal = false;
@@ -81,7 +80,6 @@ export class WorkersListComponent implements OnInit {
     this.isReceptionist = this.currentUser?.role === 'employee' && this.currentUser?.employeeRole === 'Receptionist';
     this.loadAvailableAgents();
     this.loadWorkers();
-    this.loadStats();
   }
   
   loadAvailableAgents(): void {
@@ -104,10 +102,6 @@ export class WorkersListComponent implements OnInit {
       this.workers = workers;
       this.applyFilters();
     });
-  }
-
-  loadStats(): void {
-    this.stats = this.workerService.getWorkerStats();
   }
 
   applyFilters(): void {
@@ -205,7 +199,6 @@ export class WorkersListComponent implements OnInit {
     this.showSuccessAlert = true;
     this.closeFormModal();
     this.loadWorkers();
-    this.loadStats();
     
     setTimeout(() => {
       this.showSuccessAlert = false;
@@ -259,7 +252,6 @@ export class WorkersListComponent implements OnInit {
       this.workerService.deleteWorker(this.workerToDelete.id);
       this.closeDeleteModal();
       this.loadWorkers();
-      this.loadStats();
       this.alertMessage = 'Worker deleted successfully!';
       this.showSuccessAlert = true;
       setTimeout(() => {

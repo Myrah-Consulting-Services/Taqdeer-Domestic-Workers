@@ -21,14 +21,17 @@
         </div>
         
         <div class="flex items-center gap-3">
-          <!-- Status Badge -->
-          <span 
+          <!-- Status Dropdown -->
+          <select 
+            [(ngModel)]="sponsor.status" 
+            (ngModelChange)="onStatusChange()"
             [class]="sponsor.status === 'active' ? 
-              'inline-flex px-4 py-2 text-sm font-semibold rounded-md bg-green-100 text-green-800' : 
-              'inline-flex px-4 py-2 text-sm font-semibold rounded-md bg-gray-100 text-gray-800'"
+              'px-4 py-2 text-sm font-semibold rounded-md bg-green-100 text-green-800 border border-green-300 focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer' : 
+              'px-4 py-2 text-sm font-semibold rounded-md bg-gray-100 text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 cursor-pointer'"
           >
-            {{ sponsor.status | titlecase }}
-          </span>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
           
           <!-- Edit Button -->
           <button 
@@ -39,17 +42,6 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
             </svg>
             Edit
-          </button>
-          
-          <!-- Delete Button -->
-          <button 
-            (click)="openDeleteModal()"
-            class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors"
-          >
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-            </svg>
-            Delete
           </button>
         </div>
       </div>
@@ -116,7 +108,7 @@
           <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
           </svg>
-          Worker Assignments
+          Worker List
           <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
             {{ sponsorAssignments.length }}
           </span>
@@ -131,7 +123,7 @@
           <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
           </svg>
-          Worker Interviews
+          Interview List
           <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
             {{ sponsorInterviews.length }}
           </span>
@@ -144,60 +136,6 @@
       
       <!-- Overview Tab -->
       <div *ngIf="activeTab === 'overview'">
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <!-- Total Hired -->
-          <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200 p-6">
-            <div class="flex items-center">
-              <div class="flex-shrink-0">
-                <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
-                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                  </svg>
-                </div>
-              </div>
-              <div class="ml-4">
-                <p class="text-sm font-medium text-purple-700">Total Hired</p>
-                <p class="text-2xl font-semibold text-purple-900">{{ sponsor.totalHired }}</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Current Workers -->
-          <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200 p-6">
-            <div class="flex items-center">
-              <div class="flex-shrink-0">
-                <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
-                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                </div>
-              </div>
-              <div class="ml-4">
-                <p class="text-sm font-medium text-green-700">Current Workers</p>
-                <p class="text-2xl font-semibold text-green-900">{{ sponsor.currentWorkers }}</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Total Assignments -->
-          <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg border border-orange-200 p-6">
-            <div class="flex items-center">
-              <div class="flex-shrink-0">
-                <div class="w-12 h-12" style="background-color: #FF6B00; border-radius: 0.5rem;">
-                  <svg class="w-6 h-6 text-white ml-3 mt-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                  </svg>
-                </div>
-              </div>
-              <div class="ml-4">
-                <p class="text-sm font-medium text-orange-700">Total Assignments</p>
-                <p class="text-2xl font-semibold text-orange-900">{{ sponsorAssignments.length }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <!-- Quick Summary -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
@@ -215,15 +153,18 @@
                 <span class="text-gray-600">Emirates:</span>
                 <span class="font-medium text-gray-900">{{ sponsor.emirates }}</span>
               </div>
-              <div class="flex justify-between py-2">
+              <div class="flex justify-between items-center py-2">
                 <span class="text-gray-600">Status:</span>
-                <span 
+                <select 
+                  [(ngModel)]="sponsor.status" 
+                  (ngModelChange)="onStatusChange()"
                   [class]="sponsor.status === 'active' ? 
-                    'px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800' : 
-                    'px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800'"
+                    'px-3 py-1.5 text-sm font-semibold rounded-md bg-green-100 text-green-800 border border-green-300 focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer' : 
+                    'px-3 py-1.5 text-sm font-semibold rounded-md bg-gray-100 text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 cursor-pointer'"
                 >
-                  {{ sponsor.status | titlecase }}
-                </span>
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
               </div>
             </div>
           </div>
@@ -275,13 +216,16 @@
             </div>
             <div class="flex items-center justify-between py-4">
               <span class="text-sm font-medium text-gray-600 w-1/3">Status:</span>
-              <span 
+              <select 
+                [(ngModel)]="sponsor.status" 
+                (ngModelChange)="onStatusChange()"
                 [class]="sponsor.status === 'active' ? 
-                  'px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800' : 
-                  'px-3 py-1 text-sm font-semibold rounded-full bg-gray-100 text-gray-800'"
+                  'px-3 py-1.5 text-sm font-semibold rounded-md bg-green-100 text-green-800 border border-green-300 focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer' : 
+                  'px-3 py-1.5 text-sm font-semibold rounded-md bg-gray-100 text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 cursor-pointer'"
               >
-                {{ sponsor.status | titlecase }}
-              </span>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
             </div>
           </div>
         </div>
@@ -710,7 +654,7 @@
               <!-- Select Button (only for scheduled/rescheduled) -->
               <button 
                 *ngIf="interview.interviewStatus !== 'completed' && interview.interviewStatus !== 'cancelled'"
-                (click)="updateInterviewResult(interview, 'selected')"
+                (click)="openSelectWorkerModal(interview)"
                 class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -721,7 +665,7 @@
               <!-- Reject Button (only for scheduled/rescheduled) -->
               <button 
                 *ngIf="interview.interviewStatus !== 'completed' && interview.interviewStatus !== 'cancelled'"
-                (click)="updateInterviewResult(interview, 'rejected')"
+                (click)="openRejectWorkerModal(interview)"
                 class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md transition-colors">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -732,7 +676,7 @@
               <!-- Reschedule Button (only for scheduled) -->
               <button 
                 *ngIf="interview.interviewStatus === 'scheduled' || interview.interviewStatus === 'rescheduled'"
-                (click)="rescheduleInterview(interview)"
+                (click)="openRescheduleModal(interview)"
                 class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -743,7 +687,7 @@
               <!-- Cancel Button (only for scheduled/rescheduled) -->
               <button 
                 *ngIf="interview.interviewStatus !== 'completed' && interview.interviewStatus !== 'cancelled'"
-                (click)="cancelInterview(interview)"
+                (click)="openCancelInterviewModal(interview)"
                 class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-md transition-colors">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -976,51 +920,386 @@
   </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
-<div *ngIf="showDeleteModal" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-  <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+<!-- Edit Sponsor Modal -->
+<div *ngIf="showEditModal" class="fixed inset-0 overflow-y-auto" style="z-index: 1100;" role="dialog" aria-modal="true">
+  <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
     <!-- Background overlay -->
-    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" (click)="closeDeleteModal()"></div>
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" (click)="closeEditModal()"></div>
 
     <!-- Modal panel -->
-    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
     
-    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-        <div class="sm:flex sm:items-start">
-          <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-            <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-3xl">
+      <!-- Modal Header -->
+      <div class="px-6 pt-6 pb-4 border-b border-gray-200 bg-blue-600">
+        <div class="flex items-center justify-between">
+          <h3 class="text-2xl font-bold text-white">Edit Sponsor</h3>
+          <button (click)="closeEditModal()" class="text-white hover:text-gray-200 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
-          </div>
-          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-              Delete Sponsor
-            </h3>
-            <div class="mt-2">
-              <p class="text-sm text-gray-500">
-                Are you sure you want to delete <span class="font-semibold">{{ sponsor?.fullName }}</span>? This action cannot be undone.
-              </p>
-            </div>
-          </div>
+          </button>
         </div>
       </div>
-      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-3">
-        <button 
-          type="button" 
-          (click)="confirmDelete()"
-          class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
-        >
-          Delete
-        </button>
-        <button 
-          type="button" 
-          (click)="closeDeleteModal()"
-          class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
-        >
+
+      <!-- Modal Body - Scrollable -->
+      <div class="bg-white px-6 py-6 max-h-[calc(100vh-200px)] overflow-y-auto">
+        <form (ngSubmit)="onEditSubmit()" #sponsorForm="ngForm">
+          
+          <!-- Basic Information -->
+          <div class="mb-6">
+            <h4 class="text-lg font-semibold text-gray-900 mb-4">Basic Information</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Sponsor Code <span class="text-red-500">*</span></label>
+                <input type="text" [(ngModel)]="formData.sponsorCode" name="sponsorCode" required readonly
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600 cursor-not-allowed">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Full Name <span class="text-red-500">*</span></label>
+                <input type="text" [(ngModel)]="formData.fullName" name="fullName" required placeholder="Enter full name"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Emirates ID <span class="text-red-500">*</span></label>
+                <input type="text" [(ngModel)]="formData.emiratesId" name="emiratesId" required placeholder="784-YYYY-XXXXXXX-X"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nationality <span class="text-red-500">*</span></label>
+                <input type="text" [(ngModel)]="formData.nationality" name="nationality" required placeholder="UAE"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Status <span class="text-red-500">*</span></label>
+                <select [(ngModel)]="formData.status" name="status" required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Information -->
+          <div class="mb-6">
+            <h4 class="text-lg font-semibold text-gray-900 mb-4">Contact Information</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Phone <span class="text-red-500">*</span></label>
+                <input type="tel" [(ngModel)]="formData.phone" name="phone" required placeholder="+971 50 123 4567"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Alternate Phone</label>
+                <input type="tel" [(ngModel)]="formData.alternatePhone" name="alternatePhone" placeholder="+971 4 234 5678"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <input type="email" [(ngModel)]="formData.email" name="email" placeholder="sponsor@email.ae"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+              </div>
+            </div>
+          </div>
+
+          <!-- Location Information -->
+          <div class="mb-6">
+            <h4 class="text-lg font-semibold text-gray-900 mb-4">Location Information</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Emirates <span class="text-red-500">*</span></label>
+                <select [(ngModel)]="formData.emirates" name="emirates" required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                  <option value="">Select Emirates</option>
+                  <option value="Dubai">Dubai</option>
+                  <option value="Abu Dhabi">Abu Dhabi</option>
+                  <option value="Sharjah">Sharjah</option>
+                  <option value="Ajman">Ajman</option>
+                  <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+                  <option value="Fujairah">Fujairah</option>
+                  <option value="Umm Al Quwain">Umm Al Quwain</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Area <span class="text-red-500">*</span></label>
+                <input type="text" [(ngModel)]="formData.area" name="area" required placeholder="Jumeirah, Al Majaz, etc."
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Address <span class="text-red-500">*</span></label>
+                <textarea [(ngModel)]="formData.address" name="address" required rows="3" placeholder="Villa/Apartment number, Building name, Street"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3 border-t border-gray-200">
+        <button type="button" (click)="closeEditModal()"
+          class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50 transition-colors">
           Cancel
+        </button>
+        <button type="submit" (click)="onEditSubmit()" [disabled]="!sponsorForm.form.valid"
+          class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          Update Sponsor
         </button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Select Worker Modal -->
+<div *ngIf="showSelectWorkerModal && selectedInterview" class="fixed inset-0 overflow-y-auto" style="z-index: 1100;" role="dialog" aria-modal="true">
+  <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" (click)="closeInterviewModals()"></div>
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+    
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-lg">
+      <div class="px-6 pt-6 pb-4 border-b border-gray-200 bg-green-600">
+        <div class="flex items-center justify-between">
+          <h3 class="text-2xl font-bold text-white">Select Worker</h3>
+          <button (click)="closeInterviewModals()" class="text-white hover:text-gray-200 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white px-6 py-6">
+        <div class="mb-4">
+          <p class="text-gray-700">Select this worker for:</p>
+          <div class="mt-3 p-3 bg-gray-50 rounded-md">
+            <p class="font-medium">{{ selectedInterview?.workerName }}</p>
+            <p class="text-sm text-gray-600">Interview Date: {{ selectedInterview?.interviewDate | date:'short' }}</p>
+          </div>
+        </div>
+        
+        <!-- Selection Type -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Selection Type <span class="text-red-500">*</span></label>
+          <div class="space-y-2">
+            <label class="flex items-center">
+              <input type="radio" [(ngModel)]="interviewFormData.selectionType" value="trial" name="selectionType" class="mr-2">
+              <span class="text-gray-700">Trial Basis</span>
+            </label>
+            <label class="flex items-center">
+              <input type="radio" [(ngModel)]="interviewFormData.selectionType" value="full" name="selectionType" class="mr-2">
+              <span class="text-gray-700">Pay Full</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Trial Duration (only show if trial basis selected) -->
+        <div class="mb-4" *ngIf="interviewFormData.selectionType === 'trial'">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Trial Duration <span class="text-red-500">*</span></label>
+          <select [(ngModel)]="interviewFormData.trialDuration" required
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+            <option value="">Select trial duration</option>
+            <option value="1">1 Month</option>
+            <option value="2">2 Months</option>
+            <option value="3">3 Months</option>
+            <option value="6">6 Months</option>
+          </select>
+        </div>
+
+        <!-- Return Option (only show if trial basis selected) -->
+        <div class="mb-4" *ngIf="interviewFormData.selectionType === 'trial'">
+          <div class="bg-blue-50 border border-blue-200 rounded-md p-3">
+            <p class="text-sm text-blue-800">
+              <strong>Return Policy:</strong> If the worker is not suitable during the trial period, you can return them within the trial duration.
+            </p>
+          </div>
+        </div>
+
+        <!-- Payment Information -->
+        <div class="mb-4" *ngIf="interviewFormData.selectionType === 'full'">
+          <div class="bg-green-50 border border-green-200 rounded-md p-3">
+            <p class="text-sm text-green-800">
+              <strong>Full Payment:</strong> Worker will be hired on a permanent basis with full payment terms.
+            </p>
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Notes (Optional)</label>
+          <textarea [(ngModel)]="interviewFormData.notes" rows="3" placeholder="Add any notes about this selection..."
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"></textarea>
+        </div>
+      </div>
+
+      <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3 border-t border-gray-200">
+        <button type="button" (click)="closeInterviewModals()"
+          class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+          Cancel
+        </button>
+        <button type="button" (click)="onSelectWorker()" 
+          [disabled]="!interviewFormData.selectionType || (interviewFormData.selectionType === 'trial' && !interviewFormData.trialDuration)"
+          class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          Select Worker
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reject Worker Modal -->
+<div *ngIf="showRejectWorkerModal && selectedInterview" class="fixed inset-0 overflow-y-auto" style="z-index: 1100;" role="dialog" aria-modal="true">
+  <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" (click)="closeInterviewModals()"></div>
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+    
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-lg">
+      <div class="px-6 pt-6 pb-4 border-b border-gray-200 bg-red-600">
+        <div class="flex items-center justify-between">
+          <h3 class="text-2xl font-bold text-white">Reject Worker</h3>
+          <button (click)="closeInterviewModals()" class="text-white hover:text-gray-200 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white px-6 py-6">
+        <div class="mb-4">
+          <p class="text-gray-700">Are you sure you want to reject this worker?</p>
+          <div class="mt-3 p-3 bg-gray-50 rounded-md">
+            <p class="font-medium">{{ selectedInterview?.workerName }}</p>
+            <p class="text-sm text-gray-600">Interview Date: {{ selectedInterview?.interviewDate | date:'short' }}</p>
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Reason for Rejection <span class="text-red-500">*</span></label>
+          <textarea [(ngModel)]="interviewFormData.reason" rows="3" placeholder="Please provide a reason for rejection..." required
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"></textarea>
+        </div>
+      </div>
+
+      <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3 border-t border-gray-200">
+        <button type="button" (click)="closeInterviewModals()"
+          class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+          Cancel
+        </button>
+        <button type="button" (click)="onRejectWorker()"
+          class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors">
+          Reject Worker
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reschedule Modal -->
+<div *ngIf="showRescheduleModal && selectedInterview" class="fixed inset-0 overflow-y-auto" style="z-index: 1100;" role="dialog" aria-modal="true">
+  <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" (click)="closeInterviewModals()"></div>
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+    
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-lg">
+      <div class="px-6 pt-6 pb-4 border-b border-gray-200 bg-blue-600">
+        <div class="flex items-center justify-between">
+          <h3 class="text-2xl font-bold text-white">Reschedule Interview</h3>
+          <button (click)="closeInterviewModals()" class="text-white hover:text-gray-200 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white px-6 py-6">
+        <div class="mb-4">
+          <p class="text-gray-700">Reschedule interview for:</p>
+          <div class="mt-3 p-3 bg-gray-50 rounded-md">
+            <p class="font-medium">{{ selectedInterview?.workerName }}</p>
+            <p class="text-sm text-gray-600">Current Date: {{ selectedInterview?.interviewDate | date:'short' }}</p>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">New Date <span class="text-red-500">*</span></label>
+            <input type="date" [(ngModel)]="interviewFormData.rescheduleDate" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">New Time <span class="text-red-500">*</span></label>
+            <input type="time" [(ngModel)]="interviewFormData.rescheduleTime" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Reason for Rescheduling</label>
+          <textarea [(ngModel)]="interviewFormData.reason" rows="3" placeholder="Please provide a reason for rescheduling..."
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+        </div>
+      </div>
+
+      <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3 border-t border-gray-200">
+        <button type="button" (click)="closeInterviewModals()"
+          class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+          Cancel
+        </button>
+        <button type="button" (click)="onReschedule()"
+          class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors">
+          Reschedule
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cancel Interview Modal -->
+<div *ngIf="showCancelInterviewModal && selectedInterview" class="fixed inset-0 overflow-y-auto" style="z-index: 1100;" role="dialog" aria-modal="true">
+  <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" (click)="closeInterviewModals()"></div>
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+    
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-lg">
+      <div class="px-6 pt-6 pb-4 border-b border-gray-200 bg-gray-600">
+        <div class="flex items-center justify-between">
+          <h3 class="text-2xl font-bold text-white">Cancel Interview</h3>
+          <button (click)="closeInterviewModals()" class="text-white hover:text-gray-200 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white px-6 py-6">
+        <div class="mb-4">
+          <p class="text-gray-700">Are you sure you want to cancel this interview?</p>
+          <div class="mt-3 p-3 bg-gray-50 rounded-md">
+            <p class="font-medium">{{ selectedInterview?.workerName }}</p>
+            <p class="text-sm text-gray-600">Interview Date: {{ selectedInterview?.interviewDate | date:'short' }}</p>
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Reason for Cancellation <span class="text-red-500">*</span></label>
+          <textarea [(ngModel)]="interviewFormData.reason" rows="3" placeholder="Please provide a reason for cancellation..." required
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"></textarea>
+        </div>
+      </div>
+
+      <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3 border-t border-gray-200">
+        <button type="button" (click)="closeInterviewModals()"
+          class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+          Cancel
+        </button>
+        <button type="button" (click)="onCancelInterview()"
+          class="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-md transition-colors">
+          Cancel Interview
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

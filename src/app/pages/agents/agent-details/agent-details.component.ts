@@ -1,22 +1,32 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { AgentService } from '../../../services/agent.service';
 import { WorkerService } from '../../../services/worker.service';
-import { Agent } from '../../../models/agent.model';
+import { Agent, AgentFormData } from '../../../models/agent.model';
 import { Worker } from '../../../models/worker.model';
 
 @Component({
   selector: 'app-agent-details',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './agent-details.component.html',
   styleUrl: './agent-details.component.css'
 })
 export class AgentDetailsComponent implements OnInit {
   agent: Agent | undefined;
-  showDeleteModal = false;
+  showEditModal = false;
   activeTab: string = 'overview';
   agentWorkers: Worker[] = [];
+  
+  // Form data for edit modal
+  formData: AgentFormData = this.getEmptyFormData();
+  
+  countries = [
+    'UAE', 'Saudi Arabia', 'Qatar', 'Kuwait', 'Bahrain', 'Oman',
+    'India', 'Pakistan', 'Bangladesh', 'Sri Lanka', 'Nepal',
+    'Philippines', 'Indonesia', 'Ethiopia', 'Kenya', 'Uganda'
+  ];
 
   constructor(
     private agentService: AgentService,
@@ -53,7 +63,40 @@ export class AgentDetailsComponent implements OnInit {
 
   navigateToEdit(): void {
     if (this.agent) {
-      this.router.navigate(['/agents/edit', this.agent.id]);
+      this.formData = {
+        agentCode: this.agent.agentCode,
+        agentName: this.agent.agentName,
+        companyName: this.agent.companyName,
+        contactPerson: this.agent.contactPerson,
+        email: this.agent.email,
+        phone: this.agent.phone,
+        alternatePhone: this.agent.alternatePhone,
+        country: this.agent.country,
+        city: this.agent.city,
+        address: this.agent.address,
+        commissionType: this.agent.commissionType,
+        commissionValue: this.agent.commissionValue,
+        bankName: this.agent.bankName,
+        accountNumber: this.agent.accountNumber,
+        iban: this.agent.iban,
+        swiftCode: this.agent.swiftCode,
+        status: this.agent.status,
+        notes: this.agent.notes
+      };
+      this.showEditModal = true;
+    }
+  }
+
+  closeEditModal(): void {
+    this.showEditModal = false;
+    this.formData = this.getEmptyFormData();
+  }
+
+  onEditSubmit(): void {
+    if (this.agent) {
+      this.agentService.updateAgent(this.agent.id, this.formData);
+      this.closeEditModal();
+      this.loadAgent(this.agent.id);
     }
   }
 
@@ -61,26 +104,17 @@ export class AgentDetailsComponent implements OnInit {
     this.router.navigate(['/agents']);
   }
 
-  openDeleteModal(): void {
-    this.showDeleteModal = true;
-  }
-
-  closeDeleteModal(): void {
-    this.showDeleteModal = false;
-  }
-
-  confirmDelete(): void {
-    if (this.agent) {
-      this.agentService.deleteAgent(this.agent.id);
-      this.router.navigate(['/agents']);
-    }
-  }
-
   toggleStatus(): void {
     if (this.agent) {
       const newStatus = this.agent.status === 'active' ? 'inactive' : 'active';
       this.agentService.updateAgentStatus(this.agent.id, newStatus);
       this.loadAgent(this.agent.id);
+    }
+  }
+
+  onStatusChange(): void {
+    if (this.agent) {
+      this.agentService.updateAgentStatus(this.agent.id, this.agent.status);
     }
   }
 
@@ -94,5 +128,28 @@ export class AgentDetailsComponent implements OnInit {
       month: 'long', 
       day: 'numeric' 
     });
+  }
+
+  private getEmptyFormData(): AgentFormData {
+    return {
+      agentCode: '',
+      agentName: '',
+      companyName: '',
+      contactPerson: '',
+      email: '',
+      phone: '',
+      alternatePhone: '',
+      country: '',
+      city: '',
+      address: '',
+      commissionType: 'fixed',
+      commissionValue: 0,
+      bankName: '',
+      accountNumber: '',
+      iban: '',
+      swiftCode: '',
+      status: 'active',
+      notes: ''
+    };
   }
 }

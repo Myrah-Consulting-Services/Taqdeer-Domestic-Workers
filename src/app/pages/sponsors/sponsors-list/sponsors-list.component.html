@@ -22,128 +22,6 @@
       <p class="text-lg text-gray-600">Manage Emirati sponsors and worker assignments</p>
     </div>
 
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-6 mb-8">
-      <!-- Total Sponsors -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background-color: #FF6B00;">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-500">Total</p>
-            <p class="text-2xl font-semibold text-gray-900">{{ stats.totalSponsors }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Active Sponsors -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-500">Active</p>
-            <p class="text-2xl font-semibold text-gray-900">{{ stats.activeSponsors }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Total Assignments -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-500">Assignments</p>
-            <p class="text-2xl font-semibold text-gray-900">{{ stats.totalAssignments }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Active Contracts -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-500">Active</p>
-            <p class="text-2xl font-semibold text-gray-900">{{ stats.activeAssignments }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- On Trial -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-500">On Trial</p>
-            <p class="text-2xl font-semibold text-gray-900">{{ stats.onTrial }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Returned -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-500">Returned</p>
-            <p class="text-2xl font-semibold text-gray-900">{{ stats.returned }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Refunded -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-500">Refunded</p>
-            <p class="text-2xl font-semibold text-gray-900">{{ stats.refunded }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Filters and Actions -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
       <div class="p-6">
@@ -190,8 +68,7 @@
             <!-- Add Sponsor Button -->
             <button
               (click)="openAddModal()"
-              class="inline-flex items-center px-4 py-2 text-white font-medium rounded-md transition-colors"
-              style="background-color: #FF6B00;"
+              class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
             >
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -340,13 +217,13 @@
   </div>
 
   <!-- Add/Edit Sponsor Modal -->
-  <div *ngIf="showFormModal" class="fixed z-50 inset-0 overflow-y-auto">
+  <div *ngIf="showFormModal" class="fixed inset-0 overflow-y-auto" style="z-index: 1100;">
     <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
       <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" (click)="closeFormModal()"></div>
       <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
       
       <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-3xl">
-        <div class="px-6 pt-6 pb-4 border-b border-gray-200" style="background-color: #FF6B00;">
+        <div class="px-6 pt-6 pb-4 border-b border-gray-200 bg-blue-600">
           <div class="flex items-center justify-between">
             <h3 class="text-2xl font-bold text-white">
               {{ isEditMode ? 'Edit Sponsor' : 'Add New Sponsor' }}
@@ -458,8 +335,7 @@
               Cancel
             </button>
             <button type="submit"
-              class="px-6 py-2 text-white font-medium rounded-md transition-colors"
-              style="background-color: #FF6B00;">
+              class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors">
               {{ isEditMode ? 'Update Sponsor' : 'Add Sponsor' }}
             </button>
           </div>
@@ -469,7 +345,7 @@
   </div>
 
   <!-- Assign Worker Modal -->
-  <div *ngIf="showAssignModal && selectedSponsor" class="fixed z-50 inset-0 overflow-y-auto">
+  <div *ngIf="showAssignModal && selectedSponsor" class="fixed inset-0 overflow-y-auto" style="z-index: 1100;">
     <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
       <div class="fixed inset-0 bg-gray-500 bg-opacity-75" (click)="closeAssignModal()"></div>
       <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
@@ -577,7 +453,7 @@
   </div>
 
   <!-- Schedule Interview Modal -->
-  <div *ngIf="showInterviewModal && selectedSponsor" class="fixed z-50 inset-0 overflow-y-auto">
+  <div *ngIf="showInterviewModal && selectedSponsor" class="fixed inset-0 overflow-y-auto" style="z-index: 1100;">
     <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
       <div class="fixed inset-0 bg-gray-500 bg-opacity-75" (click)="closeInterviewModal()"></div>
       <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
@@ -716,7 +592,7 @@
   </div>
 
   <!-- Delete Confirmation Modal -->
-  <div *ngIf="showDeleteModal && sponsorToDelete" class="fixed z-50 inset-0 overflow-y-auto">
+  <div *ngIf="showDeleteModal && sponsorToDelete" class="fixed inset-0 overflow-y-auto" style="z-index: 1100;">
     <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
       <div class="fixed inset-0 bg-gray-500 bg-opacity-75" (click)="closeDeleteModal()"></div>
       <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
@@ -988,7 +864,7 @@
   </div>
 
   <!-- Sponsor Details Modal -->
-  <div *ngIf="showDetailsModal && selectedSponsor" class="fixed z-50 inset-0 overflow-y-auto">
+  <div *ngIf="showDetailsModal && selectedSponsor" class="fixed inset-0 overflow-y-auto" style="z-index: 1100;">
     <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
       <div class="fixed inset-0 bg-gray-500 bg-opacity-75" (click)="closeDetailsModal()"></div>
       <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
