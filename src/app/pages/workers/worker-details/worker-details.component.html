@@ -78,18 +78,6 @@
     <div class="bg-white rounded-t-lg shadow-sm border border-gray-200 border-b-0">
       <nav class="flex space-x-8 px-6" aria-label="Tabs">
         <button
-          (click)="switchTab('overview')"
-          [class]="activeTab === 'overview' ? 
-            'border-purple-500 text-purple-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' : 
-            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'"
-        >
-          <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-          </svg>
-          Overview
-        </button>
-        
-        <button
           (click)="switchTab('personal')"
           [class]="activeTab === 'personal' ? 
             'border-purple-500 text-purple-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' : 
@@ -178,78 +166,6 @@
     <!-- Tab Content -->
     <div class="bg-white rounded-b-lg shadow-sm border border-gray-200 p-6">
       
-      <!-- Overview Tab -->
-      <div *ngIf="activeTab === 'overview'">
-        <!-- Quick Summary -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Summary</h3>
-            <div class="space-y-3">
-              <div class="flex justify-between py-2 border-b border-gray-200">
-                <span class="text-gray-600">Full Name:</span>
-                <span class="font-medium text-gray-900">{{ worker.fullName }}</span>
-              </div>
-              <div class="flex justify-between py-2 border-b border-gray-200">
-                <span class="text-gray-600">Nationality:</span>
-                <span class="font-medium text-gray-900">{{ worker.nationality }}</span>
-              </div>
-              <div class="flex justify-between py-2 border-b border-gray-200">
-                <span class="text-gray-600">Passport:</span>
-                <span class="font-medium text-gray-900">{{ worker.passportNumber }}</span>
-              </div>
-              <div class="flex justify-between py-2">
-                <span class="text-gray-600">Current Status:</span>
-                <span 
-                  [ngClass]="{
-                    'bg-green-100 text-green-800': worker.currentStatus === 'available',
-                    'bg-blue-100 text-blue-800': worker.currentStatus === 'interview',
-                    'bg-yellow-100 text-yellow-800': worker.currentStatus === 'trial',
-                    'bg-purple-100 text-purple-800': worker.currentStatus === 'placed',
-                    'bg-red-100 text-red-800': worker.currentStatus === 'returned',
-                    'bg-gray-100 text-gray-800': worker.currentStatus === 'absconded'
-                  }"
-                  class="px-2 py-1 text-xs font-semibold rounded-full capitalize"
-                >
-                  {{ getStatusLabel(worker.currentStatus) }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Skills & Languages</h3>
-            <div class="space-y-3">
-              <div class="py-2 border-b border-gray-200">
-                <span class="text-gray-600 block mb-2">Languages:</span>
-                <div class="flex flex-wrap gap-2">
-                  <span *ngFor="let lang of worker.languages" class="inline-flex px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full font-medium">
-                    {{ lang }}
-                  </span>
-                </div>
-              </div>
-              <div class="py-2">
-                <span class="text-gray-600 block mb-2">Skills:</span>
-                <div class="flex flex-wrap gap-2">
-                  <span *ngFor="let skill of worker.skills" class="inline-flex px-3 py-1 text-sm bg-green-100 text-green-800 rounded-full font-medium">
-                    {{ skill }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Notes -->
-        <div *ngIf="worker.notes" class="mt-6 bg-yellow-50 rounded-lg p-6 border border-yellow-200">
-          <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-            <svg class="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-            Notes
-          </h3>
-          <p class="text-gray-700">{{ worker.notes }}</p>
-        </div>
-      </div>
 
       <!-- Personal Info Tab -->
       <div *ngIf="activeTab === 'personal'">
@@ -347,6 +263,10 @@
             <div class="flex items-center justify-between py-4 border-b border-gray-200">
               <span class="text-sm font-medium text-gray-600 w-1/3">Worker Type:</span>
               <span class="text-base text-gray-900 w-2/3">{{ getWorkerTypeLabel(worker.workerType) }}</span>
+            </div>
+            <div class="flex items-start justify-between py-4 border-b border-gray-200" *ngIf="worker.workDescription">
+              <span class="text-sm font-medium text-gray-600 w-1/3">Work Description:</span>
+              <span class="text-base text-gray-900 w-2/3 whitespace-pre-line">{{ worker.workDescription }}</span>
             </div>
             <div class="flex items-center justify-between py-4 border-b border-gray-200">
               <span class="text-sm font-medium text-gray-600 w-1/3">Experience:</span>
@@ -815,7 +735,7 @@
           <!-- Work Details -->
           <div class="mb-6">
             <h4 class="text-lg font-semibold text-gray-900 mb-4">Work Details</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Worker Type</label>
                 <input type="text" [(ngModel)]="editFormData.workerType" name="workerType"
@@ -826,6 +746,12 @@
                 <input type="number" [(ngModel)]="editFormData.experience" name="experience" min="0"
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
               </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Work Description</label>
+              <textarea [(ngModel)]="editFormData.workDescription" name="workDescription" rows="3"
+                placeholder="Describe the worker's experience, capabilities, and work background..."
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
             </div>
           </div>
 
@@ -1000,7 +926,7 @@
 
     <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-2xl">
       <!-- Modal Header -->
-      <div class="px-6 pt-6 pb-4 border-b border-gray-200" style="background-color: #FF6B00;">
+      <div class="px-6 pt-6 pb-4 border-b border-gray-200" style="background-color: #3B82F6;">
         <div class="flex items-center justify-between">
           <div class="flex items-center">
             <svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

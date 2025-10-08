@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -72,7 +72,8 @@ export class DashboardComponent implements OnInit {
     private sponsorService: SponsorService,
     private employeeService: EmployeeService,
     private accountsFinanceService: AccountsFinanceService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -371,13 +372,48 @@ export class DashboardComponent implements OnInit {
     
     // Get recent data for receptionist
     const recentWorkers = this.workerService.getAllWorkers().slice(-5);
-    const recentSponsors: any[] = []; // Initialize empty array
     
-    // Get sponsors data
-    this.sponsorService.getSponsors().subscribe(sponsors => {
-      const recentSponsorsData = sponsors.slice(-5);
-      this.dashboardData.recentSponsors = recentSponsorsData;
-    });
+    // Hardcoded recent sponsors data for demo
+    const recentSponsors: any[] = [
+      {
+        id: '1',
+        sponsorCode: 'SP001',
+        fullName: 'Ahmed Mohammed Al Maktoum',
+        phone: '+971501234567',
+        emirates: 'Dubai',
+        status: 'active',
+        totalHired: 3,
+        currentWorkers: 2,
+        createdAt: '2024-01-15T10:00:00Z'
+      },
+      {
+        id: '2',
+        sponsorCode: 'SP002',
+        fullName: 'Fatima Hassan Al Nahyan',
+        phone: '+971509876543',
+        emirates: 'Abu Dhabi',
+        status: 'active',
+        totalHired: 1,
+        currentWorkers: 1,
+        createdAt: '2024-02-10T11:30:00Z'
+      },
+      {
+        id: '3',
+        sponsorCode: 'SP003',
+        fullName: 'Mohammed Rashid Al Qasimi',
+        phone: '+971561122334',
+        emirates: 'Sharjah',
+        status: 'active',
+        totalHired: 2,
+        currentWorkers: 1,
+        createdAt: '2024-03-05T09:00:00Z'
+      }
+    ];
+    
+    // Set hardcoded data immediately
+    this.dashboardData.recentSponsors = recentSponsors;
+    this.cdr.detectChanges(); // Force change detection
+    this.isLoading = false; // Set loading to false
     
     this.dashboardData = {
       // Key Metrics
@@ -430,8 +466,6 @@ export class DashboardComponent implements OnInit {
       onTrial: sponsorStats.onTrial,
       returned: sponsorStats.returned
     };
-    
-    this.isLoading = false;
   }
 
   private loadHRManagerDashboardData() {

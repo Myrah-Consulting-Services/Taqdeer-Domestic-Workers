@@ -44,8 +44,7 @@ interface AttendanceRecord {
 })
 export class EmployeeDetailsComponent implements OnInit {
   employee: Employee | undefined;
-  showDeleteModal = false;
-  activeTab: string = 'overview';
+  activeTab: string = 'personal';
 
   // Interview-related properties
   employeeInterviews: WorkerInterview[] = [];
@@ -168,20 +167,6 @@ export class EmployeeDetailsComponent implements OnInit {
     this.router.navigate(['/employees']);
   }
 
-  openDeleteModal(): void {
-    this.showDeleteModal = true;
-  }
-
-  closeDeleteModal(): void {
-    this.showDeleteModal = false;
-  }
-
-  confirmDelete(): void {
-    if (this.employee) {
-      this.employeeService.deleteEmployee(this.employee.id);
-      this.router.navigate(['/employees']);
-    }
-  }
 
   formatCurrency(amount: number): string {
     return `AED ${amount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
@@ -634,6 +619,19 @@ export class EmployeeDetailsComponent implements OnInit {
 
   getLateDays(): number {
     return this.attendanceRecords.filter(a => a.status === 'late').length;
+  }
+
+  updateEmployeeStatus(): void {
+    if (this.employee) {
+      // Update the employee status in the service
+      this.employeeService.updateEmployee(this.employee);
+      
+      // Show success message
+      console.log(`Employee status updated to: ${this.employee.status}`);
+      
+      // You can add a toast notification here if you have one
+      // this.toastService.success(`Employee status updated to ${this.employee.status}`);
+    }
   }
 }
 

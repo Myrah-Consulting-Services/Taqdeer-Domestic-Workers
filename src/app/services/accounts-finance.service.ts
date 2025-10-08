@@ -114,6 +114,12 @@ export class AccountsFinanceService {
     return newExpense;
   }
 
+  updateExpense(expense: BusinessExpense): BusinessExpense {
+    expense.lastUpdated = new Date().toISOString();
+    console.log('Updating expense:', expense);
+    return expense;
+  }
+
   // Agent Commissions
   getAgentCommissions(): AgentCommission[] {
     return [

@@ -19,7 +19,7 @@ export class AccFinComponent implements OnInit {
   recentExpenses: BusinessExpense[] = [];
   recentCommissions: AgentCommission[] = [];
   recentEmployeeSalaries: EmployeeSalary[] = [];
-  activeTab: 'overview' | 'expenses' | 'commissions' | 'notes' = 'overview';
+  activeTab: 'expenses' | 'commissions' | 'notes' = 'expenses';
 
   constructor(private accountsFinanceService: AccountsFinanceService) {}
 
@@ -38,7 +38,7 @@ export class AccFinComponent implements OnInit {
     this.recentEmployeeSalaries = this.accountsFinanceService.getRecentEmployeeSalaries(5);
   }
 
-  switchTab(tab: 'overview' | 'expenses' | 'commissions' | 'notes'): void {
+  switchTab(tab: 'expenses' | 'commissions' | 'notes'): void {
     this.activeTab = tab;
   }
 

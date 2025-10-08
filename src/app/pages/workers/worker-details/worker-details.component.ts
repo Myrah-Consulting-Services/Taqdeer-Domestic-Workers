@@ -35,7 +35,7 @@ interface WorkerInterview {
 export class WorkerDetailsComponent implements OnInit {
   worker: Worker | undefined;
   showEditModal = false;
-  activeTab: string = 'overview';
+  activeTab: string = 'personal';
   workerActiveStatus: 'active' | 'inactive' = 'active';
   
   // Edit form data
@@ -205,6 +205,7 @@ export class WorkerDetailsComponent implements OnInit {
         passportNumber: this.worker.passportNumber,
         passportExpiryDate: this.worker.passportExpiryDate,
         workerType: this.worker.workerType,
+        workDescription: this.worker.workDescription,
         experience: this.worker.experience,
         notes: this.worker.notes
       };

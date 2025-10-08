@@ -108,14 +108,9 @@
               </div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-              <div class="space-x-2">
-                <button (click)="openViewModal(note)" class="text-blue-600 hover:text-blue-900 transition-colors">
-                  View
-                </button>
-                <button *ngIf="note.status === 'draft'" class="text-green-600 hover:text-green-900 transition-colors">
-                  Issue
-                </button>
-              </div>
+              <button (click)="openViewModal(note)" class="text-blue-600 hover:text-blue-900 transition-colors">
+                View
+              </button>
             </td>
           </tr>
         </tbody>

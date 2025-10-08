@@ -32,6 +32,7 @@ export interface Worker {
   
   // Worker Details
   workerType: WorkerType;
+  workDescription?: string; // Description of work experience and capabilities
   experience: number; // Years of experience
   languages: string[]; // e.g., ['English', 'Arabic', 'Hindi']
   skills: string[]; // Additional skills
@@ -94,6 +95,7 @@ export interface WorkerFormData {
   visaExpiryDate?: Date;
   arrivalDate?: Date;
   workerType: WorkerType;
+  workDescription?: string;
   experience: number;
   languages: string[];
   skills: string[];
