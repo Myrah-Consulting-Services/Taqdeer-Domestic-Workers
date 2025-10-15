@@ -4,6 +4,24 @@ import { FormsModule } from '@angular/forms';
 import { WorkerService } from '../../services/worker.service';
 import { Worker } from '../../models/worker.model';
 
+interface ModulePermission {
+  moduleName: string;
+  moduleId: string;
+  permissions: {
+    view: boolean;
+    create: boolean;
+    edit: boolean;
+    delete: boolean;
+  };
+}
+
+interface RolePermission {
+  roleId: string;
+  roleName: string;
+  department: string;
+  modules: ModulePermission[];
+}
+
 @Component({
   selector: 'app-settings',
   imports: [CommonModule, FormsModule],
@@ -11,6 +29,35 @@ import { Worker } from '../../models/worker.model';
   styleUrl: './settings.component.css'
 })
 export class SettingsComponent implements OnInit {
+  // Tab management
+  activeTab: 'configuration' | 'permissions' = 'configuration';
+
+  // Permissions management
+  availableRoles: RolePermission[] = [];
+  selectedRole: RolePermission | null = null;
+  departments: string[] = ['HR', 'Sales', 'Accounts & Finance', 'Operations', 'Admin'];
+  
+  // Modal management
+  showCreateRoleModal = false;
+  newRole = {
+    roleId: '',
+    roleName: '',
+    department: '',
+    modules: [] as ModulePermission[]
+  };
+  
+  availableModules = [
+    { id: 'workers', name: 'Workers Management' },
+    { id: 'sponsors', name: 'Sponsors Management' },
+    { id: 'agents', name: 'Agents Management' },
+    { id: 'sales', name: 'Sales Management' },
+    { id: 'accounts', name: 'Accounts & Finance' },
+    { id: 'employees', name: 'Employee Management' },
+    { id: 'attendance', name: 'Attendance' },
+    { id: 'dashboard', name: 'Dashboard' },
+    { id: 'settings', name: 'Settings' }
+  ];
+
   // Auto-fetch settings
   autoFetchEnabled = false;
   fetchInterval = 30; // minutes
@@ -64,6 +111,207 @@ export class SettingsComponent implements OnInit {
   ngOnInit() {
     this.loadSettings();
     this.loadRecentData();
+    this.loadRolePermissions();
+  }
+
+  // Tab switching
+  switchTab(tab: 'configuration' | 'permissions') {
+    this.activeTab = tab;
+  }
+
+  // Permissions management methods
+  loadRolePermissions() {
+    const savedPermissions = localStorage.getItem('rolePermissions');
+    if (savedPermissions) {
+      this.availableRoles = JSON.parse(savedPermissions);
+    } else {
+      // Initialize default roles
+      this.availableRoles = [
+        this.createDefaultRole('admin', 'Administrator', 'Admin'),
+        this.createDefaultRole('hr_manager', 'HR Manager', 'HR'),
+        this.createDefaultRole('sales_manager', 'Sales Manager', 'Sales'),
+        this.createDefaultRole('accountant', 'Accountant', 'Accounts & Finance'),
+        this.createDefaultRole('operations', 'Operations Manager', 'Operations')
+      ];
+      this.saveRolePermissions();
+    }
+  }
+
+  createDefaultRole(roleId: string, roleName: string, department: string): RolePermission {
+    const modules: ModulePermission[] = this.availableModules.map(module => ({
+      moduleName: module.name,
+      moduleId: module.id,
+      permissions: {
+        view: roleId === 'admin', // Admin has all permissions by default
+        create: roleId === 'admin',
+        edit: roleId === 'admin',
+        delete: roleId === 'admin'
+      }
+    }));
+
+    return {
+      roleId,
+      roleName,
+      department,
+      modules
+    };
+  }
+
+  saveRolePermissions() {
+    localStorage.setItem('rolePermissions', JSON.stringify(this.availableRoles));
+  }
+
+  onRoleSelect(event: any) {
+    const roleId = event.target.value;
+    this.selectedRole = this.availableRoles.find(role => role.roleId === roleId) || null;
+  }
+
+  togglePermission(moduleId: string, permissionType: 'view' | 'create' | 'edit' | 'delete') {
+    if (!this.selectedRole) return;
+
+    const module = this.selectedRole.modules.find(m => m.moduleId === moduleId);
+    if (module) {
+      module.permissions[permissionType] = !module.permissions[permissionType];
+      
+      // If disabling view, disable all other permissions
+      if (permissionType === 'view' && !module.permissions.view) {
+        module.permissions.create = false;
+        module.permissions.edit = false;
+        module.permissions.delete = false;
+      }
+      
+      // If enabling create/edit/delete, automatically enable view
+      if ((permissionType === 'create' || permissionType === 'edit' || permissionType === 'delete') 
+          && module.permissions[permissionType]) {
+        module.permissions.view = true;
+      }
+
+      this.saveRolePermissions();
+    }
+  }
+
+  toggleAllPermissions(moduleId: string, enabled: boolean) {
+    if (!this.selectedRole) return;
+
+    const module = this.selectedRole.modules.find(m => m.moduleId === moduleId);
+    if (module) {
+      module.permissions.view = enabled;
+      module.permissions.create = enabled;
+      module.permissions.edit = enabled;
+      module.permissions.delete = enabled;
+      this.saveRolePermissions();
+    }
+  }
+
+  // Modal management methods
+  openCreateRoleModal() {
+    this.showCreateRoleModal = true;
+    this.resetNewRoleForm();
+  }
+
+  closeCreateRoleModal() {
+    this.showCreateRoleModal = false;
+    this.resetNewRoleForm();
+  }
+
+  resetNewRoleForm() {
+    this.newRole = {
+      roleId: '',
+      roleName: '',
+      department: '',
+      modules: this.availableModules.map(module => ({
+        moduleName: module.name,
+        moduleId: module.id,
+        permissions: {
+          view: false,
+          create: false,
+          edit: false,
+          delete: false
+        }
+      }))
+    };
+  }
+
+  createNewRole() {
+    // Validate form
+    if (!this.newRole.roleName || !this.newRole.department) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    // Generate role ID from role name
+    this.newRole.roleId = this.newRole.roleName.toLowerCase().replace(/\s+/g, '_');
+
+    // Check if role ID already exists
+    if (this.availableRoles.some(role => role.roleId === this.newRole.roleId)) {
+      alert('A role with this name already exists');
+      return;
+    }
+
+    // Add new role to available roles
+    const newRolePermission: RolePermission = {
+      roleId: this.newRole.roleId,
+      roleName: this.newRole.roleName,
+      department: this.newRole.department,
+      modules: [...this.newRole.modules]
+    };
+
+    this.availableRoles.push(newRolePermission);
+    this.saveRolePermissions();
+
+    // Close modal and select the new role
+    this.closeCreateRoleModal();
+    this.selectedRole = newRolePermission;
+    
+    alert('Role created successfully!');
+  }
+
+  toggleNewRolePermission(moduleId: string, permissionType: 'view' | 'create' | 'edit' | 'delete') {
+    const module = this.newRole.modules.find(m => m.moduleId === moduleId);
+    if (module) {
+      module.permissions[permissionType] = !module.permissions[permissionType];
+      
+      // If disabling view, disable all other permissions
+      if (permissionType === 'view' && !module.permissions.view) {
+        module.permissions.create = false;
+        module.permissions.edit = false;
+        module.permissions.delete = false;
+      }
+      
+      // If enabling create/edit/delete, automatically enable view
+      if ((permissionType === 'create' || permissionType === 'edit' || permissionType === 'delete') 
+          && module.permissions[permissionType]) {
+        module.permissions.view = true;
+      }
+    }
+  }
+
+  toggleAllNewRolePermissions(moduleId: string, enabled: boolean) {
+    const module = this.newRole.modules.find(m => m.moduleId === moduleId);
+    if (module) {
+      module.permissions.view = enabled;
+      module.permissions.create = enabled;
+      module.permissions.edit = enabled;
+      module.permissions.delete = enabled;
+    }
+  }
+
+  deleteRole(roleId: string) {
+    if (roleId === 'admin') {
+      alert('Cannot delete Administrator role');
+      return;
+    }
+
+    if (confirm('Are you sure you want to delete this role?')) {
+      this.availableRoles = this.availableRoles.filter(role => role.roleId !== roleId);
+      this.saveRolePermissions();
+      
+      if (this.selectedRole?.roleId === roleId) {
+        this.selectedRole = null;
+      }
+      
+      alert('Role deleted successfully!');
+    }
   }
 
   private loadSettings() {

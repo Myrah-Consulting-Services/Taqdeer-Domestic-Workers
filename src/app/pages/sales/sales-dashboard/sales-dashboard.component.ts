@@ -74,27 +74,30 @@ export class SalesDashboardComponent implements OnInit {
 
   // Dashboard methods
   loadDashboardData(): void {
-    this.stats = this.salesService.getSalesStats();
-    const allSales = this.salesService.getAllSales();
-    
-    // Get recent sales (last 5)
-    this.recentSales = allSales
-      .sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime())
-      .slice(0, 5);
-    
-    // Get sales in trial period
-    this.trialPeriodSales = allSales.filter(s => s.status === 'trial');
-    
-    // Get sales with pending payments
-    this.pendingPayments = allSales.filter(s => s.paymentStatus === 'advance-paid');
+    this.salesService.getSales().subscribe(allSales => {
+      this.stats = this.salesService.getSalesStats();
+      
+      // Get recent sales (last 5)
+      this.recentSales = allSales
+        .sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime())
+        .slice(0, 5);
+      
+      // Get sales in trial period
+      this.trialPeriodSales = allSales.filter(s => s.status === 'trial');
+      
+      // Get sales with pending payments
+      this.pendingPayments = allSales.filter(s => s.paymentStatus === 'advance-paid');
+    });
   }
 
   // List methods
   loadListData(): void {
-    this.allSales = this.salesService.getAllSales();
-    this.groupSalesByWorker();
-    this.groupSalesBySponsor();
-    this.applyFilters();
+    this.salesService.getSales().subscribe(sales => {
+      this.allSales = sales;
+      this.groupSalesByWorker();
+      this.groupSalesBySponsor();
+      this.applyFilters();
+    });
   }
 
   groupSalesByWorker(): void {

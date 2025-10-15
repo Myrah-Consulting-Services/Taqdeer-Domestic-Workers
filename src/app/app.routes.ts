@@ -10,6 +10,8 @@ import { WorkersListComponent } from './pages/workers/workers-list/workers-list.
 import { WorkerDetailsComponent } from './pages/workers/worker-details/worker-details.component';
 import { SponsorsListComponent } from './pages/sponsors/sponsors-list/sponsors-list.component';
 import { SponsorDetailsComponent } from './pages/sponsors/sponsor-details/sponsor-details.component';
+import { LeadsListComponent } from './pages/leads/leads-list/leads-list.component';
+import { LeadDetailsComponent } from './pages/leads/lead-details/lead-details.component';
 import { EmployeesListComponent } from './pages/employees/employees-list/employees-list.component';
 import { EmployeeDetailsComponent } from './pages/employees/employee-details/employee-details.component';
 import { SalesDashboardComponent } from './pages/sales/sales-dashboard/sales-dashboard.component';
@@ -39,6 +41,8 @@ export const routes: Routes = [
       { path: 'workers/:id', component: WorkerDetailsComponent },
       { path: 'sponsors', component: SponsorsListComponent },
       { path: 'sponsors/:id', component: SponsorDetailsComponent },
+      { path: 'leads', component: LeadsListComponent },
+      { path: 'leads/:id', component: LeadDetailsComponent },
       { path: 'employees', component: EmployeesListComponent },
       { path: 'employees/:id', component: EmployeeDetailsComponent },
       { path: 'sales', component: SalesListComponent },

@@ -192,7 +192,6 @@ export class SponsorsListComponent implements OnInit {
     this.filteredSponsors = this.sponsors.filter(sponsor => {
       const matchesSearch = !this.searchTerm || 
         sponsor.fullName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        sponsor.sponsorCode.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         sponsor.phone.includes(this.searchTerm) ||
         sponsor.emiratesId.includes(this.searchTerm);
       

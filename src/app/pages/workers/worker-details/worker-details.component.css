@@ -1,5 +1,16 @@
 /* Worker Details Component Styles */
 
+/* Profile Image Hover Effects */
+.profile-image-container:hover .profile-overlay {
+  opacity: 1;
+}
+
+.profile-overlay {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+
 
 
 

@@ -33,8 +33,10 @@ export class SalesListComponent implements OnInit {
   }
 
   loadSales(): void {
-    this.allSales = this.salesService.getAllSales();
-    this.applyFilters();
+    this.salesService.getSales().subscribe(sales => {
+      this.allSales = sales;
+      this.applyFilters();
+    });
   }
 
   applyFilters(): void {

@@ -1,10 +1,16 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Sale, SalesStats, QuotationData, InvoiceData, RefundCalculation, WORKER_PRICING, ADVANCE_PAYMENT_PERCENTAGE, CONTRACT_DURATION, TRIAL_PERIOD } from '../models/sales.model';
+import { SponsorService } from './sponsor.service';
+import { WorkerAssignment } from '../models/sponsor.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SalesService {
+  private salesSubject = new BehaviorSubject<Sale[]>([]);
+  public sales$ = this.salesSubject.asObservable();
+  
   private sales: Sale[] = [
     {
       id: 'SAL001',
@@ -139,11 +145,112 @@ export class SalesService {
     }
   ];
 
-  constructor() {}
+  constructor(private sponsorService: SponsorService) {
+    // Sync sales with sponsor assignments
+    this.syncSalesWithAssignments();
+  }
+
+  // Sync sales data from sponsor-worker assignments
+  private syncSalesWithAssignments(): void {
+    this.sponsorService.getAssignments().subscribe(assignments => {
+      // Convert assignments to sales
+      const syncedSales: Sale[] = assignments.map((assignment, index) => this.convertAssignmentToSale(assignment, index));
+      
+      // Merge with existing sales that don't have assignment mapping
+      this.sales = [...syncedSales];
+      this.salesSubject.next([...this.sales]);
+    });
+  }
+
+  // Convert WorkerAssignment to Sale format
+  private convertAssignmentToSale(assignment: WorkerAssignment, index: number): Sale {
+    let salesStatus: any = 'quotation';
+    if (assignment.assignmentStatus === 'on-trial') {
+      salesStatus = 'trial';
+    } else if (assignment.assignmentStatus === 'active') {
+      salesStatus = 'confirmed';
+    } else if (assignment.assignmentStatus === 'refunded') {
+      salesStatus = 'refunded';
+    } else if (assignment.assignmentStatus === 'replaced') {
+      salesStatus = 'replaced';
+    } else if (assignment.assignmentStatus === 'returned') {
+      salesStatus = 'cancelled';
+    }
+
+    let paymentStatus: any = 'pending';
+    if (assignment.paidAmount >= assignment.totalAmount) {
+      paymentStatus = 'fully-paid';
+    } else if (assignment.paidAmount > 0) {
+      paymentStatus = 'advance-paid';
+    }
+    if (assignment.assignmentStatus === 'refunded') {
+      paymentStatus = 'refunded';
+    }
+
+    return {
+      id: `SAL${String(parseInt(assignment.id) + 100).padStart(3, '0')}`,
+      saleCode: `SAL${String(parseInt(assignment.id) + 100).padStart(3, '0')}`,
+      workerId: assignment.workerId,
+      workerName: assignment.workerName,
+      workerPassport: assignment.workerPassport,
+      workerNationality: assignment.workerNationality,
+      workerType: assignment.workerType,
+      sponsorId: assignment.sponsorId,
+      sponsorName: assignment.sponsorName,
+      sponsorEmirates: '',
+      sponsorPhone: '',
+      isOnTrial: assignment.isOnTrial,
+      trialStatus: assignment.isOnTrial ? 'ongoing' : 'completed',
+      trialStartDate: assignment.trialStartDate,
+      trialEndDate: assignment.trialEndDate,
+      totalAmount: assignment.totalAmount,
+      advanceAmount: assignment.advanceAmount,
+      remainingAmount: assignment.remainingAmount,
+      paidAmount: assignment.paidAmount,
+      paymentStatus: paymentStatus,
+      quotationNumber: assignment.quotationNumber,
+      quotationDate: assignment.createdAt.split('T')[0],
+      invoiceNumber: assignment.invoiceNumber,
+      invoiceDate: assignment.invoiceDate,
+      contractStartDate: assignment.contractStartDate,
+      contractEndDate: assignment.contractEndDate,
+      contractDuration: 24,
+      monthsWorked: this.calculateMonthsWorked(assignment.contractStartDate),
+      status: salesStatus,
+      returnDate: assignment.returnDate,
+      returnReason: assignment.returnReason,
+      refundAmount: assignment.refundAmount,
+      refundReason: assignment.refundReason as any,
+      refundDate: assignment.refundDate,
+      replacementWorkerId: assignment.replacementWorkerId,
+      notes: assignment.notes,
+      salesPersonId: 'system',
+      salesPersonName: 'System',
+      createdBy: 'system',
+      createdDate: assignment.createdAt,
+      lastUpdated: assignment.updatedAt
+    };
+  }
+
+  private calculateMonthsWorked(startDate: string): number {
+    const start = new Date(startDate);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - start.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return Math.floor(diffDays / 30);
+  }
 
   // Get all sales
   getAllSales(): Sale[] {
+    // Re-sync to get latest data
+    this.syncSalesWithAssignments();
     return this.sales;
+  }
+
+  // Get sales as observable
+  getSales(): Observable<Sale[]> {
+    this.syncSalesWithAssignments();
+    return this.sales$;
   }
 
   // Get sale by ID

@@ -171,6 +171,46 @@
       <div *ngIf="activeTab === 'personal'">
         <div class="w-full">
           <h2 class="text-2xl font-semibold text-gray-900 mb-6">Personal Information</h2>
+          
+          <!-- Profile Image Section -->
+          <div class="flex justify-center mb-8">
+            <div class="relative">
+              <div class="w-40 h-40 rounded-full overflow-hidden border-4 border-purple-500 shadow-lg">
+                <img 
+                  [src]="profileImageUrl" 
+                  alt="Profile Image" 
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              
+              <!-- Edit/Upload Button -->
+              <label class="absolute bottom-0 right-0 bg-purple-600 hover:bg-purple-700 text-white rounded-full p-3 cursor-pointer shadow-lg transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <input 
+                  type="file" 
+                  class="hidden" 
+                  accept="image/*"
+                  (change)="onProfileImageSelected($event)"
+                />
+              </label>
+              
+              <!-- Remove Button (shown only if custom image is selected) -->
+              <button 
+                *ngIf="selectedProfileImage"
+                (click)="removeProfileImage()"
+                class="absolute top-0 right-0 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg transition-colors"
+                title="Remove Image"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          
           <div class="space-y-4">
             <div class="flex items-center justify-between py-4 border-b border-gray-200">
               <span class="text-sm font-medium text-gray-600 w-1/3">Full Name:</span>
@@ -442,10 +482,6 @@
             <div class="flex items-center justify-between py-4 border-b border-gray-200">
               <span class="text-sm font-medium text-gray-600 w-1/3">Remaining Amount:</span>
               <span class="text-base text-orange-600 font-medium w-2/3">{{ formatCurrency(worker.remainingAmount) }}</span>
-            </div>
-            <div class="flex items-center justify-between py-4 border-b border-gray-200">
-              <span class="text-sm font-medium text-gray-600 w-1/3">Agent Commission:</span>
-              <span class="text-base text-gray-900 w-2/3">{{ formatCurrency(worker.agentCommission) }}</span>
             </div>
             <div class="flex items-center justify-between py-4 border-b border-gray-200">
               <span class="text-sm font-medium text-gray-600 w-1/3">Payment Status:</span>

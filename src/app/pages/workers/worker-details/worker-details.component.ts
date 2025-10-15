@@ -41,6 +41,10 @@ export class WorkerDetailsComponent implements OnInit {
   // Edit form data
   editFormData: any = {};
   
+  // Profile Image
+  profileImageUrl: string = 'https://via.placeholder.com/150';
+  selectedProfileImage: File | null = null;
+  
   // Documents
   showDocumentModal = false;
   isEditingDocument = false;
@@ -432,6 +436,41 @@ export class WorkerDetailsComponent implements OnInit {
   closeInterviewDetailsModal(): void {
     this.showInterviewDetailsModal = false;
     this.selectedInterview = null;
+  }
+
+  // Profile Image Methods
+  onProfileImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      
+      // Check file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file');
+        return;
+      }
+      
+      // Check file size (max 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      if (file.size > maxSize) {
+        alert('Image size exceeds 5MB. Please select a smaller image.');
+        return;
+      }
+
+      this.selectedProfileImage = file;
+      
+      // Create a preview URL
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.profileImageUrl = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeProfileImage(): void {
+    this.selectedProfileImage = null;
+    this.profileImageUrl = 'https://via.placeholder.com/150';
   }
 }
 

@@ -220,7 +220,10 @@ export class SponsorService {
   }
 
   generateSponsorCode(): string {
-    const lastSponsor = this.sponsors.sort((a, b) => a.sponsorCode.localeCompare(b.sponsorCode)).pop();
+    // Create a copy of sponsors array to avoid mutating original
+    const sortedSponsors = [...this.sponsors].sort((a, b) => a.sponsorCode.localeCompare(b.sponsorCode));
+    const lastSponsor = sortedSponsors.length > 0 ? sortedSponsors[sortedSponsors.length - 1] : null;
+    
     if (lastSponsor) {
       const lastNumber = parseInt(lastSponsor.sponsorCode.replace('SP', ''), 10);
       return 'SP' + String(lastNumber + 1).padStart(3, '0');
