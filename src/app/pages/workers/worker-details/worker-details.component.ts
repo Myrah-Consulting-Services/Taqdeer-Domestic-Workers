@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { WorkerService } from '../../../services/worker.service';
+import { AuthService } from '../../../services/auth.service';
 import { Worker, WorkerTypeLabels, WorkerStatusLabels } from '../../../models/worker.model';
 
 interface WorkerDocument {
@@ -79,7 +80,8 @@ export class WorkerDetailsComponent implements OnInit {
   constructor(
     private workerService: WorkerService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -194,6 +196,10 @@ export class WorkerDetailsComponent implements OnInit {
 
   switchTab(tab: string): void {
     this.activeTab = tab;
+  }
+
+  get isAgent(): boolean {
+    return this.authService.isAgent();
   }
 
   openEditModal(): void {
