@@ -19,12 +19,99 @@ export class HeaderComponent implements OnInit {
   
   isDropdownOpen = false;
   isMobileMenuOpen = false;
+  isNotificationPanelOpen = false;
+
+  // Notification data
+  notifications: Array<{
+    id: string;
+    type: 'worker-trial' | 'expense-approval' | 'employee-leave';
+    workerId?: string;
+    workerName?: string;
+    agentName?: string;
+    endDate?: string;
+    expenseId?: string;
+    expenseDescription?: string;
+    expenseAmount?: number;
+    expenseCategory?: string;
+    employeeId?: string;
+    employeeName?: string;
+    leaveType?: string;
+    leaveStartDate?: string;
+    leaveEndDate?: string;
+    leaveDays?: number;
+    leaveReason?: string;
+    time: string;
+  }> = [];
 
   constructor(
     private router: Router, 
     private authService: AuthService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    // Initialize sample notifications for demonstration
+    this.notifications = [
+      {
+        id: '1',
+        type: 'worker-trial',
+        workerId: 'WRK-001',
+        workerName: 'Maria Santos',
+        agentName: 'John Doe',
+        endDate: '2024-12-20',
+        time: '2 hours ago'
+      },
+      {
+        id: '2',
+        type: 'expense-approval',
+        expenseId: 'EXP-2024-045',
+        expenseDescription: 'Office Supplies - Stationery',
+        expenseAmount: 1250.00,
+        expenseCategory: 'office-supplies',
+        time: '3 hours ago'
+      },
+      {
+        id: '3',
+        type: 'employee-leave',
+        employeeId: 'EMP-001',
+        employeeName: 'Sarah Johnson',
+        leaveType: 'Annual Leave',
+        leaveStartDate: '2024-12-25',
+        leaveEndDate: '2024-12-30',
+        leaveDays: 5,
+        leaveReason: 'Family vacation during holidays',
+        time: '4 hours ago'
+      },
+      {
+        id: '4',
+        type: 'worker-trial',
+        workerId: 'WRK-002',
+        workerName: 'Anita Sharma',
+        agentName: 'Jane Smith',
+        endDate: '2024-12-19',
+        time: '5 hours ago'
+      },
+      {
+        id: '5',
+        type: 'employee-leave',
+        employeeId: 'EMP-002',
+        employeeName: 'Ahmed Al-Rashid',
+        leaveType: 'Sick Leave',
+        leaveStartDate: '2024-12-22',
+        leaveEndDate: '2024-12-24',
+        leaveDays: 3,
+        leaveReason: 'Medical treatment and recovery',
+        time: '6 hours ago'
+      },
+      {
+        id: '6',
+        type: 'expense-approval',
+        expenseId: 'EXP-2024-046',
+        expenseDescription: 'Marketing Campaign - Social Media',
+        expenseAmount: 3500.00,
+        expenseCategory: 'marketing',
+        time: '7 hours ago'
+      }
+    ];
+  }
 
   ngOnInit() {
     // Subscribe to current user changes
@@ -106,6 +193,10 @@ export class HeaderComponent implements OnInit {
     return this.currentUser?.role === 'employee' && this.currentUser?.employeeRole === 'Receptionist';
   }
 
+  get notificationCount(): number {
+    return this.notifications.length;
+  }
+
   // Navigation permission checks for employees
   get canViewSales(): boolean {
     return this.authService.hasPermission('canViewSales');
@@ -139,18 +230,135 @@ export class HeaderComponent implements OnInit {
 
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
-    // Close mobile menu if open
+    // Close mobile menu and notification panel if open
     if (this.isMobileMenuOpen) {
       this.isMobileMenuOpen = false;
+    }
+    if (this.isNotificationPanelOpen) {
+      this.isNotificationPanelOpen = false;
     }
   }
 
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
-    // Close dropdown if open
+    // Close dropdown and notification panel if open
     if (this.isDropdownOpen) {
       this.isDropdownOpen = false;
     }
+    if (this.isNotificationPanelOpen) {
+      this.isNotificationPanelOpen = false;
+    }
+  }
+
+  toggleNotificationPanel() {
+    this.isNotificationPanelOpen = !this.isNotificationPanelOpen;
+    // Close dropdown and mobile menu if open
+    if (this.isDropdownOpen) {
+      this.isDropdownOpen = false;
+    }
+    if (this.isMobileMenuOpen) {
+      this.isMobileMenuOpen = false;
+    }
+  }
+
+  confirmWorker(notification: any) {
+    console.log('Confirming worker:', notification);
+    // TODO: Implement confirmation logic
+    // Remove notification from list
+    this.notifications = this.notifications.filter(n => n.id !== notification.id);
+    
+    // TODO: Update worker status in backend
+    // Example: this.workerService.confirmWorker(notification.workerId);
+    
+    // Show success message
+    alert(`Worker ${notification.workerName} confirmed successfully`);
+  }
+
+  returnWorker(notification: any) {
+    console.log('Returning worker:', notification);
+    // TODO: Implement return logic
+    // Remove notification from list
+    this.notifications = this.notifications.filter(n => n.id !== notification.id);
+    
+    // TODO: Update worker status in backend
+    // Example: this.workerService.returnWorker(notification.workerId);
+    
+    // Show success message
+    alert(`Worker ${notification.workerName} returned successfully`);
+  }
+
+  approveExpense(notification: any) {
+    console.log('Approving expense:', notification);
+    // TODO: Implement expense approval logic
+    // Remove notification from list
+    this.notifications = this.notifications.filter(n => n.id !== notification.id);
+    
+    // TODO: Update expense status in backend
+    // Example: this.accountsFinanceService.approveExpense(notification.expenseId);
+    
+    // Show success message
+    alert(`Expense ${notification.expenseId} approved successfully`);
+  }
+
+  rejectExpense(notification: any) {
+    console.log('Rejecting expense:', notification);
+    // TODO: Implement expense rejection logic
+    // Remove notification from list
+    this.notifications = this.notifications.filter(n => n.id !== notification.id);
+    
+    // TODO: Update expense status in backend
+    // Example: this.accountsFinanceService.rejectExpense(notification.expenseId);
+    
+    // Show success message
+    alert(`Expense ${notification.expenseId} rejected`);
+  }
+
+  approveLeaveRequest(notification: any) {
+    console.log('Approving leave request:', notification);
+    // TODO: Implement leave approval logic
+    // Remove notification from list
+    this.notifications = this.notifications.filter(n => n.id !== notification.id);
+    
+    // TODO: Update leave status in backend
+    // Example: this.employeeService.approveLeaveRequest(notification.employeeId, notification.id);
+    
+    // Show success message
+    alert(`Leave request for ${notification.employeeName} approved successfully`);
+  }
+
+  rejectLeaveRequest(notification: any) {
+    console.log('Rejecting leave request:', notification);
+    // TODO: Implement leave rejection logic
+    // Remove notification from list
+    this.notifications = this.notifications.filter(n => n.id !== notification.id);
+    
+    // TODO: Update leave status in backend
+    // Example: this.employeeService.rejectLeaveRequest(notification.employeeId, notification.id);
+    
+    // Show success message
+    alert(`Leave request for ${notification.employeeName} rejected`);
+  }
+
+  formatCurrency(amount: number): string {
+    return `AED ${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }
+
+  getCategoryDisplayName(category: string): string {
+    const categoryMap: { [key: string]: string } = {
+      'office-rent': 'Office Rent',
+      'utilities': 'Utilities',
+      'staff-salaries': 'Staff Salaries',
+      'marketing': 'Marketing',
+      'transportation': 'Transportation',
+      'office-supplies': 'Office Supplies',
+      'professional-services': 'Professional Services',
+      'insurance': 'Insurance',
+      'maintenance': 'Maintenance',
+      'telecommunications': 'Telecommunications',
+      'training': 'Training',
+      'other': 'Other'
+    };
+    return categoryMap[category] || category;
   }
 
   // Close dropdown when clicking outside
@@ -160,10 +368,16 @@ export class HeaderComponent implements OnInit {
     const userMenuButton = document.getElementById('user-menu-button');
     const dropdownMenu = document.querySelector('.absolute');
     
-    // Check if click is outside the dropdown
+    // Check if click is outside the dropdown and notification panel
+    // Don't close if clicking on notification bell or its panel
     if (userMenuButton && !userMenuButton.contains(target) && 
         (!dropdownMenu || !dropdownMenu.contains(target))) {
-      this.isDropdownOpen = false;
+      const notificationButton = target.closest('button[class*="p-2 text-gray-600"]');
+      const notificationPanel = target.closest('.w-80.bg-white.rounded-lg');
+      if (!notificationButton && !notificationPanel) {
+        this.isDropdownOpen = false;
+        this.isNotificationPanelOpen = false;
+      }
     }
   }
 
@@ -172,6 +386,7 @@ export class HeaderComponent implements OnInit {
   onEscapeKey() {
     this.isDropdownOpen = false;
     this.isMobileMenuOpen = false;
+    this.isNotificationPanelOpen = false;
   }
 
   logout() {
