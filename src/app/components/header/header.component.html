@@ -40,10 +40,10 @@
              class="text-gray-600 hover:text-primary px-3 py-2 font-medium transition-colors">
             Sales
           </a>
-          <!-- <a routerLink="/accounts-finance" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: false}" 
+          <a routerLink="/accounts-finance" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: false}" 
              class="text-gray-600 hover:text-primary px-3 py-2 font-medium transition-colors">
             Accounts & Finance
-          </a> -->
+          </a>
           <a routerLink="/employees" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: false}" 
              class="text-gray-600 hover:text-primary px-3 py-2 font-medium transition-colors">
             Employees
@@ -112,6 +112,10 @@
 
         <!-- ACCOUNTANT NAVIGATION -->
         <ng-container *ngIf="isAccountant">
+          <a routerLink="/sales" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: false}" 
+             class="text-gray-600 hover:text-primary px-3 py-2 font-medium transition-colors">
+            Sales
+          </a>
           <a routerLink="/accounts-finance" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: false}" 
              class="text-gray-600 hover:text-primary px-3 py-2 font-medium transition-colors">
             Accounts & Finance
@@ -294,6 +298,7 @@
 
         <!-- ACCOUNTANT MOBILE NAVIGATION -->
         <ng-container *ngIf="isAccountant">
+          <a routerLink="/sales" class="text-gray-600 hover:text-primary block px-3 py-2 text-base font-medium">Sales</a>
           <a routerLink="/accounts-finance" class="text-gray-600 hover:text-primary block px-3 py-2 text-base font-medium">Accounts & Finance</a>
         </ng-container>
 
