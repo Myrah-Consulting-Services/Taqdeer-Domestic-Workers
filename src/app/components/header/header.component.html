@@ -17,7 +17,10 @@
            class="text-gray-600 hover:text-primary px-3 py-2 font-medium transition-colors">
           Dashboard
         </a>
-        
+        <a routerLink="/leads" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: false}" 
+        class="text-gray-600 hover:text-primary px-3 py-2 font-medium transition-colors">
+       Leads
+     </a>
         <!-- ADMIN NAVIGATION -->
         <ng-container *ngIf="isAdmin && !isHRManager">
           <a routerLink="/agents" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: false}" 
@@ -32,10 +35,7 @@
              class="text-gray-600 hover:text-primary px-3 py-2 font-medium transition-colors">
             Sponsors
           </a>
-          <a routerLink="/leads" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: false}" 
-             class="text-gray-600 hover:text-primary px-3 py-2 font-medium transition-colors">
-            Leads
-          </a>
+         
            <a routerLink="/sales" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: false}" 
              class="text-gray-600 hover:text-primary px-3 py-2 font-medium transition-colors">
             Sales
